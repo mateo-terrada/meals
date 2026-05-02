@@ -521,7 +521,7 @@ async function ahGetToken(){
   const res=await fetch(AH_PROXY+'/mobile-auth/v1/auth/token/anonymous',{
     method:'POST',
     headers:{'Content-Type':'application/json','x-application-id':'appie','User-Agent':'Appie/8.22.3'},
-    body:JSON.stringify({clientId:'appie-android'})
+    body:JSON.stringify({clientId:'appie'})
   });
   if(!res.ok)throw new Error('token_failed');
   const d=await res.json();
