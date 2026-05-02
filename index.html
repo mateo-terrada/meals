@@ -4,6 +4,12 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Dinners at home</title>
+<link rel="apple-touch-icon" href="icon.png">
+<link rel="manifest" href="manifest.json">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Dinners">
+<meta name="theme-color" content="#c8943a">
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,600;1,9..144,300&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
@@ -175,6 +181,58 @@ html,body{min-height:100%;background:var(--bg);color:var(--text);font-family:'Ou
 .ah-total-lbl{font-size:13px;color:var(--muted)}
 .ah-total-val{font-family:'Fraunces',serif;font-size:22px;font-weight:600;color:var(--gold)}
 
+
+/* CALENDAR FLOAT BUTTON */
+.cal-fab{position:fixed;bottom:22px;left:22px;width:46px;height:46px;border-radius:50%;background:var(--gold);border:none;color:#fff;font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 3px 12px rgba(0,0,0,.15);z-index:50;transition:transform .15s}
+.cal-fab:hover{transform:scale(1.08)}
+
+/* CALENDAR OVERLAY */
+.cal-overlay{position:fixed;inset:0;background:rgba(40,33,26,.55);backdrop-filter:blur(3px);z-index:110;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .2s}
+.cal-overlay.open{opacity:1;pointer-events:all}
+.cal-modal{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);width:min(680px,96vw);max-height:90vh;display:flex;flex-direction:column;transform:scale(.97);transition:transform .2s;overflow:hidden}
+.cal-overlay.open .cal-modal{transform:scale(1)}
+.cal-mhdr{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;border-bottom:1px solid var(--border);flex-shrink:0}
+.cal-mhdr h3{font-family:'Fraunces',serif;font-size:18px;font-weight:600}
+.cal-nav{display:flex;align-items:center;gap:8px}
+.cal-nav button{width:30px;height:30px;border:1px solid var(--border);background:var(--surface2);color:var(--muted);border-radius:var(--rs);cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;transition:all .15s}
+.cal-nav button:hover{border-color:var(--gold);color:var(--gold)}
+.cal-month-lbl{font-size:14px;font-weight:500;min-width:140px;text-align:center}
+.cal-close{background:none;border:none;color:var(--muted);font-size:22px;cursor:pointer;line-height:1}
+.cal-close:hover{color:var(--text)}
+.cal-body{overflow-y:auto;padding:16px 20px 20px}
+.cal-dow{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-bottom:4px}
+.cal-dow span{font-size:11px;font-weight:600;text-align:center;color:var(--muted);letter-spacing:.5px;text-transform:uppercase;padding:4px 0}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
+.cal-day{border:1px solid var(--border);border-radius:var(--rs);padding:6px 6px 5px;min-height:64px;cursor:pointer;transition:all .15s;display:flex;flex-direction:column;gap:3px;background:var(--surface)}
+.cal-day:hover{border-color:var(--gold)}
+.cal-day.today{border-color:var(--gold)}
+.cal-day.today .cal-dn{color:var(--gold);font-weight:600}
+.cal-day.other-month{opacity:.35}
+.cal-day.has-meal{background:var(--surface2)}
+.cal-dn{font-size:13px;font-weight:400;line-height:1}
+.cal-meal-chip{font-size:10px;color:var(--gold);line-height:1.3;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;font-weight:500}
+.cal-empty-dot{width:6px;height:6px;border-radius:50%;border:1px dashed var(--faint);margin-top:auto;align-self:center}
+
+
+/* TODAY WIDGET */
+.today-widget{position:fixed;bottom:22px;right:22px;z-index:50;width:220px;background:var(--surface);border:1px solid var(--border);border-radius:var(--r);box-shadow:0 4px 20px rgba(0,0,0,.12);overflow:hidden;transition:all .25s}
+.today-widget.dismissed{opacity:0;pointer-events:none;transform:translateY(8px)}
+.tw-hdr{display:flex;align-items:center;justify-content:space-between;padding:9px 12px 0}
+.tw-lbl{font-size:10px;font-weight:600;letter-spacing:.8px;text-transform:uppercase;color:var(--muted)}
+.tw-close{background:none;border:none;color:var(--faint);font-size:16px;cursor:pointer;line-height:1;padding:0}
+.tw-close:hover{color:var(--muted)}
+.tw-body{padding:8px 12px 10px;display:flex;flex-direction:column;gap:6px}
+.tw-meal{display:flex;align-items:center;gap:8px}
+.tw-emoji{font-size:22px;line-height:1;flex-shrink:0}
+.tw-name{font-family:'Fraunces',serif;font-size:14px;font-weight:600;line-height:1.25;color:var(--text)}
+.tw-meta{font-size:11px;color:var(--muted)}
+.tw-actions{display:flex;gap:5px;margin-top:2px}
+.tw-btn{flex:1;padding:5px 0;border-radius:var(--rs);font-family:'Outfit',sans-serif;font-size:12px;font-weight:500;cursor:pointer;border:1px solid var(--border);background:transparent;color:var(--muted);transition:all .15s;text-align:center}
+.tw-btn:hover{border-color:var(--gold);color:var(--gold)}
+.tw-btn.primary{background:var(--gold);border-color:var(--gold);color:#fff}
+.tw-btn.primary:hover{opacity:.88}
+.tw-planned{font-size:11px;color:var(--sage);font-weight:500;margin-top:1px}
+
 /* TOAST */
 .toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%) translateY(16px);background:var(--text);border:1px solid transparent;color:#faf6f0;padding:9px 16px;border-radius:var(--rs);font-size:13px;opacity:0;transition:all .2s;z-index:200;white-space:nowrap;pointer-events:none}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
@@ -246,30 +304,69 @@ html,body{min-height:100%;background:var(--bg);color:var(--text);font-family:'Ou
 
 <div class="toast" id="toast"></div>
 
+<div class="today-widget" id="todayWidget">
+  <div class="tw-hdr">
+    <span class="tw-lbl">Tonight</span>
+    <button class="tw-close" onclick="dismissWidget()">×</button>
+  </div>
+  <div class="tw-body">
+    <div class="tw-meal">
+      <span class="tw-emoji" id="twEmoji"></span>
+      <div>
+        <div class="tw-name" id="twName"></div>
+        <div class="tw-meta" id="twMeta"></div>
+      </div>
+    </div>
+    <div class="tw-actions" id="twActions"></div>
+  </div>
+</div>
+
+<button class="cal-fab" onclick="openCal()" title="Meal history">📅</button>
+
+<div class="cal-overlay" id="calOverlay" onclick="closeCal(event)">
+  <div class="cal-modal">
+    <div class="cal-mhdr">
+      <div class="cal-nav">
+        <button onclick="calNav(-1)">&#8249;</button>
+        <span class="cal-month-lbl" id="calMonthLbl"></span>
+        <button onclick="calNav(1)">&#8250;</button>
+      </div>
+      <h3 style="position:absolute;left:50%;transform:translateX(-50%)">History</h3>
+      <button class="cal-close" onclick="closeCal()">×</button>
+    </div>
+    <div class="cal-body">
+      <div class="cal-dow">
+        <span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span>
+      </div>
+      <div class="cal-grid" id="calGrid"></div>
+    </div>
+  </div>
+</div>
+
 <script>
 const MEALS=[
-  {id:1,name:"Steak with fries",ingr:["Steak","Fries"],cx:2,t:20,cost:"High",y:9,who:"Mateo"},
-  {id:2,name:"Milanesas",ingr:["Chicken breast","Breadcrumbs","Eggs","Garlic"],cx:5,t:60,cost:"Medium",y:10,who:"Both"},
-  {id:3,name:"Chicken with veggies",ingr:["Chicken breast","Vegetables"],cx:3,t:60,cost:"Medium",y:7,who:"Both"},
-  {id:4,name:"Pasta Carbonara",ingr:["Pasta","Eggs","Guanciale","Parmesan"],cx:2,t:30,cost:"Medium",y:10,who:"Both"},
-  {id:5,name:"Pasta with shrimps",ingr:["Pasta","Shrimps","Lemon","Garlic","Parsley","Butter"],cx:3,t:30,cost:"High",y:9,who:"Both"},
-  {id:6,name:"Pasta with chorizo",ingr:["Pasta","Chorizo","Tomato sauce","Tomato purée","Red pepper"],cx:3,t:30,cost:"Medium",y:8,who:"Both"},
-  {id:7,name:"Shrimp & lemon risotto",ingr:["Arborio rice","Shrimps","Lemon","Garlic","Parmesan","White wine","Butter","Onion","Broth"],cx:4,t:60,cost:"High",y:8,who:"Both"},
-  {id:8,name:"Mushroom risotto",ingr:["Arborio rice","Mushrooms","Parmesan","White wine","Butter","Onion","Garlic","Broth"],cx:4,t:60,cost:"High",y:7,who:"Both"},
-  {id:9,name:"Burritos",ingr:["Minced meat","Bell pepper","Onion","Wraps","Lettuce","Cheddar"],cx:4,t:30,cost:"High",y:8,who:"Both"},
-  {id:10,name:"Chicken Fajitas",ingr:["Chicken breast","Wraps","Onion","Bell pepper","Lettuce"],cx:4,t:30,cost:"High",y:8,who:"Both"},
-  {id:11,name:"AH Pizzas",ingr:["Box pizza"],cx:1,t:20,cost:"Low",y:7,who:"Both"},
-  {id:12,name:"Dutch snacks",ingr:["Mixed snacks","Chicken nuggets","Fries"],cx:1,t:15,cost:"Medium",y:7,who:"Both"},
-  {id:13,name:"Meat burgers",ingr:["Beef patties","Burger buns","Cheddar","Tomato","Lettuce"],cx:3,t:20,cost:"Medium",y:8,who:"Both"},
-  {id:14,name:"Chicken burgers",ingr:["Chicken breast","Tomato","Burger buns","Lettuce","Cheddar"],cx:2,t:20,cost:"Medium",y:9,who:"Both"},
-  {id:15,name:"Pork Ribs",ingr:["AH marinated ribs"],cx:2,t:90,cost:"Medium",y:8,who:"Both"},
-  {id:16,name:"Sushi",ingr:["Sushi"],cx:1,t:5,cost:"High",y:8,who:"Both"},
-  {id:17,name:"Picada",ingr:["Cheese","Salami","Prosciutto","Burrata","Rocket","Bread","Snacks"],cx:2,t:15,cost:"High",y:9,who:"Both"},
-  {id:18,name:"Fish mix",ingr:["AH frozen fish mix"],cx:1,t:20,cost:"High",y:9,who:"Both"},
-  {id:19,name:"Chicken Madras",ingr:["Knorr packet","Chicken breast","Rice","Vegetables"],cx:4,t:30,cost:"Medium",y:8,who:"Both"},
-  {id:20,name:"Breaded fish fillet",ingr:["Hake fillet","Flour","Eggs","Lemon","Oil"],cx:4,t:30,cost:"High",y:9,who:"Both"},
-  {id:21,name:"Pasta Bolognese",ingr:["Pasta","Minced meat","Tomato sauce"],cx:3,t:30,cost:"Medium",y:8,who:"Both"},
-  {id:22,name:"Cheese toast",ingr:["Cheese","Sandwich bread"],cx:1,t:10,cost:"Low",y:7,who:"Both"},
+  {id:1,name:"Steak with fries",emoji:"🥩",ingr:["Steak","Fries"],cx:2,t:20,cost:"High",y:9,who:"Mateo"},
+  {id:2,name:"Milanesas",emoji:"🍗",ingr:["Chicken breast","Breadcrumbs","Eggs","Garlic"],cx:5,t:60,cost:"Medium",y:10,who:"Both"},
+  {id:3,name:"Chicken with veggies",emoji:"🥦",ingr:["Chicken breast","Vegetables"],cx:3,t:60,cost:"Medium",y:7,who:"Both"},
+  {id:4,name:"Pasta Carbonara",emoji:"🍝",ingr:["Pasta","Eggs","Guanciale","Parmesan"],cx:2,t:30,cost:"Medium",y:10,who:"Both"},
+  {id:5,name:"Pasta with shrimps",emoji:"🦐",ingr:["Pasta","Shrimps","Lemon","Garlic","Parsley","Butter"],cx:3,t:30,cost:"High",y:9,who:"Both"},
+  {id:6,name:"Pasta with chorizo",emoji:"🌶️",ingr:["Pasta","Chorizo","Tomato sauce","Tomato purée","Red pepper"],cx:3,t:30,cost:"Medium",y:8,who:"Both"},
+  {id:7,name:"Shrimp & lemon risotto",emoji:"🦐",ingr:["Arborio rice","Shrimps","Lemon","Garlic","Parmesan","White wine","Butter","Onion","Broth"],cx:4,t:60,cost:"High",y:8,who:"Both"},
+  {id:8,name:"Mushroom risotto",emoji:"🍄",ingr:["Arborio rice","Mushrooms","Parmesan","White wine","Butter","Onion","Garlic","Broth"],cx:4,t:60,cost:"High",y:7,who:"Both"},
+  {id:9,name:"Burritos",emoji:"🌯",ingr:["Minced meat","Bell pepper","Onion","Wraps","Lettuce","Cheddar"],cx:4,t:30,cost:"High",y:8,who:"Both"},
+  {id:10,name:"Chicken Fajitas",emoji:"🌮",ingr:["Chicken breast","Wraps","Onion","Bell pepper","Lettuce"],cx:4,t:30,cost:"High",y:8,who:"Both"},
+  {id:11,name:"AH Pizzas",emoji:"🍕",ingr:["Box pizza"],cx:1,t:20,cost:"Low",y:7,who:"Both"},
+  {id:12,name:"Dutch snacks",emoji:"🍟",ingr:["Mixed snacks","Chicken nuggets","Fries"],cx:1,t:15,cost:"Medium",y:7,who:"Both"},
+  {id:13,name:"Meat burgers",emoji:"🍔",ingr:["Beef patties","Burger buns","Cheddar","Tomato","Lettuce"],cx:3,t:20,cost:"Medium",y:8,who:"Both"},
+  {id:14,name:"Chicken burgers",emoji:"🍔",ingr:["Chicken breast","Tomato","Burger buns","Lettuce","Cheddar"],cx:2,t:20,cost:"Medium",y:9,who:"Both"},
+  {id:15,name:"Pork Ribs",emoji:"🍖",ingr:["AH marinated ribs"],cx:2,t:90,cost:"Medium",y:8,who:"Both"},
+  {id:16,name:"Sushi",emoji:"🍣",ingr:["Sushi"],cx:1,t:5,cost:"High",y:8,who:"Both"},
+  {id:17,name:"Picada",emoji:"🧀",ingr:["Cheese","Salami","Prosciutto","Burrata","Rocket","Bread","Snacks"],cx:2,t:15,cost:"High",y:9,who:"Both"},
+  {id:18,name:"Fish mix",emoji:"🐟",ingr:["AH frozen fish mix"],cx:1,t:20,cost:"High",y:9,who:"Both"},
+  {id:19,name:"Chicken Madras",emoji:"🍛",ingr:["Knorr packet","Chicken breast","Rice","Vegetables"],cx:4,t:30,cost:"Medium",y:8,who:"Both"},
+  {id:20,name:"Breaded fish fillet",emoji:"🐟",ingr:["Hake fillet","Flour","Eggs","Lemon","Oil"],cx:4,t:30,cost:"High",y:9,who:"Both"},
+  {id:21,name:"Pasta Bolognese",emoji:"🍝",ingr:["Pasta","Minced meat","Tomato sauce"],cx:3,t:30,cost:"Medium",y:8,who:"Both"},
+  {id:22,name:"Cheese toast",emoji:"🧀",ingr:["Cheese","Sandwich bread"],cx:1,t:10,cost:"Low",y:7,who:"Both"},
 ];
 
 const DNAMES=['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
@@ -343,7 +440,7 @@ function renderGrid(){
     const d=daysSince(S.lc[m.id]);
     const lastTxt=d<9999?`<div class="mc-last">Last cooked ${d} days ago</div>`:'';
     return`<div class="mc" onclick="openMealDetail(${m.id})">
-      <div class="mc-name">${m.name}</div>
+      <div class="mc-name">${m.emoji||''} ${m.name}</div>
       <div class="mc-ingr">${m.ingr.join(', ')}</div>
       <div class="mc-foot">
         <span class="bdg bdg-t">⏱ ${m.t}min</span>
@@ -355,7 +452,7 @@ function renderGrid(){
 }
 function openMealDetail(id){
   // future: detail sheet. For now open planner modal with meal pre-selected
-  toast(`★ ${MEALS.find(m=>m.id===id).name} — abrí "Esta semana" para planificar`);
+  showToast(`★ ${MEALS.find(m=>m.id===id).name} — abrí "Esta semana" para planificar`);
 }
 
 /* ---- WEEK ---- */
@@ -395,7 +492,7 @@ function autoFill(){
     const scored=avail.map(m=>{
       let sc=m.y;
       if(recent.has(m.id))sc-=3;
-      const ds=daysSince(S.lc[m.id]);
+      const ds=daysSince(lastCookedDate(m.id)||S.lc[m.id]);
       if(ds<7)sc-=4;else if(ds<14)sc-=2;
       sc+=Math.random()*1.8;
       return{m,sc};
@@ -403,7 +500,7 @@ function autoFill(){
     S.plan[key]=scored[0].m.id;
     used.add(scored[0].m.id);
   });
-  save();renderWeek();toast('✦ Week suggested — adjust anything you want to change');
+  save();renderWeek();showToast('✦ Week suggested — adjust anything you want to change');
 }
 
 /* ---- MODAL ---- */
@@ -438,7 +535,7 @@ function renderMlist(){
   });
   const cur=S.plan[S.pendDay];
   document.getElementById('mlist').innerHTML=meals.map(m=>{
-    const ds=daysSince(S.lc[m.id]);
+    const ds=daysSince(lastCookedDate(m.id)||S.lc[m.id]);
     const dotCls=ds<7?'dot-mid':ds<9999?'dot-new':'dot-old';
     const inWk=usedWk.has(m.id);
     return`<div class="mitem${cur===m.id?' sel':''}" onclick="selMeal(${m.id})">
@@ -462,7 +559,7 @@ function selMeal(id){
   if(pd<=new Date())S.lc[id]=S.pendDay;
   save();closeMod();renderWeek();
   if(S.tab==='l')renderList();
-  toast(`${meal.name} assigned`);
+  showToast(`${meal.name} assigned`);
 }
 function closeMod(ev){
   if(ev&&ev.target!==document.getElementById('moverlay'))return;
@@ -653,13 +750,13 @@ function savePrices(){
     }
   });
   savePricesStore();
-  toast('Prices saved ✓');
+  showToast('Prices saved ✓');
   if(S.tab==='l')renderList();
 }
 
 /* ---- TOAST ---- */
 let _tt;
-function toast(msg){
+function showToast(msg){
   const el=document.getElementById('toast');
   if(!el)return;
   el.textContent=msg;el.classList.add('show');
@@ -667,6 +764,7 @@ function toast(msg){
 }
 
 /* ---- CLOUD SYNC ---- */
+const AH_PROXY='https://withered-hall-4097.jterrada.workers.dev';
 const SYNC_URL = AH_PROXY + '/sync';
 let syncTimer = null;
 let lastSyncedHash = null;
@@ -749,8 +847,170 @@ async function loadFromCloud(){
   }
 }
 
+/* ---- CALENDAR ---- */
+let calYear = new Date().getFullYear();
+let calMonth = new Date().getMonth(); // 0-indexed
+
+function openCal(){
+  calYear=new Date().getFullYear();
+  calMonth=new Date().getMonth();
+  renderCal();
+  document.getElementById('calOverlay').classList.add('open');
+}
+function closeCal(ev){
+  if(ev&&ev.target!==document.getElementById('calOverlay'))return;
+  document.getElementById('calOverlay').classList.remove('open');
+}
+function calNav(dir){
+  calMonth+=dir;
+  if(calMonth>11){calMonth=0;calYear++;}
+  if(calMonth<0){calMonth=11;calYear--;}
+  renderCal();
+}
+function renderCal(){
+  const lbl=document.getElementById('calMonthLbl');
+  lbl.textContent=new Date(calYear,calMonth,1).toLocaleDateString('en-GB',{month:'long',year:'numeric'});
+  const grid=document.getElementById('calGrid');
+  const today=dk(new Date());
+
+  // First day of month, adjusted to Mon=0
+  const first=new Date(calYear,calMonth,1);
+  const startDow=(first.getDay()+6)%7; // Mon=0
+  const daysInMonth=new Date(calYear,calMonth+1,0).getDate();
+  const daysInPrev=new Date(calYear,calMonth,0).getDate();
+
+  const cells=[];
+  // Previous month padding
+  for(let i=startDow-1;i>=0;i--){
+    cells.push({day:daysInPrev-i,month:calMonth-1,year:calYear,other:true});
+  }
+  // Current month
+  for(let d=1;d<=daysInMonth;d++){
+    cells.push({day:d,month:calMonth,year:calYear,other:false});
+  }
+  // Next month padding to fill 6 rows
+  let next=1;
+  while(cells.length%7!==0)cells.push({day:next++,month:calMonth+1,year:calYear,other:true});
+
+  grid.innerHTML=cells.map(({day,month,year,other})=>{
+    const m=((month%12)+12)%12;
+    const y=month<0?year-1:month>11?year+1:year;
+    const key=`${y}-${String(m+1).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
+    const mealId=S.plan[key];
+    const meal=mealId?MEALS.find(x=>x.id===mealId):null;
+    const isToday=key===today;
+    return`<div class="cal-day${other?' other-month':''}${isToday?' today':''}${meal?' has-meal':''}" onclick="calDayClick('${key}')">
+      <span class="cal-dn">${day}</span>
+      ${meal?`<span class="cal-meal-chip">${meal.emoji||''} ${meal.name}</span>`:`<div class="cal-empty-dot"></div>`}
+    </div>`;
+  }).join('');
+}
+
+function calDayClick(key){
+  // Reuse existing day modal
+  S.pendDay=key;
+  S.mf={t:'all',c:'all'};
+  const d=new Date(key+'T12:00:00');
+  const di=(d.getDay()+6)%7;
+  document.getElementById('mtitle').textContent=`${DFULL[di]} ${d.getDate()} ${d.toLocaleDateString('en-GB',{month:'long'})}`;
+  renderMFbar();renderMlist();
+  document.getElementById('moverlay').classList.add('open');
+}
+
+// Override selMeal to also re-render calendar and update lastCooked from plan
+const _origSelMeal=selMeal;
+
+function selMeal(id){
+  const meal=MEALS.find(m=>m.id===id);
+  S.plan[S.pendDay]=id;
+  // Derive lastCooked from plan history
+  const pd=new Date(S.pendDay+'T12:00:00');
+  if(pd<=new Date())S.lc[id]=S.pendDay;
+  save();
+  document.getElementById('moverlay').classList.remove('open');
+  // Refresh whichever view is open
+  if(document.getElementById('calOverlay').classList.contains('open'))renderCal();
+  if(S.tab==='s')renderWeek();
+  if(S.tab==='l')renderList();
+  renderWidget();
+  showToast(meal.name+' saved');
+}
+
+// Better lastCooked: scan full plan history
+function lastCookedDate(mealId){
+  const dates=Object.entries(S.plan)
+    .filter(([,id])=>id===mealId)
+    .map(([d])=>d)
+    .sort();
+  return dates.length?dates[dates.length-1]:null;
+}
+
+/* ---- TODAY WIDGET ---- */
+function suggestForToday(){
+  const todayKey=dk(new Date());
+  // Meals used in last 7 days
+  const recentIds=new Set(
+    Object.entries(S.plan)
+      .filter(([d,])=>daysSince(d)<8)
+      .map(([,id])=>id)
+  );
+  return MEALS.map(m=>{
+    const lastD=lastCookedDate(m.id)||S.lc[m.id];
+    const days=daysSince(lastD);
+    let score=m.y;
+    if(recentIds.has(m.id))score-=5;
+    if(days<7)score-=4;
+    else if(days<14)score-=2;
+    else if(days>30)score+=1;
+    score+=Math.random()*.5;
+    return{m,score};
+  }).sort((a,b)=>b.score-a.score)[0].m;
+}
+
+function renderWidget(){
+  const todayKey=dk(new Date());
+  const plannedId=S.plan[todayKey];
+  const meal=plannedId?MEALS.find(m=>m.id===plannedId):suggestForToday();
+  const isPlanned=!!plannedId;
+  const lastD=lastCookedDate(meal.id)||S.lc[meal.id];
+  const days=daysSince(lastD);
+  const metaTxt=isPlanned?'Planned for tonight'
+    :days<9999?`Last cooked ${days} days ago`:'Never cooked';
+
+  document.getElementById('twEmoji').textContent=meal.emoji||'';
+  document.getElementById('twName').textContent=meal.name;
+  document.getElementById('twMeta').textContent=metaTxt;
+
+  const acts=document.getElementById('twActions');
+  if(isPlanned){
+    acts.innerHTML=`<button class="tw-btn" onclick="twChange()">Change</button>
+      <div class="tw-planned" style="display:flex;align-items:center;gap:4px;padding:3px 0">✓ Set</div>`;
+  } else {
+    acts.innerHTML=`<button class="tw-btn" onclick="renderWidget()">🔄</button>
+      <button class="tw-btn primary" onclick="twAccept(${meal.id})">Tonight ✓</button>`;
+  }
+}
+
+function twAccept(id){
+  const todayKey=dk(new Date());
+  S.plan[todayKey]=id;
+  S.lc[id]=todayKey;
+  save();
+  renderWidget();
+  if(S.tab==='s')renderWeek();
+  if(S.tab==='l')renderList();
+}
+
+function twChange(){
+  openDayMod(dk(new Date()));
+}
+
+function dismissWidget(){
+  document.getElementById('todayWidget').classList.add('dismissed');
+}
+
 /* ---- INIT ---- */
-load();loadPrices();renderFbar();renderGrid();loadFromCloud();
+load();loadPrices();renderFbar();renderGrid();renderWidget();loadFromCloud();
 </script>
 </body>
 </html>
