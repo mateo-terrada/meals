@@ -523,7 +523,7 @@ async function ahGetToken(){
     headers:{'Content-Type':'application/json','x-application-id':'appie','User-Agent':'Appie/8.22.3'},
     body:JSON.stringify({clientId:'appie'})
   });
-  if(!res.ok)throw new Error('token_failed');
+  if(!res.ok)throw new Error('HTTP '+res.status+' en token');
   const d=await res.json();
   ahToken=d.access_token;
   ahTokenExp=Date.now()+(d.expires_in||3600)*900;
@@ -537,17 +537,16 @@ async function ahSearchOne(ingredient){
   const res=await fetch(AH_PROXY+`/mobile-services/product/search/v2?query=${encodeURIComponent(q)}&size=2&sortOn=RELEVANCE`,{
     headers:{'Authorization':'Bearer '+token,'x-application-id':'appie','x-client-name':'appie-android'}
   });
-  if(!res.ok)throw new Error('search_failed');
+  if(!res.ok)throw new Error('HTTP '+res.status+' en búsqueda');
   const d=await res.json();
   const p=d.products?.[0];
   if(!p)return{state:'miss',fetchedAt:Date.now()};
-  const price=p.priceLabel?.now??p.price?.now??null;
-  const numPrice=price?parseFloat(String(price).replace(',','.')):null;
+  const numPrice=p.currentPrice??p.price?.now??null;
   return{
     state:'found',name:p.title||p.description,
-    price:numPrice,
-    bonus:!!(p.discounts?.length||p.propertyIcons?.some(i=>i.includes('bonus'))),
-    url:`https://www.ah.nl/producten/product/${p.webshopId||p.id}`,
+    price:numPrice!=null?parseFloat(numPrice):null,
+    bonus:!!(p.isBonus||p.discountType),
+    url:`https://www.ah.nl/producten/product/${p.webshopId}/${p.hrefName||'product'}`,
     fetchedAt:Date.now()
   };
 }
@@ -584,9 +583,9 @@ async function fetchAllPrices(){
     saveAhCache();
     status.textContent=`✓ ${allIngr.filter(i=>ahPrices[i]?.price!=null).length}/${allIngr.length} encontrados`;
   }catch(e){
-    let msg='No se pudo conectar con Albert Heijn.';
+    let msg=`Error: ${e.message}`;
     if(e.message==='Failed to fetch'||e.name==='TypeError'){
-      msg=`CORS bloqueado — el browser no permite llamadas directas a api.ah.nl desde una página estática. <a href="https://github.com/Teo/cenas" target="_blank">Podemos agregar un proxy mínimo</a> para resolverlo.`;
+      msg='CORS bloqueado — el Worker no está respondiendo.';
     }
     errEl.innerHTML=`<div class="ah-err">${msg}</div>`;
     errEl.style.display='block';
