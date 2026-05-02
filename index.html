@@ -36,10 +36,10 @@ html,body{min-height:100%;background:var(--bg);color:var(--text);font-family:'Ou
 .hdr-sub{margin-left:auto;font-size:12px;color:var(--muted)}
 
 /* SYNC */
-.sync-status{font-size:11px;padding:3px 9px;border-radius:20px;border:1px solid var(--border);color:var(--muted);transition:all .3s;white-space:nowrap}
-.sync-status.syncing{color:var(--gold);border-color:var(--gold)}
-.sync-status.synced{color:var(--sage);border-color:var(--sage)}
-.sync-status.error{color:var(--terra);border-color:var(--terra)}
+.sync-dot{width:9px;height:9px;border-radius:50%;background:var(--faint);transition:background .3s;flex-shrink:0;margin-left:4px;align-self:center}
+.sync-dot.syncing{background:#e8a020;box-shadow:0 0 0 3px rgba(232,160,32,.2)}
+.sync-dot.synced{background:var(--sage)}
+.sync-dot.error{background:var(--terra)}
 
 /* TABS */
 .tabs{display:flex;gap:3px;background:var(--surface);padding:4px;border-radius:var(--r);border:1px solid var(--border);margin-bottom:22px}
@@ -188,7 +188,7 @@ html,body{min-height:100%;background:var(--bg);color:var(--text);font-family:'Ou
   <div class="hdr">
     <h1>Dinners <em>at home</em></h1>
     <span class="hdr-sub" id="hdrSub"></span>
-    <span class="sync-status" id="syncStatus"></span>
+    <span class="sync-dot" id="syncStatus" title=""></span>
   </div>
   <div class="tabs">
     <button class="tab on" onclick="setTab('r')">Recipes</button>
@@ -597,22 +597,35 @@ function getPrice(ing){return manualPrices[ing]||{price:null,bonus:false}}
 
 function renderPrices(){
   const ingrs=allIngredients();
-  // Group by meal category
   const grid=document.getElementById('pgrid');
+  if(!grid)return;
   grid.innerHTML=ingrs.map(ing=>{
     const p=getPrice(ing);
-    const bOn=p.bonus;
-    return`<div class="p-item">
-      <span class="p-name">${ing}</span>
-      <input class="p-input" type="number" step="0.01" min="0" placeholder="€" 
-        value="${p.price!=null?p.price:''}" 
-        onchange="updatePrice('${ing.replace(/'/g,"\\'")}',${JSON.stringify(ing)},this.value)"
-        id="pi-${ing.replace(/[^a-zA-Z0-9]/g,'_')}">
-      <button class="p-bonus${bOn?' on':''}" onclick="toggleBonus(${JSON.stringify(ing)})" id="pb-${ing.replace(/[^a-zA-Z0-9]/g,'_')}">
-        ${bOn?'★ Bonus':'Bonus'}
-      </button>
-    </div>`;
+    const sid='pi-'+ing.replace(/[^a-zA-Z0-9]/g,'_');
+    const bid='pb-'+ing.replace(/[^a-zA-Z0-9]/g,'_');
+    const esc=ing.replace(/"/g,'&quot;');
+    return'<div class="p-item">'
+      +'<span class="p-name">'+ing+'</span>'
+      +'<input class="p-input" type="number" step="0.01" min="0" placeholder="€" value="'+(p.price!=null?p.price:'')+'" data-ing="'+esc+'" id="'+sid+'">'
+      +'<button class="p-bonus'+(p.bonus?' on':'')+'" data-ing="'+esc+'" id="'+bid+'">'+(p.bonus?'★ Bonus':'Bonus')+'</button>'
+      +'</div>';
   }).join('');
+  grid.querySelectorAll('.p-input').forEach(el=>{
+    el.addEventListener('change',()=>{
+      const ing=el.dataset.ing;
+      if(!manualPrices[ing])manualPrices[ing]={price:null,bonus:false};
+      manualPrices[ing].price=el.value===''?null:parseFloat(el.value);
+    });
+  });
+  grid.querySelectorAll('.p-bonus').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      const ing=btn.dataset.ing;
+      if(!manualPrices[ing])manualPrices[ing]={price:null,bonus:false};
+      manualPrices[ing].bonus=!manualPrices[ing].bonus;
+      btn.classList.toggle('on',manualPrices[ing].bonus);
+      btn.textContent=manualPrices[ing].bonus?'★ Bonus':'Bonus';
+    });
+  });
 }
 
 function updatePrice(ing,ingJson,val){
@@ -644,6 +657,15 @@ function savePrices(){
   if(S.tab==='l')renderList();
 }
 
+/* ---- TOAST ---- */
+let _tt;
+function toast(msg){
+  const el=document.getElementById('toast');
+  if(!el)return;
+  el.textContent=msg;el.classList.add('show');
+  clearTimeout(_tt);_tt=setTimeout(()=>el.classList.remove('show'),2600);
+}
+
 /* ---- CLOUD SYNC ---- */
 const SYNC_URL = AH_PROXY + '/sync';
 let syncTimer = null;
@@ -656,11 +678,13 @@ function stateHash(){
 function setSyncStatus(state, msg){
   const el = document.getElementById('syncStatus');
   if(!el) return;
-  el.textContent = msg;
-  el.className = 'sync-status ' + state;
+  el.title = msg;
+  el.className = 'sync-dot' + (state ? ' ' + state : '');
 }
 
+let cloudLoaded = false;
 async function syncToCloud(){
+  if(!cloudLoaded) return; // don't push until we've pulled first
   clearTimeout(syncTimer);
   syncTimer = setTimeout(async () => {
     const payload = stateHash();
@@ -696,25 +720,31 @@ async function loadFromCloud(){
     const localTs = parseInt(localStorage.getItem('cenas_updatedAt')||'0');
 
     if(cloud.updatedAt > localTs){
-      // Cloud is newer — merge in
-      if(cloud.plan) S.plan = cloud.plan;
-      if(cloud.ckd)  S.ckd  = cloud.ckd;
-      if(cloud.lc)   S.lc   = cloud.lc;
-      if(cloud.prices){
-        manualPrices = cloud.prices;
+      // Cloud is newer — merge carefully
+      if(cloud.plan && Object.keys(cloud.plan).length) S.plan = cloud.plan;
+      if(cloud.ckd  && Object.keys(cloud.ckd).length)  S.ckd  = cloud.ckd;
+      if(cloud.lc   && Object.keys(cloud.lc).length)   S.lc   = cloud.lc;
+
+      // Merge prices: cloud wins per key, but keep local defaults for missing keys
+      if(cloud.prices && Object.keys(cloud.prices).length){
+        // Start from current manualPrices (which has defaults), overlay cloud values
+        Object.assign(manualPrices, cloud.prices);
         localStorage.setItem('cenas_prices', JSON.stringify(manualPrices));
       }
+
       localStorage.setItem('cenas2', JSON.stringify({plan:S.plan,ckd:S.ckd,lc:S.lc}));
       localStorage.setItem('cenas_updatedAt', cloud.updatedAt);
-      // Re-render current tab
       if(S.tab==='s') renderWeek();
       if(S.tab==='l') renderList();
       if(S.tab==='r') renderGrid();
+      if(S.tab==='p') renderPrices();
     }
     lastSyncedHash = stateHash();
+    cloudLoaded = true;
     setSyncStatus('synced','✓ synced');
     setTimeout(()=>setSyncStatus('',''),3000);
   } catch(e) {
+    cloudLoaded = true; // allow syncing even if offline
     setSyncStatus('error','✗ offline');
   }
 }
