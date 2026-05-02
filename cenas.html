@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cenas en casa</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,600;1,9..144,300&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#f7f4ef;
+  --bg2:#ffffff;
+  --surface:#ffffff;
+  --surface2:#f2ede6;
+  --border:#e2d9ce;
+  --border2:#cec4b6;
+  --gold:#b8721e;
+  --gold-dim:rgba(184,114,30,.1);
+  --terra:#b84830;
+  --terra-dim:rgba(184,72,48,.1);
+  --sage:#3a8c36;
+  --sage-dim:rgba(58,140,54,.1);
+  --text:#28211a;
+  --muted:#8a7e6e;
+  --faint:#c4b8a8;
+  --r:10px;--rs:6px
+}
+html,body{min-height:100%;background:var(--bg);color:var(--text);font-family:'Outfit',sans-serif;font-weight:300;font-size:15px;line-height:1.5}
+::-webkit-scrollbar{width:5px}::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px}
+.app{max-width:980px;margin:0 auto;padding:0 18px 100px}
+
+/* HEADER */
+.hdr{padding:32px 0 20px;display:flex;align-items:baseline;gap:10px}
+.hdr h1{font-family:'Fraunces',serif;font-weight:600;font-size:26px;letter-spacing:-.4px}
+.hdr h1 em{font-style:italic;font-weight:300;color:var(--gold)}
+.hdr-sub{margin-left:auto;font-size:12px;color:var(--muted)}
+
+/* TABS */
+.tabs{display:flex;gap:3px;background:var(--surface);padding:4px;border-radius:var(--r);border:1px solid var(--border);margin-bottom:22px}
+.tab{flex:1;padding:8px 0;border:none;background:transparent;color:var(--muted);font-family:'Outfit',sans-serif;font-size:13px;font-weight:500;letter-spacing:.2px;cursor:pointer;border-radius:var(--rs);transition:all .18s;text-align:center}
+.tab:hover{color:var(--text)}
+.tab.on{background:var(--surface2);color:var(--gold);border:1px solid var(--border)}
+
+/* FILTER BAR */
+.fbar{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:18px;align-items:center}
+.chip{padding:5px 13px;border-radius:20px;border:1px solid var(--border);background:transparent;color:var(--muted);font-family:'Outfit',sans-serif;font-size:12px;cursor:pointer;transition:all .15s}
+.chip:hover{border-color:var(--gold);color:var(--text)}
+.chip.on{background:var(--gold-dim);border-color:var(--gold);color:var(--gold)}
+.fbar-div{width:1px;background:var(--border);height:20px;margin:0 2px}
+
+/* MEAL GRID */
+.mgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:10px}
+.mc{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:14px;cursor:pointer;transition:all .18s;position:relative;overflow:hidden}
+.mc::after{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--gold),transparent);opacity:0;transition:opacity .18s}
+.mc:hover{border-color:var(--gold);transform:translateY(-1px);box-shadow:0 6px 20px rgba(0,0,0,.08)}
+.mc:hover::after{opacity:1}
+.mc-name{font-family:'Fraunces',serif;font-size:15px;font-weight:600;margin-bottom:6px;line-height:1.3}
+.mc-ingr{font-size:12px;color:var(--muted);margin-bottom:11px;line-height:1.4;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.mc-foot{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.mc-last{font-size:11px;color:var(--faint);margin-top:7px}
+.bdg{font-size:11px;font-weight:500;padding:3px 8px;border-radius:4px;letter-spacing:.2px}
+.bdg-t{background:var(--surface2);color:var(--muted)}
+.bdg-Low{background:var(--sage-dim);color:var(--sage)}
+.bdg-Medium{background:var(--gold-dim);color:var(--gold)}
+.bdg-High{background:var(--terra-dim);color:var(--terra)}
+.yummy{margin-left:auto;font-size:12px;color:var(--gold);font-weight:500}
+
+/* WEEK */
+.whdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;flex-wrap:wrap;gap:10px}
+.wnav{display:flex;align-items:center;gap:10px}
+.wnav button{width:30px;height:30px;border:1px solid var(--border);background:var(--surface);color:var(--muted);border-radius:var(--rs);cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;transition:all .15s;padding:0}
+.wnav button:hover{border-color:var(--gold);color:var(--gold)}
+.wlbl{font-size:13px;color:var(--muted);min-width:170px;text-align:center}
+.wlbl strong{color:var(--text)}
+.btn-auto{padding:7px 14px;background:var(--gold-dim);border:1px solid var(--gold);color:var(--gold);border-radius:var(--rs);font-family:'Outfit',sans-serif;font-size:13px;font-weight:500;cursor:pointer;transition:all .15s}
+.btn-auto:hover{background:var(--gold);color:var(--bg)}
+.wgrid{display:grid;grid-template-columns:repeat(7,1fr);gap:7px}
+@media(max-width:680px){.wgrid{grid-template-columns:1fr}}
+.dc{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:11px;min-height:115px;display:flex;flex-direction:column;gap:7px;cursor:pointer;transition:border-color .18s}
+.dc:hover{border-color:var(--gold)}
+.dc.today{border-color:var(--gold)}
+.dc.today .dname{color:var(--gold)}
+.dname{font-size:10px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:var(--muted)}
+.ddate{font-size:18px;font-family:'Fraunces',serif;line-height:1}
+.dmeal{flex:1;display:flex;flex-direction:column;justify-content:flex-end}
+.dmeal-name{font-size:12px;font-weight:500;line-height:1.3}
+.dmeal-bdgs{display:flex;gap:4px;margin-top:4px;flex-wrap:wrap}
+.dempty{flex:1;display:flex;align-items:center;justify-content:center;color:var(--faint);font-size:20px;border:1px dashed var(--border);border-radius:var(--rs);transition:all .15s}
+.dc:hover .dempty{border-color:var(--gold);color:var(--gold)}
+.btn-rm{font-size:11px;color:var(--faint);background:none;border:none;cursor:pointer;padding:0;transition:color .15s;line-height:1}
+.btn-rm:hover{color:var(--terra)}
+.dc-hdr{display:flex;align-items:flex-start;justify-content:space-between}
+
+/* LISTA */
+.lhdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px}
+.lhdr h2{font-family:'Fraunces',serif;font-size:20px;font-weight:600}
+.btn-clr{padding:6px 13px;border:1px solid var(--border);background:transparent;color:var(--muted);border-radius:var(--rs);font-family:'Outfit',sans-serif;font-size:12px;cursor:pointer;transition:all .15s}
+.btn-clr:hover{border-color:var(--terra);color:var(--terra)}
+.lempty{text-align:center;padding:55px 0;color:var(--muted)}
+.lempty p{margin-bottom:6px}.lempty small{color:var(--faint);font-size:13px}
+.msec{margin-bottom:18px}
+.msec-ttl{font-size:12px;font-weight:600;color:var(--gold);text-transform:uppercase;letter-spacing:.7px;margin-bottom:7px;padding-bottom:5px;border-bottom:1px solid var(--border)}
+
+.btn-ah{padding:7px 14px;background:var(--gold-dim);border:1px solid var(--gold);color:var(--gold);border-radius:var(--rs);font-family:'Outfit',sans-serif;font-size:13px;font-weight:500;cursor:pointer;transition:all .15s}
+.btn-ah:hover{background:var(--gold);color:#fff}
+.btn-ah:disabled{opacity:.5;cursor:not-allowed}
+.ah-status{font-size:12px;color:var(--muted);display:flex;align-items:center;gap:5px}
+.ah-err{background:var(--terra-dim);border:1px solid var(--terra);color:var(--terra);border-radius:var(--rs);padding:10px 14px;font-size:13px;margin-bottom:14px;line-height:1.5}
+.ah-err a{color:var(--terra);font-weight:500}
+.price-badge{display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:500;padding:2px 7px;border-radius:4px;margin-left:auto;flex-shrink:0;white-space:nowrap}
+.price-found{background:var(--sage-dim);color:var(--sage)}
+.price-bonus{background:rgba(220,80,30,.12);color:#c04020}
+.price-loading{background:var(--surface2);color:var(--muted);animation:pulse 1.2s infinite}
+.price-miss{background:var(--surface2);color:var(--faint)}
+@keyframes pulse{0%,100%{opacity:.5}50%{opacity:1}}
+.ah-total{background:var(--surface2);border:1px solid var(--border);border-radius:var(--r);padding:12px 16px;margin-bottom:18px;display:flex;align-items:center;justify-content:space-between}
+.ah-total-lbl{font-size:13px;color:var(--muted)}
+.ah-total-val{font-family:'Fraunces',serif;font-size:22px;font-weight:600;color:var(--gold)}
+.iitem{display:flex;align-items:center;gap:10px;padding:7px 0;border-bottom:1px solid var(--border);cursor:pointer;transition:opacity .15s}
+
+.iitem:last-child{border-bottom:none}
+.iitem.ckd{opacity:.35}
+.iitem input[type=checkbox]{appearance:none;width:15px;height:15px;border:1px solid var(--border);border-radius:3px;flex-shrink:0;cursor:pointer;position:relative;transition:all .15s}
+.iitem input[type=checkbox]:checked{background:var(--gold);border-color:var(--gold)}
+.iitem input[type=checkbox]:checked::after{content:'✓';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:9px;color:var(--bg);font-weight:700}
+.ilbl{font-size:14px}.ilbl.ckd{text-decoration:line-through;color:var(--muted)}
+
+/* MODAL */
+.moverlay{position:fixed;inset:0;background:rgba(40,33,26,.55);backdrop-filter:blur(3px);z-index:100;display:flex;align-items:flex-end;justify-content:center;opacity:0;pointer-events:none;transition:opacity .2s}
+.moverlay.open{opacity:1;pointer-events:all}
+.modal{background:var(--bg2);border:1px solid var(--border);border-bottom:none;border-radius:var(--r) var(--r) 0 0;width:100%;max-width:580px;max-height:88vh;display:flex;flex-direction:column;transform:translateY(24px);transition:transform .22s}
+.moverlay.open .modal{transform:translateY(0)}
+.mhdr{padding:18px 18px 12px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border);flex-shrink:0}
+.mhdr h3{font-family:'Fraunces',serif;font-size:17px;font-weight:600}
+.mclose{background:none;border:none;color:var(--muted);font-size:22px;cursor:pointer;padding:0;line-height:1;transition:color .15s}
+.mclose:hover{color:var(--text)}
+.mfbar{padding:10px 18px;display:flex;gap:5px;flex-wrap:wrap;border-bottom:1px solid var(--border);flex-shrink:0}
+.mlist{overflow-y:auto;padding:10px 18px;display:flex;flex-direction:column;gap:7px}
+.mitem{display:flex;align-items:center;gap:10px;padding:11px;border:1px solid var(--border);border-radius:var(--rs);cursor:pointer;transition:all .15s}
+.mitem:hover{border-color:var(--gold);background:var(--gold-dim)}
+.mitem.sel{border-color:var(--gold);background:var(--gold-dim)}
+.mitem-name{font-size:13px;font-weight:500;flex:1;line-height:1.3}
+.mitem-bdgs{display:flex;gap:5px;align-items:center;flex-shrink:0}
+.dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.dot-new{background:var(--sage)}.dot-mid{background:var(--gold)}.dot-old{background:var(--faint)}
+.week-note{font-size:11px;color:var(--faint);margin-top:1px}
+
+/* TOAST */
+.toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%) translateY(16px);background:var(--text);border:1px solid transparent;color:#faf6f0;padding:9px 16px;border-radius:var(--rs);font-size:13px;opacity:0;transition:all .2s;z-index:200;white-space:nowrap;pointer-events:none}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+.tc{display:none}.tc.on{display:block}
+.no-results{color:var(--muted);padding:16px 0;font-size:14px}
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="hdr">
+    <h1>Cenas <em>en casa</em></h1>
+    <span class="hdr-sub" id="hdrSub"></span>
+  </div>
+  <div class="tabs">
+    <button class="tab on" onclick="setTab('r')">Recetario</button>
+    <button class="tab" onclick="setTab('s')">Esta semana</button>
+    <button class="tab" onclick="setTab('l')">Lista del súper</button>
+  </div>
+
+  <div class="tc on" id="tc-r">
+    <div class="fbar" id="fbar"></div>
+    <div class="mgrid" id="mgrid"></div>
+  </div>
+
+  <div class="tc" id="tc-s">
+    <div class="whdr">
+      <div class="wnav">
+        <button onclick="chgWeek(-1)">&#8249;</button>
+        <span class="wlbl" id="wlbl"></span>
+        <button onclick="chgWeek(1)">&#8250;</button>
+      </div>
+      <button class="btn-auto" onclick="autoFill()">✦ Sugerir semana</button>
+    </div>
+    <div class="wgrid" id="wgrid"></div>
+  </div>
+
+  <div class="tc" id="tc-l">
+    <div class="lhdr">
+      <h2>Lista del súper</h2>
+      <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+        <span class="ah-status" id="ahStatus"></span>
+        <button class="btn-ah" id="btnAh" onclick="fetchAllPrices()">🛒 Precios AH</button>
+        <button class="btn-clr" onclick="clrChecked()">Limpiar tachados</button>
+      </div>
+    </div>
+    <div id="ahErr"></div>
+    <div id="ahTotal" style="display:none"></div>
+    <div id="slist"></div>
+  </div>
+</div>
+
+<div class="moverlay" id="moverlay" onclick="closeMod(event)">
+  <div class="modal">
+    <div class="mhdr">
+      <h3 id="mtitle">Elegir plato</h3>
+      <button class="mclose" onclick="closeMod()">×</button>
+    </div>
+    <div class="mfbar" id="mfbar"></div>
+    <div class="mlist" id="mlist"></div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const MEALS=[
+  {id:1,name:"Steak con papas fritas",ingr:["Steak","Papas fritas"],cx:2,t:20,cost:"High",y:9,who:"Mateo"},
+  {id:2,name:"Milanesas",ingr:["Pollo","Pan rallado","Huevos","Ajo"],cx:5,t:60,cost:"Medium",y:10,who:"Both"},
+  {id:3,name:"Pollo con verduras",ingr:["Pollo","Verduras"],cx:3,t:60,cost:"Medium",y:7,who:"Both"},
+  {id:4,name:"Pasta Carbonara",ingr:["Pasta","Huevos","Guanciale","Queso parmesano"],cx:2,t:30,cost:"Medium",y:10,who:"Both"},
+  {id:5,name:"Pasta con camarones",ingr:["Pasta","Camarones","Limón","Ajo","Perejil","Manteca"],cx:3,t:30,cost:"High",y:9,who:"Both"},
+  {id:6,name:"Pasta con chorizo",ingr:["Pasta","Chorizo","Salsa de tomate","Puré de tomate","Morrón rojo"],cx:3,t:30,cost:"Medium",y:8,who:"Both"},
+  {id:7,name:"Risotto camarones & limón",ingr:["Arroz arborio","Camarones","Limón","Ajo","Parmesano","Vino blanco","Manteca","Cebolla","Caldo"],cx:4,t:60,cost:"High",y:8,who:"Both"},
+  {id:8,name:"Risotto de champignons",ingr:["Arroz arborio","Champignons","Parmesano","Vino blanco","Manteca","Cebolla","Ajo","Caldo"],cx:4,t:60,cost:"High",y:7,who:"Both"},
+  {id:9,name:"Burritos",ingr:["Carne picada","Pimiento","Cebolla","Tortillas","Lechuga","Cheddar"],cx:4,t:30,cost:"High",y:8,who:"Both"},
+  {id:10,name:"Chicken Fajitas",ingr:["Pollo","Tortillas","Cebolla","Pimiento","Lechuga"],cx:4,t:30,cost:"High",y:8,who:"Both"},
+  {id:11,name:"Pizzas AH",ingr:["Pizza en caja"],cx:1,t:20,cost:"Low",y:7,who:"Both"},
+  {id:12,name:"Dutch snacks",ingr:["Snacks surtidos","Nuggets de pollo","Papas fritas"],cx:1,t:15,cost:"Medium",y:7,who:"Both"},
+  {id:13,name:"Hamburguesas de carne",ingr:["Medallones de carne","Pan de hamburguesa","Cheddar","Tomate","Lechuga"],cx:3,t:20,cost:"Medium",y:8,who:"Both"},
+  {id:14,name:"Hamburguesas de pollo",ingr:["Medallones de pollo","Tomate","Pan de hamburguesa","Lechuga","Cheddar"],cx:2,t:20,cost:"Medium",y:9,who:"Both"},
+  {id:15,name:"Pork Ribs",ingr:["Costillas de cerdo marinadas AH"],cx:2,t:90,cost:"Medium",y:8,who:"Both"},
+  {id:16,name:"Sushi",ingr:["Sushi"],cx:1,t:5,cost:"High",y:8,who:"Both"},
+  {id:17,name:"Picada",ingr:["Queso","Salami","Jamón crudo","Burrata","Rúcula","Pan","Snacks"],cx:2,t:15,cost:"High",y:9,who:"Both"},
+  {id:18,name:"Fish mix",ingr:["Pescado surtido congelado AH"],cx:1,t:20,cost:"High",y:9,who:"Both"},
+  {id:19,name:"Chicken Madras",ingr:["Paquete Knorr","Pollo","Arroz","Verduras"],cx:4,t:30,cost:"Medium",y:8,who:"Both"},
+  {id:20,name:"Filet empanado",ingr:["Filet de merluza","Harina","Huevos","Limón","Aceite"],cx:4,t:30,cost:"High",y:9,who:"Both"},
+  {id:21,name:"Pasta Bolognesa",ingr:["Pasta","Carne picada","Salsa de tomate"],cx:3,t:30,cost:"Medium",y:8,who:"Both"},
+  {id:22,name:"Tosti kaas",ingr:["Queso","Pan de molde"],cx:1,t:10,cost:"Low",y:7,who:"Both"},
+];
+
+const DNAMES=['Lun','Mar','Mié','Jue','Vie','Sáb','Dom'];
+const DFULL=['Lunes','Martes','Miércoles','Jueves','Viernes','Sábado','Domingo'];
+
+let S={tab:'r',wk:0,plan:{},ckd:{},lc:{},tf:{t:'all',c:'all'},mf:{t:'all',c:'all'},pendDay:null};
+
+function load(){try{const d=localStorage.getItem('cenas2');if(d){const p=JSON.parse(d);S={...S,plan:p.plan||{},ckd:p.ckd||{},lc:p.lc||{}}}}catch(e){}}
+function save(){localStorage.setItem('cenas2',JSON.stringify({plan:S.plan,ckd:S.ckd,lc:S.lc}))}
+
+function wkDates(off=0){
+  const t=new Date();t.setHours(0,0,0,0);
+  const d=t.getDay();const mon=new Date(t);
+  mon.setDate(t.getDate()-(d===0?6:d-1)+off*7);
+  return Array.from({length:7},(_,i)=>{const x=new Date(mon);x.setDate(mon.getDate()+i);return x});
+}
+function dk(d){return d.toISOString().slice(0,10)}
+function isToday(d){return dk(d)===dk(new Date())}
+function daysSince(s){if(!s)return 9999;return Math.floor((new Date()-new Date(s))/86400000)}
+function fmtDate(d){return d.toLocaleDateString('es-ES',{day:'numeric',month:'short'})}
+
+function setTab(t){
+  S.tab=t;
+  document.querySelectorAll('.tab').forEach((el,i)=>el.classList.toggle('on',['r','s','l'][i]===t));
+  document.querySelectorAll('.tc').forEach(el=>el.classList.remove('on'));
+  document.getElementById('tc-'+t).classList.add('on');
+  if(t==='r'){renderFbar();renderGrid()}
+  if(t==='s'){renderWeek()}
+  if(t==='l'){renderList()}
+  updateHdr();
+}
+
+function updateHdr(){
+  const el=document.getElementById('hdrSub');
+  if(S.tab==='s'){
+    const ds=wkDates(S.wk);const n=ds.filter(d=>S.plan[dk(d)]).length;
+    el.textContent=`${n}/7 cenas planificadas`;
+  }else{el.textContent=''}
+}
+
+/* ---- RECETARIO ---- */
+function fMeals(){
+  return MEALS.filter(m=>{
+    if(S.tf.t==='q'&&m.t>20)return false;
+    if(S.tf.t==='m'&&m.t>30)return false;
+    if(S.tf.t==='sl'&&m.t<=30)return false;
+    if(S.tf.c!=='all'&&m.cost!==S.tf.c)return false;
+    return true;
+  });
+}
+function renderFbar(){
+  const b=document.getElementById('fbar');
+  const tF=[{k:'all',l:'Todos'},{k:'q',l:'≤ 20 min'},{k:'m',l:'≤ 30 min'},{k:'sl',l:'+ 30 min'}];
+  const cF=[{k:'all',l:'Cualquier precio'},{k:'Low',l:'€ Barato'},{k:'Medium',l:'€€ Medio'},{k:'High',l:'€€€ Caro'}];
+  b.innerHTML=tF.map(f=>`<button class="chip${S.tf.t===f.k?' on':''}" onclick="setTF('t','${f.k}')">${f.l}</button>`).join('')
+    +`<div class="fbar-div"></div>`
+    +cF.map(f=>`<button class="chip${S.tf.c===f.k?' on':''}" onclick="setTF('c','${f.k}')">${f.l}</button>`).join('');
+}
+function setTF(k,v){S.tf[k]=v;renderFbar();renderGrid()}
+function renderGrid(){
+  const g=document.getElementById('mgrid');
+  const meals=fMeals();
+  if(!meals.length){g.innerHTML='<p class="no-results">No hay platos con esos filtros.</p>';return}
+  g.innerHTML=meals.map(m=>{
+    const d=daysSince(S.lc[m.id]);
+    const lastTxt=d<9999?`<div class="mc-last">Última vez hace ${d} días</div>`:'';
+    return`<div class="mc" onclick="openMealDetail(${m.id})">
+      <div class="mc-name">${m.name}</div>
+      <div class="mc-ingr">${m.ingr.join(', ')}</div>
+      <div class="mc-foot">
+        <span class="bdg bdg-t">⏱ ${m.t}min</span>
+        <span class="bdg bdg-${m.cost}">${m.cost}</span>
+        <span class="yummy">★ ${m.y}</span>
+      </div>${lastTxt}
+    </div>`;
+  }).join('');
+}
+function openMealDetail(id){
+  // future: detail sheet. For now open planner modal with meal pre-selected
+  toast(`★ ${MEALS.find(m=>m.id===id).name} — abrí "Esta semana" para planificar`);
+}
+
+/* ---- WEEK ---- */
+function renderWeek(){
+  const dates=wkDates(S.wk);
+  const lbl=document.getElementById('wlbl');
+  lbl.innerHTML=`<strong>${fmtDate(dates[0])}</strong> — ${fmtDate(dates[6])}`+(S.wk===0?' <span style="color:var(--gold);font-size:11px">• hoy</span>':'');
+  const g=document.getElementById('wgrid');
+  g.innerHTML=dates.map((d,i)=>{
+    const key=dk(d);const mid=S.plan[key];const meal=mid?MEALS.find(m=>m.id===mid):null;
+    return`<div class="dc${isToday(d)?' today':''}" onclick="openDayMod('${key}')">
+      <div class="dc-hdr">
+        <div><div class="dname">${DNAMES[i]}</div><div class="ddate">${d.getDate()}</div></div>
+        ${meal?`<button class="btn-rm" onclick="rmDay(event,'${key}')">✕</button>`:''}
+      </div>
+      ${meal?`<div class="dmeal"><div class="dmeal-name">${meal.name}</div>
+        <div class="dmeal-bdgs"><span class="bdg bdg-t">⏱${meal.t}m</span><span class="bdg bdg-${meal.cost}">${meal.cost}</span></div>
+      </div>`:`<div class="dempty">+</div>`}
+    </div>`;
+  }).join('');
+  updateHdr();
+}
+function rmDay(ev,key){ev.stopPropagation();delete S.plan[key];save();renderWeek();if(S.tab==='l')renderList()}
+function chgWeek(dir){S.wk+=dir;renderWeek()}
+
+function autoFill(){
+  const dates=wkDates(S.wk);
+  const used=new Set();
+  const recent=new Set();
+  [-2,-1].forEach(off=>wkDates(off).forEach(d=>{const m=S.plan[dk(d)];if(m)recent.add(m)}));
+  dates.forEach(d=>{const m=S.plan[dk(d)];if(m)used.add(m)});
+  dates.forEach(d=>{
+    const key=dk(d);
+    if(S.plan[key])return;
+    const avail=MEALS.filter(m=>!used.has(m.id));
+    if(!avail.length)return;
+    const scored=avail.map(m=>{
+      let sc=m.y;
+      if(recent.has(m.id))sc-=3;
+      const ds=daysSince(S.lc[m.id]);
+      if(ds<7)sc-=4;else if(ds<14)sc-=2;
+      sc+=Math.random()*1.8;
+      return{m,sc};
+    }).sort((a,b)=>b.sc-a.sc);
+    S.plan[key]=scored[0].m.id;
+    used.add(scored[0].m.id);
+  });
+  save();renderWeek();toast('✦ Semana sugerida — ajustá lo que no te convenza');
+}
+
+/* ---- MODAL ---- */
+function openDayMod(key){
+  S.pendDay=key;S.mf={t:'all',c:'all'};
+  const d=new Date(key+'T12:00:00');const di=(d.getDay()+6)%7;
+  document.getElementById('mtitle').textContent=`${DFULL[di]} ${d.getDate()} de ${d.toLocaleDateString('es-ES',{month:'long'})}`;
+  renderMFbar();renderMlist();
+  document.getElementById('moverlay').classList.add('open');
+}
+function renderMFbar(){
+  const b=document.getElementById('mfbar');
+  const tF=[{k:'all',l:'Todos'},{k:'q',l:'≤ 20min'},{k:'m',l:'≤ 30min'}];
+  const cF=[{k:'Low',l:'€'},{k:'Medium',l:'€€'},{k:'High',l:'€€€'}];
+  b.innerHTML=tF.map(f=>`<button class="chip${S.mf.t===f.k?' on':''}" onclick="setMF('t','${f.k}')">${f.l}</button>`).join('')
+    +`<span style="flex:1"></span>`
+    +cF.map(f=>`<button class="chip${S.mf.c===f.k?' on':''}" onclick="setMF('c','${f.k}')">${f.l}</button>`).join('');
+}
+function setMF(k,v){if(k==='c'&&S.mf.c===v)S.mf.c='all';else S.mf[k]=v;renderMFbar();renderMlist()}
+function renderMlist(){
+  const dates=wkDates(S.wk);
+  const usedWk=new Set(dates.map(d=>dk(d)!==S.pendDay?S.plan[dk(d)]:null).filter(Boolean));
+  let meals=MEALS.filter(m=>{
+    if(S.mf.t==='q'&&m.t>20)return false;
+    if(S.mf.t==='m'&&m.t>30)return false;
+    if(S.mf.c!=='all'&&m.cost!==S.mf.c)return false;
+    return true;
+  }).sort((a,b)=>{
+    const ai=usedWk.has(a.id)?1:0,bi=usedWk.has(b.id)?1:0;
+    if(ai!==bi)return ai-bi;
+    return daysSince(S.lc[b.id])-daysSince(S.lc[a.id]);
+  });
+  const cur=S.plan[S.pendDay];
+  document.getElementById('mlist').innerHTML=meals.map(m=>{
+    const ds=daysSince(S.lc[m.id]);
+    const dotCls=ds<7?'dot-mid':ds<9999?'dot-new':'dot-old';
+    const inWk=usedWk.has(m.id);
+    return`<div class="mitem${cur===m.id?' sel':''}" onclick="selMeal(${m.id})">
+      <div class="dot ${dotCls}" title="${ds<9999?'Última vez hace '+ds+' días':'Nunca cocinado'}"></div>
+      <div style="flex:1">
+        <div class="mitem-name">${m.name}</div>
+        ${inWk?`<div class="week-note">ya en la semana</div>`:''}
+      </div>
+      <div class="mitem-bdgs">
+        <span class="bdg bdg-t">⏱${m.t}m</span>
+        <span class="bdg bdg-${m.cost}">${m.cost}</span>
+        <span style="font-size:12px;color:var(--gold)">★${m.y}</span>
+      </div>
+    </div>`;
+  }).join('');
+}
+function selMeal(id){
+  const meal=MEALS.find(m=>m.id===id);
+  S.plan[S.pendDay]=id;
+  const pd=new Date(S.pendDay+'T12:00:00');
+  if(pd<=new Date())S.lc[id]=S.pendDay;
+  save();closeMod();renderWeek();
+  if(S.tab==='l')renderList();
+  toast(`${meal.name} asignado`);
+}
+function closeMod(ev){
+  if(ev&&ev.target!==document.getElementById('moverlay'))return;
+  document.getElementById('moverlay').classList.remove('open');
+}
+
+/* ---- LISTA ---- */
+function renderList(){
+  const dates=wkDates(S.wk);
+  const planned=dates.map(d=>({date:d,meal:MEALS.find(m=>m.id===S.plan[dk(d)])})).filter(x=>x.meal);
+  const c=document.getElementById('slist');
+  if(!planned.length){
+    c.innerHTML=`<div class="lempty"><p>No hay cenas planificadas para esta semana.</p><small>Andá a "Esta semana" y asigná platos para ver la lista acá.</small></div>`;
+    renderAhTotal();return;
+  }
+  c.innerHTML=planned.map(({date,meal})=>{
+    const sec=dk(date);const dn=DNAMES[(date.getDay()+6)%7];
+    return`<div class="msec">
+      <div class="msec-ttl">${dn} ${date.getDate()} · ${meal.name}</div>
+      ${meal.ingr.map(ing=>{
+        const key=`${sec}|${ing}`;const ck=S.ckd[key];
+        const pd=ahPrices[ing];
+        let pBadge='';
+        if(pd&&pd.state==='loading')pBadge=`<span class="price-badge price-loading">buscando...</span>`;
+        else if(pd&&pd.price!=null){
+          const cls=pd.bonus?'price-bonus':'price-found';
+          const bonus=pd.bonus?' ⭐':'';
+          pBadge=`<a href="${pd.url}" target="_blank" class="price-badge ${cls}" title="${pd.name}" style="text-decoration:none">€${pd.price.toFixed(2)}${bonus}</a>`;
+        }else if(pd&&pd.state==='miss')pBadge=`<span class="price-badge price-miss">—</span>`;
+        return`<div class="iitem${ck?' ckd':''}" onclick="togCkd('${key}')">
+          <input type="checkbox"${ck?' checked':''} onclick="togCkd('${key}',event)">
+          <span class="ilbl${ck?' ckd':''}">${ing}</span>
+          ${pBadge}
+        </div>`;
+      }).join('')}
+    </div>`;
+  }).join('');
+  renderAhTotal();
+}
+function togCkd(key,ev){if(ev)ev.stopPropagation();S.ckd[key]=!S.ckd[key];save();renderList()}
+function clrChecked(){S.ckd={};save();renderList()}
+
+function renderAhTotal(){
+  const tot=document.getElementById('ahTotal');
+  const prices=Object.values(ahPrices).filter(p=>p&&p.price!=null);
+  if(!prices.length){tot.style.display='none';return}
+  const sum=prices.reduce((a,p)=>a+p.price,0);
+  tot.style.display='flex';
+  tot.innerHTML=`<span class="ah-total-lbl">Estimado esta semana (${prices.length} productos encontrados)</span><span class="ah-total-val">€${sum.toFixed(2)}</span>`;
+}
+
+/* ---- AH API ---- */
+// Dutch translations for AH search
+const AH_NL={
+  "Steak":"entrecote","Papas fritas":"friet","Pollo":"kipfilet","Pan rallado":"paneermeel",
+  "Huevos":"eieren","Ajo":"knoflook","Verduras":"groenten mix","Pasta":"pasta spaghetti",
+  "Guanciale":"spekblokjes","Queso parmesano":"parmezaan","Camarones":"garnalen",
+  "Limón":"citroen","Perejil":"peterselie","Manteca":"roomboter","Chorizo":"chorizo",
+  "Salsa de tomate":"tomatensaus","Puré de tomate":"tomatenpuree","Morrón rojo":"rode paprika",
+  "Arroz arborio":"risotto rijst","Champignons":"champignons","Vino blanco":"witte wijn",
+  "Cebolla":"ui","Caldo":"bouillon blokjes","Parmesano":"parmezaan geraspte",
+  "Carne picada":"rundergehakt","Pimiento":"paprika","Tortillas":"wraps tortilla",
+  "Lechuga":"ijsbergsla","Cheddar":"cheddar kaas","Pizza en caja":"diepvries pizza",
+  "Snacks surtidos":"borrelhapjes","Nuggets de pollo":"kip nuggets",
+  "Medallones de carne":"hamburgervlees","Pan de hamburguesa":"hamburgerbroodjes",
+  "Tomate":"tomaat","Costillas de cerdo marinadas AH":"spareribs","Sushi":"sushi",
+  "Queso":"kaas","Salami":"salami","Jamón crudo":"rauwe ham prosciutto",
+  "Burrata":"burrata","Rúcula":"rucola","Pan":"brood","Snacks":"chips borrelhapjes",
+  "Pescado surtido congelado AH":"vis diepvries","Paquete Knorr":"knorr kruidenmix",
+  "Arroz":"rijst","Filet de merluza":"kabeljauwfilet","Harina":"bloem",
+  "Aceite":"olijfolie","Pan de molde":"boterhammen wit","Vino blanco":"witte wijn"
+};
+
+let ahToken=null;let ahTokenExp=0;
+let ahPrices={};
+let ahFetching=false;
+
+function loadAhCache(){
+  try{const c=localStorage.getItem('ah_prices');if(c)ahPrices=JSON.parse(c);}catch(e){}
+  // Clear stale cache (older than 24h)
+  const now=Date.now();
+  Object.keys(ahPrices).forEach(k=>{
+    if(ahPrices[k]&&ahPrices[k].fetchedAt&&now-ahPrices[k].fetchedAt>86400000)delete ahPrices[k];
+  });
+}
+function saveAhCache(){localStorage.setItem('ah_prices',JSON.stringify(ahPrices))}
+
+async function ahGetToken(){
+  if(ahToken&&Date.now()<ahTokenExp)return ahToken;
+  try{
+    const cached=JSON.parse(localStorage.getItem('ah_token')||'{}');
+    if(cached.t&&Date.now()<cached.e){ahToken=cached.t;ahTokenExp=cached.e;return ahToken;}
+  }catch(e){}
+  const res=await fetch('https://api.ah.nl/mobile-auth/v1/auth/token/anonymous',{
+    method:'POST',
+    headers:{'Content-Type':'application/json','x-application-id':'appie'},
+    body:JSON.stringify({clientId:'appie-android',clientSecret:'vMcel1TqyrfgrKghNgBT7hNreg8GnsFHDXoAMSvY'})
+  });
+  if(!res.ok)throw new Error('token_failed');
+  const d=await res.json();
+  ahToken=d.access_token;
+  ahTokenExp=Date.now()+(d.expires_in||3600)*900;
+  localStorage.setItem('ah_token',JSON.stringify({t:ahToken,e:ahTokenExp}));
+  return ahToken;
+}
+
+async function ahSearchOne(ingredient){
+  const q=AH_NL[ingredient]||ingredient;
+  const token=await ahGetToken();
+  const res=await fetch(`https://api.ah.nl/mobile-services/product/search/v2?query=${encodeURIComponent(q)}&size=2&sortOn=RELEVANCE`,{
+    headers:{'Authorization':'Bearer '+token,'x-application-id':'appie','x-client-name':'appie-android'}
+  });
+  if(!res.ok)throw new Error('search_failed');
+  const d=await res.json();
+  const p=d.products?.[0];
+  if(!p)return{state:'miss',fetchedAt:Date.now()};
+  const price=p.priceLabel?.now??p.price?.now??null;
+  const numPrice=price?parseFloat(String(price).replace(',','.')):null;
+  return{
+    state:'found',name:p.title||p.description,
+    price:numPrice,
+    bonus:!!(p.discounts?.length||p.propertyIcons?.some(i=>i.includes('bonus'))),
+    url:`https://www.ah.nl/producten/product/${p.webshopId||p.id}`,
+    fetchedAt:Date.now()
+  };
+}
+
+async function fetchAllPrices(){
+  if(ahFetching)return;
+  const dates=wkDates(S.wk);
+  const allIngr=[...new Set(
+    dates.flatMap(d=>{const m=MEALS.find(x=>x.id===S.plan[dk(d)]);return m?m.ingr:[]})
+  )];
+  if(!allIngr.length){toast('Primero planificá la semana');return}
+
+  const errEl=document.getElementById('ahErr');
+  const btn=document.getElementById('btnAh');
+  const status=document.getElementById('ahStatus');
+  errEl.innerHTML='';errEl.style.display='none';
+  ahFetching=true;btn.disabled=true;
+
+  // Mark all as loading
+  allIngr.forEach(ing=>{ahPrices[ing]={state:'loading'}});
+  renderList();
+
+  try{
+    await ahGetToken();
+    let done=0;
+    for(const ing of allIngr){
+      status.textContent=`Buscando ${done+1}/${allIngr.length}...`;
+      try{ahPrices[ing]=await ahSearchOne(ing);}
+      catch(e){ahPrices[ing]={state:'miss',fetchedAt:Date.now()};}
+      done++;
+      renderList();
+      await new Promise(r=>setTimeout(r,180));// small delay to avoid rate limiting
+    }
+    saveAhCache();
+    status.textContent=`✓ ${allIngr.filter(i=>ahPrices[i]?.price!=null).length}/${allIngr.length} encontrados`;
+  }catch(e){
+    let msg='No se pudo conectar con Albert Heijn.';
+    if(e.message==='Failed to fetch'||e.name==='TypeError'){
+      msg=`CORS bloqueado — el browser no permite llamadas directas a api.ah.nl desde una página estática. <a href="https://github.com/Teo/cenas" target="_blank">Podemos agregar un proxy mínimo</a> para resolverlo.`;
+    }
+    errEl.innerHTML=`<div class="ah-err">${msg}</div>`;
+    errEl.style.display='block';
+    allIngr.forEach(ing=>{if(ahPrices[ing]?.state==='loading')delete ahPrices[ing];});
+    status.textContent='';
+    renderList();
+  }finally{
+    ahFetching=false;btn.disabled=false;
+  }
+}
+
+/* ---- TOAST ---- */
+let _tt;
+function toast(msg){
+  const el=document.getElementById('toast');el.textContent=msg;el.classList.add('show');
+  clearTimeout(_tt);_tt=setTimeout(()=>el.classList.remove('show'),2600);
+}
+
+/* ---- INIT ---- */
+load();loadAhCache();renderFbar();renderGrid();
+</script>
+</body>
+</html>
