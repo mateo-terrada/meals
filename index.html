@@ -473,6 +473,10 @@ function renderAhTotal(){
 }
 
 /* ---- AH API ---- */
+// Proxy URL — reemplazá con la URL de tu Cloudflare Worker
+// Ejemplo: 'https://ah-proxy.tu-usuario.workers.dev'
+const AH_PROXY='https://withered-hall-4097.jterrada.workers.dev';
+
 // Dutch translations for AH search
 const AH_NL={
   "Steak":"entrecote","Papas fritas":"friet","Pollo":"kipfilet","Pan rallado":"paneermeel",
@@ -514,7 +518,7 @@ async function ahGetToken(){
     const cached=JSON.parse(localStorage.getItem('ah_token')||'{}');
     if(cached.t&&Date.now()<cached.e){ahToken=cached.t;ahTokenExp=cached.e;return ahToken;}
   }catch(e){}
-  const res=await fetch('https://api.ah.nl/mobile-auth/v1/auth/token/anonymous',{
+  const res=await fetch(AH_PROXY+'/mobile-auth/v1/auth/token/anonymous',{
     method:'POST',
     headers:{'Content-Type':'application/json','x-application-id':'appie'},
     body:JSON.stringify({clientId:'appie-android',clientSecret:'vMcel1TqyrfgrKghNgBT7hNreg8GnsFHDXoAMSvY'})
@@ -530,7 +534,7 @@ async function ahGetToken(){
 async function ahSearchOne(ingredient){
   const q=AH_NL[ingredient]||ingredient;
   const token=await ahGetToken();
-  const res=await fetch(`https://api.ah.nl/mobile-services/product/search/v2?query=${encodeURIComponent(q)}&size=2&sortOn=RELEVANCE`,{
+  const res=await fetch(AH_PROXY+`/mobile-services/product/search/v2?query=${encodeURIComponent(q)}&size=2&sortOn=RELEVANCE`,{
     headers:{'Authorization':'Bearer '+token,'x-application-id':'appie','x-client-name':'appie-android'}
   });
   if(!res.ok)throw new Error('search_failed');
