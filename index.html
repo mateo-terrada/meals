@@ -537,7 +537,11 @@ async function ahSearchOne(ingredient){
   const res=await fetch(AH_PROXY+`/mobile-services/product/search/v2?query=${encodeURIComponent(q)}&size=3&sortBy=RELEVANCE`,{
     headers:{'Authorization':'Bearer '+token,'x-application-id':'appie','x-client-name':'appie-android'}
   });
-  if(!res.ok)throw new Error('HTTP '+res.status+' en búsqueda');
+  if(!res.ok){
+    const body=await res.text().catch(()=>'');
+    console.error('AH search error',res.status,body.slice(0,300));
+    throw new Error('HTTP '+res.status+' en búsqueda: '+body.slice(0,120));
+  }
   const d=await res.json();
   const p=d.products?.[0];
   if(!p)return{state:'miss',fetchedAt:Date.now()};
