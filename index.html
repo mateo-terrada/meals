@@ -42,6 +42,9 @@ html,body{min-height:100%;background:var(--bg);color:var(--text);font-family:'Ou
 .hdr-sub{margin-left:auto;font-size:12px;color:var(--muted)}
 
 /* SYNC */
+.sync-banner{display:none;background:var(--gold-dim);border:1px solid var(--gold);border-radius:var(--rs);padding:9px 14px;margin-bottom:14px;font-size:13px;color:var(--gold);cursor:pointer;transition:all .15s;text-align:center}
+.sync-banner:hover{background:var(--gold);color:#fff}
+/* SYNC */
 .sync-dot{width:9px;height:9px;border-radius:50%;background:var(--faint);transition:background .3s;flex-shrink:0;margin-left:4px;align-self:center}
 .sync-dot.syncing{background:#e8a020;box-shadow:0 0 0 3px rgba(232,160,32,.2)}
 .sync-dot.synced{background:var(--sage)}
@@ -72,9 +75,9 @@ html,body{min-height:100%;background:var(--bg);color:var(--text);font-family:'Ou
 .mc-last{font-size:11px;color:var(--faint);margin-top:7px}
 .bdg{font-size:11px;font-weight:500;padding:3px 8px;border-radius:4px;letter-spacing:.2px}
 .bdg-t{background:var(--surface2);color:var(--muted)}
-.bdg-Low{background:var(--sage-dim);color:var(--sage)}
-.bdg-Medium{background:var(--gold-dim);color:var(--gold)}
-.bdg-High{background:var(--terra-dim);color:var(--terra)}
+.bdg-low{background:var(--sage-dim);color:var(--sage)}
+.bdg-mid{background:var(--gold-dim);color:var(--gold)}
+.bdg-high{background:var(--terra-dim);color:var(--terra)}
 .yummy{margin-left:auto;font-size:12px;color:var(--gold);font-weight:500}
 
 /* WEEK */
@@ -131,6 +134,7 @@ html,body{min-height:100%;background:var(--bg);color:var(--text);font-family:'Ou
 .iitem{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--border);cursor:pointer;transition:opacity .15s}
 .ingr-info{flex:1;display:flex;flex-direction:column;gap:2px;min-width:0}
 .ingr-meals{font-size:11px;color:var(--faint);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ingr-qty{font-size:11px;font-weight:600;color:var(--gold);background:var(--gold-dim);padding:1px 5px;border-radius:4px;margin-left:4px}
 
 .iitem:last-child{border-bottom:none}
 .iitem.ckd{opacity:.35}
@@ -255,6 +259,7 @@ html,body{min-height:100%;background:var(--bg);color:var(--text);font-family:'Ou
     <button class="tab" onclick="setTab('p')">Prices</button>
   </div>
 
+  <div class="sync-banner" id="syncBanner" onclick="applyCloudUpdate()"></div>
   <div class="tc on" id="tc-r">
     <div class="fbar" id="fbar"></div>
     <div class="mgrid" id="mgrid"></div>
@@ -267,7 +272,10 @@ html,body{min-height:100%;background:var(--bg);color:var(--text);font-family:'Ou
         <span class="wlbl" id="wlbl"></span>
         <button onclick="chgWeek(1)">&#8250;</button>
       </div>
-      <button class="btn-auto" onclick="autoFill()">✦ Suggest week</button>
+      <div style="display:flex;gap:7px">
+        <button class="btn-clr" onclick="clearWeek()">Clear week</button>
+        <button class="btn-auto" onclick="autoFill()">✦ Suggest week</button>
+      </div>
     </div>
     <div class="wgrid" id="wgrid"></div>
   </div>
@@ -345,39 +353,39 @@ html,body{min-height:100%;background:var(--bg);color:var(--text);font-family:'Ou
 
 <script>
 const MEALS=[
-  {id:1,name:"Steak with fries",emoji:"🥩",ingr:["Steak","Fries"],cx:2,t:20,cost:"High",y:9,who:"Mateo"},
-  {id:2,name:"Milanesas",emoji:"🍗",ingr:["Chicken breast","Breadcrumbs","Eggs","Garlic"],cx:5,t:60,cost:"Medium",y:10,who:"Both"},
-  {id:3,name:"Chicken with veggies",emoji:"🥦",ingr:["Chicken breast","Vegetables"],cx:3,t:60,cost:"Medium",y:7,who:"Both"},
-  {id:4,name:"Pasta Carbonara",emoji:"🍝",ingr:["Pasta","Eggs","Guanciale","Parmesan"],cx:2,t:30,cost:"Medium",y:10,who:"Both"},
-  {id:5,name:"Pasta with shrimps",emoji:"🦐",ingr:["Pasta","Shrimps","Lemon","Garlic","Parsley","Butter"],cx:3,t:30,cost:"High",y:9,who:"Both"},
-  {id:6,name:"Pasta with chorizo",emoji:"🌶️",ingr:["Pasta","Chorizo","Tomato sauce","Tomato purée","Red pepper"],cx:3,t:30,cost:"Medium",y:8,who:"Both"},
-  {id:7,name:"Shrimp & lemon risotto",emoji:"🦐",ingr:["Arborio rice","Shrimps","Lemon","Garlic","Parmesan","White wine","Butter","Onion","Broth"],cx:4,t:60,cost:"High",y:8,who:"Both"},
-  {id:8,name:"Mushroom risotto",emoji:"🍄",ingr:["Arborio rice","Mushrooms","Parmesan","White wine","Butter","Onion","Garlic","Broth"],cx:4,t:60,cost:"High",y:7,who:"Both"},
-  {id:9,name:"Burritos",emoji:"🌯",ingr:["Minced meat","Bell pepper","Onion","Wraps","Lettuce","Cheddar"],cx:4,t:30,cost:"High",y:8,who:"Both"},
-  {id:10,name:"Chicken Fajitas",emoji:"🌮",ingr:["Chicken breast","Wraps","Onion","Bell pepper","Lettuce"],cx:4,t:30,cost:"High",y:8,who:"Both"},
-  {id:11,name:"AH Pizzas",emoji:"🍕",ingr:["Box pizza"],cx:1,t:20,cost:"Low",y:7,who:"Both"},
-  {id:12,name:"Dutch snacks",emoji:"🍟",ingr:["Mixed snacks","Chicken nuggets","Fries"],cx:1,t:15,cost:"Medium",y:7,who:"Both"},
-  {id:13,name:"Meat burgers",emoji:"🍔",ingr:["Beef patties","Burger buns","Cheddar","Tomato","Lettuce"],cx:3,t:20,cost:"Medium",y:8,who:"Both"},
-  {id:14,name:"Chicken burgers",emoji:"🍔",ingr:["Chicken breast","Tomato","Burger buns","Lettuce","Cheddar"],cx:2,t:20,cost:"Medium",y:9,who:"Both"},
-  {id:15,name:"Pork Ribs",emoji:"🍖",ingr:["AH marinated ribs"],cx:2,t:90,cost:"Medium",y:8,who:"Both"},
-  {id:16,name:"Sushi",emoji:"🍣",ingr:["Sushi"],cx:1,t:5,cost:"High",y:8,who:"Both"},
-  {id:17,name:"Picada",emoji:"🧀",ingr:["Cheese","Salami","Prosciutto","Burrata","Rocket","Bread","Snacks"],cx:2,t:15,cost:"High",y:9,who:"Both"},
-  {id:18,name:"Fish mix",emoji:"🐟",ingr:["AH frozen fish mix"],cx:1,t:20,cost:"High",y:9,who:"Both"},
-  {id:19,name:"Chicken Madras",emoji:"🍛",ingr:["Knorr packet","Chicken breast","Rice","Vegetables"],cx:4,t:30,cost:"Medium",y:8,who:"Both"},
-  {id:20,name:"Breaded fish fillet",emoji:"🐟",ingr:["Hake fillet","Flour","Eggs","Lemon","Oil"],cx:4,t:30,cost:"High",y:9,who:"Both"},
-  {id:21,name:"Pasta Bolognese",emoji:"🍝",ingr:["Pasta","Minced meat","Tomato sauce"],cx:3,t:30,cost:"Medium",y:8,who:"Both"},
-  {id:22,name:"Cheese toast",emoji:"🧀",ingr:["Cheese","Sandwich bread"],cx:1,t:10,cost:"Low",y:7,who:"Both"},
+  {id:1,name:"Steak with fries",emoji:"🥩",ingr:["Steak","Fries"],cx:2,t:20,cost:"$$",y:9,who:"Mateo"},
+  {id:2,name:"Milanesas",emoji:"🍗",ingr:["Chicken breast","Breadcrumbs","Eggs","Garlic","Oil"],cx:5,t:60,cost:"$$",y:10,who:"Both"},
+  {id:3,name:"Chicken with veggies",emoji:"🥦",ingr:["Chicken breast","Vegetables"],cx:3,t:60,cost:"$$",y:7,who:"Both"},
+  {id:4,name:"Pasta Carbonara",emoji:"🍝",ingr:["Pasta","Eggs","Guanciale","Parmesan"],cx:2,t:30,cost:"$$",y:10,who:"Both"},
+  {id:5,name:"Pasta with shrimps",emoji:"🦐",ingr:["Pasta","Shrimps","Lemon","Garlic","Parsley"],cx:3,t:30,cost:"$$$",y:9,who:"Both"},
+  {id:6,name:"Pasta with chorizo",emoji:"🌶️",ingr:["Pasta","Chorizo","Tomato sauce","Tomato peeled","Red pepper"],cx:3,t:30,cost:"$",y:8,who:"Both"},
+  {id:7,name:"Shrimp & lemon risotto",emoji:"🦐",ingr:["Arborio rice","Shrimps","Lemon","Garlic","Parmesan","Onion","Broth"],cx:4,t:60,cost:"$$$",y:8,who:"Both"},
+  {id:8,name:"Mushroom risotto",emoji:"🍄",ingr:["Arborio rice","Mushrooms","Parmesan","Onion","Garlic","Broth"],cx:4,t:60,cost:"$",y:7,who:"Both"},
+  {id:9,name:"Burritos",emoji:"🌯",ingr:["Minced meat","Bell pepper","Onion","Wraps","Lettuce","Cheddar"],cx:4,t:30,cost:"$$",y:8,who:"Both"},
+  {id:10,name:"Chicken Fajitas",emoji:"🌮",ingr:["Chicken breast","Wraps","Onion","Bell pepper","Lettuce"],cx:4,t:30,cost:"$$",y:8,who:"Both"},
+  {id:11,name:"AH Pizzas",emoji:"🍕",ingr:["Box pizza"],cx:1,t:20,cost:"$",y:7,who:"Both"},
+  {id:12,name:"Dutch snacks",emoji:"🍟",ingr:["Mixed snacks","Chicken nuggets","Fries"],cx:1,t:15,cost:"$",y:7,who:"Both"},
+  {id:13,name:"Meat burgers",emoji:"🍔",ingr:["Beef patties","Burger buns","Cheddar","Tomato","Lettuce"],cx:3,t:20,cost:"$$",y:8,who:"Both"},
+  {id:14,name:"Chicken burgers",emoji:"🍔",ingr:["Chicken patties","Tomato","Burger buns","Lettuce","Cheddar"],cx:2,t:20,cost:"$$",y:9,who:"Both"},
+  {id:15,name:"Pork Ribs",emoji:"🍖",ingr:["AH marinated ribs"],cx:2,t:90,cost:"$",y:8,who:"Both"},
+  {id:16,name:"Sushi",emoji:"🍣",ingr:["Sushi"],cx:1,t:5,cost:"$$$",y:8,who:"Both"},
+  {id:17,name:"Picada",emoji:"🧀",ingr:["Cheese","Salami","Prosciutto","Burrata","Rucola","Bread"],cx:2,t:15,cost:"$$",y:9,who:"Both"},
+  {id:18,name:"Fish mix",emoji:"🐟",ingr:["AH frozen fish mix"],cx:1,t:20,cost:"$",y:9,who:"Both"},
+  {id:19,name:"Chicken Madras",emoji:"🍛",ingr:["Knorr Seasoned Rice","Chicken breast (½ kg)","Green beans","Crème fraîche"],cx:4,t:30,cost:"$$$",y:8,who:"Both"},
+  {id:20,name:"Breaded fish fillet",emoji:"🐟",ingr:["Fish fillet","Flour","Eggs","Lemon","Oil"],cx:4,t:30,cost:"$$$",y:9,who:"Both"},
+  {id:21,name:"Pasta Bolognese",emoji:"🍝",ingr:["Pasta","Minced meat","Tomato sauce"],cx:3,t:30,cost:"$$",y:8,who:"Both"},
+  {id:22,name:"Cheese toast",emoji:"🧀",ingr:["Cheese","Sandwich bread"],cx:1,t:10,cost:"$",y:7,who:"Both"},
 ];
 
 const DNAMES=['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
 const DFULL=['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'];
 
-let S={tab:'r',wk:0,plan:{},ckd:{},lc:{},tf:{t:'all',c:'all'},mf:{t:'all',c:'all'},pendDay:null};
+let S={tab:'r',wk:0,plan:{},ckd:{},lc:{},manual:{},tf:{t:'all',c:'all'},mf:{t:'all',c:'all'},pendDay:null};
 
-function load(){try{const d=localStorage.getItem('cenas2');if(d){const p=JSON.parse(d);S={...S,plan:p.plan||{},ckd:p.ckd||{},lc:p.lc||{}}}}catch(e){}}
+function load(){try{const d=localStorage.getItem('cenas2');if(d){const p=JSON.parse(d);S={...S,plan:p.plan||{},ckd:p.ckd||{},lc:p.lc||{},manual:p.manual||{}}}}catch(e){}}
 function save(){
   const now = Date.now();
-  localStorage.setItem('cenas2',JSON.stringify({plan:S.plan,ckd:S.ckd,lc:S.lc}));
+  localStorage.setItem('cenas2',JSON.stringify({plan:S.plan,ckd:S.ckd,lc:S.lc,manual:S.manual}));
   localStorage.setItem('cenas_updatedAt', now);
   syncToCloud();
 }
@@ -426,7 +434,7 @@ function fMeals(){
 function renderFbar(){
   const b=document.getElementById('fbar');
   const tF=[{k:'all',l:'All'},{k:'q',l:'≤ 20 min'},{k:'m',l:'≤ 30 min'},{k:'sl',l:'+ 30 min'}];
-  const cF=[{k:'all',l:'Cualquier precio'},{k:'Low',l:'€ Barato'},{k:'Medium',l:'€€ Medio'},{k:'High',l:'€€€ Caro'}];
+  const cF=[{k:'all',l:'Cualquier precio'},{k:'$',l:'€ Barato'},{k:'$$',l:'€€ Medio'},{k:'$$$',l:'€€€ Caro'}];
   b.innerHTML=tF.map(f=>`<button class="chip${S.tf.t===f.k?' on':''}" onclick="setTF('t','${f.k}')">${f.l}</button>`).join('')
     +`<div class="fbar-div"></div>`
     +cF.map(f=>`<button class="chip${S.tf.c===f.k?' on':''}" onclick="setTF('c','${f.k}')">${f.l}</button>`).join('');
@@ -444,7 +452,8 @@ function renderGrid(){
       <div class="mc-ingr">${m.ingr.join(', ')}</div>
       <div class="mc-foot">
         <span class="bdg bdg-t">⏱ ${m.t}min</span>
-        <span class="bdg bdg-${m.cost}">${m.cost}</span>
+        <span class="bdg bdg-${m.cost==='$$$'?'high':m.cost==='$$'?'mid':'low'}">${m.cost}</span>
+        ${(()=>{const p=getMealPrice(m);const cls=m.cost==='$$$'?'high':m.cost==='$$'?'mid':'low';return p?`<span class="bdg bdg-${cls}">~€${p.toFixed(2)}</span>`:''})()}
         <span class="yummy">★ ${m.y}</span>
       </div>${lastTxt}
     </div>`;
@@ -466,41 +475,123 @@ function renderWeek(){
     return`<div class="dc${isToday(d)?' today':''}" onclick="openDayMod('${key}')">
       <div class="dc-hdr">
         <div><div class="dname">${DNAMES[i]}</div><div class="ddate">${d.getDate()}</div></div>
+        <div style="display:flex;gap:4px">
+        ${meal&&S.manual[key]?`<button class="btn-rm" style="color:var(--gold)" onclick="toggleLock(event,'${key}')" title="Locked — click to unlock">🔒</button>`:''}
+        ${meal&&!S.manual[key]?`<button class="btn-rm" style="color:var(--faint)" onclick="toggleLock(event,'${key}')" title="Click to lock">🔓</button>`:''}
         ${meal?`<button class="btn-rm" onclick="rmDay(event,'${key}')">✕</button>`:''}
       </div>
-      ${meal?`<div class="dmeal"><div class="dmeal-name">${meal.name}</div>
-        <div class="dmeal-bdgs"><span class="bdg bdg-t">⏱${meal.t}m</span><span class="bdg bdg-${meal.cost}">${meal.cost}</span></div>
+      </div>
+      ${meal?`<div class="dmeal"><div class="dmeal-name">${meal.emoji||''} ${meal.name}</div>
+        <div class="dmeal-bdgs"><span class="bdg bdg-t">⏱${meal.t}m</span><span class="bdg bdg-${meal.cost==='$$$'?'high':meal.cost==='$$'?'mid':'low'}">${meal.cost}</span></div>
       </div>`:`<div class="dempty">+</div>`}
     </div>`;
   }).join('');
   updateHdr();
 }
-function rmDay(ev,key){ev.stopPropagation();delete S.plan[key];save();renderWeek();if(S.tab==='l')renderList()}
+function rmDay(ev,key){ev.stopPropagation();delete S.plan[key];delete S.manual[key];save();renderWeek();if(S.tab==='l')renderList()}
+function toggleLock(ev,key){ev.stopPropagation();S.manual[key]=!S.manual[key];if(!S.manual[key])delete S.manual[key];save();renderWeek();}
 function chgWeek(dir){S.wk+=dir;renderWeek()}
 
+function clearWeek(){
+  const dates=wkDates(S.wk);
+  dates.forEach(d=>{
+    delete S.plan[dk(d)];
+    delete S.manual[dk(d)];
+  });
+  save();renderWeek();showToast('Week cleared');
+}
 function autoFill(){
   const dates=wkDates(S.wk);
   const used=new Set();
-  const recent=new Set();
-  [-2,-1].forEach(off=>wkDates(off).forEach(d=>{const m=S.plan[dk(d)];if(m)recent.add(m)}));
-  dates.forEach(d=>{const m=S.plan[dk(d)];if(m)used.add(m)});
-  dates.forEach(d=>{
-    const key=dk(d);
-    if(S.plan[key])return;
-    const avail=MEALS.filter(m=>!used.has(m.id));
-    if(!avail.length)return;
-    const scored=avail.map(m=>{
-      let sc=m.y;
-      if(recent.has(m.id))sc-=3;
-      const ds=daysSince(lastCookedDate(m.id)||S.lc[m.id]);
-      if(ds<7)sc-=4;else if(ds<14)sc-=2;
-      sc+=Math.random()*1.8;
-      return{m,sc};
-    }).sort((a,b)=>b.sc-a.sc);
-    S.plan[key]=scored[0].m.id;
-    used.add(scored[0].m.id);
+  // Pre-load manually chosen meals so algo never repeats them
+  dates.forEach(d=>{if(S.manual[dk(d)]&&S.plan[dk(d)])used.add(S.plan[dk(d)]);});
+
+  const PASTA_IDS=MEALS.filter(m=>m.name.toLowerCase().includes('pasta')).map(m=>m.id);
+
+  function scoreMeal(m, dateKey){
+    let sc=m.y;
+    // Recency penalty
+    const ds=daysSince(lastCookedDate(m.id)||S.lc[m.id]);
+    if(ds<7)sc-=3;
+    else if(ds<14)sc-=1;
+
+    // Complexity penalty on weekdays (Mon-Thu = dow 1-4)
+    const dow=new Date(dateKey+'T12:00:00').getDay(); // 0=Sun,1=Mon...
+    const isWeekday=dow>=1&&dow<=4;
+    if(isWeekday){
+      if(m.cx===5)sc-=4;
+      else if(m.cx===4)sc-=1.5;
+    }
+    // Monthly limit: sushi once per calendar month
+    if(m.name==='Sushi'&&dateKey){
+      const targetMonth=dateKey.slice(0,7);
+      const usedThisMonth=Object.entries(S.plan).some(([d,id])=>
+        id===m.id&&d.slice(0,7)===targetMonth&&d!==dateKey
+      );
+      if(usedThisMonth)sc-=999;
+    }
+    sc+=Math.random()*1.8;
+    return sc;
+  }
+
+  function pickBest(pool, dateKey=''){
+    const avail=pool.filter(m=>!used.has(m.id));
+    if(!avail.length)return null;
+    return avail.map(m=>({m,sc:scoreMeal(m,dateKey)})).sort((a,b)=>b.sc-a.sc)[0].m;
+  }
+
+  const WEEKLY_BUDGET = 90;
+  const keys=dates.map(d=>dk(d));
+
+  // Reset plan for this week — only clear algo-suggested days, keep manual ones
+  keys.forEach(key=>{if(!S.manual[key])delete S.plan[key];});
+
+  function weeklyTotal(){
+    return keys.reduce((sum,key)=>{
+      const m=MEALS.find(x=>x.id===S.plan[key]);
+      return sum+(m?getMealPrice(m):0);
+    },0);
+  }
+
+  function budgetRemaining(slotsLeft){
+    // Budget left divided by remaining unfilled slots = max per slot
+    return (WEEKLY_BUDGET - weeklyTotal()) / slotsLeft;
+  }
+
+  function pickBestWithBudget(pool, dateKey, maxPrice){
+    // Filter by budget if we have a constraint, but keep top scorer if nothing fits
+    const affordable=pool.filter(m=>!used.has(m.id)&&(getMealPrice(m)||0)<=maxPrice);
+    const fallback=pool.filter(m=>!used.has(m.id));
+    const candidates=affordable.length?affordable:fallback;
+    if(!candidates.length)return null;
+    return candidates.map(m=>({m,sc:scoreMeal(m,dateKey)})).sort((a,b)=>b.sc-a.sc)[0].m;
+  }
+
+  // Step 1: guarantee 2 pasta slots on random FREE days
+  const freeKeys=[...keys].filter(k=>!S.manual[k]).sort(()=>Math.random()-.5);
+  const pastaSlots=freeKeys.slice(0,2);
+  let slotsLeft=freeKeys.length;
+  pastaSlots.forEach(key=>{
+    const maxP=budgetRemaining(slotsLeft);
+    const pasta=pickBestWithBudget(MEALS.filter(m=>PASTA_IDS.includes(m.id)),key,maxP);
+    if(pasta){S.plan[key]=pasta.id;used.add(pasta.id);slotsLeft--;}
   });
-  save();renderWeek();showToast('✦ Week suggested — adjust anything you want to change');
+
+  // Step 2: fill remaining days respecting budget (skip manual)
+  keys.forEach(key=>{
+    if(S.plan[key])return; // already filled (manual or pasta slot)
+    const maxP=budgetRemaining(slotsLeft);
+    const best=pickBestWithBudget(MEALS,key,maxP);
+    if(best){S.plan[key]=best.id;used.add(best.id);slotsLeft--;}
+  });
+
+  const total=weeklyTotal();
+  const overBudget=total>WEEKLY_BUDGET;
+  save();renderWeek();
+  showToast(overBudget
+    ? `⚠ €${total.toFixed(0)} — slightly over €${WEEKLY_BUDGET} budget`
+    : `✦ Week suggested · €${total.toFixed(0)} / €${WEEKLY_BUDGET}`
+  );
 }
 
 /* ---- MODAL ---- */
@@ -514,7 +605,7 @@ function openDayMod(key){
 function renderMFbar(){
   const b=document.getElementById('mfbar');
   const tF=[{k:'all',l:'All'},{k:'q',l:'≤ 20min'},{k:'m',l:'≤ 30min'}];
-  const cF=[{k:'Low',l:'€'},{k:'Medium',l:'€€'},{k:'High',l:'€€€'}];
+  const cF=[{k:'$',l:'€'},{k:'$$',l:'€€'},{k:'$$$',l:'€€€'}];
   b.innerHTML=tF.map(f=>`<button class="chip${S.mf.t===f.k?' on':''}" onclick="setMF('t','${f.k}')">${f.l}</button>`).join('')
     +`<span style="flex:1"></span>`
     +cF.map(f=>`<button class="chip${S.mf.c===f.k?' on':''}" onclick="setMF('c','${f.k}')">${f.l}</button>`).join('');
@@ -546,7 +637,7 @@ function renderMlist(){
       </div>
       <div class="mitem-bdgs">
         <span class="bdg bdg-t">⏱${m.t}m</span>
-        <span class="bdg bdg-${m.cost}">${m.cost}</span>
+        <span class="bdg bdg-${m.cost==='$$$'?'high':m.cost==='$$'?'mid':'low'}">${m.cost}</span>
         <span style="font-size:12px;color:var(--gold)">★${m.y}</span>
       </div>
     </div>`;
@@ -555,6 +646,7 @@ function renderMlist(){
 function selMeal(id){
   const meal=MEALS.find(m=>m.id===id);
   S.plan[S.pendDay]=id;
+  S.manual[S.pendDay]=true; // user-chosen
   const pd=new Date(S.pendDay+'T12:00:00');
   if(pd<=new Date())S.lc[id]=S.pendDay;
   save();closeMod();renderWeek();
@@ -568,10 +660,10 @@ function closeMod(ev){
 
 /* ---- LISTA ---- */
 const CAT_ORDER=[
-  {name:'🥩 Meat & fish',keys:['Steak','Chicken breast','Minced meat','AH marinated ribs','Hake fillet','Shrimps','AH frozen fish mix','Salami','Prosciutto','Chicken nuggets','Beef patties']},
+  {name:'🥩 Meat & fish',keys:['Steak','Chicken breast','Chicken breast (½ kg)','Minced meat','AH marinated ribs','Fish fillet','Shrimps','AH frozen fish mix','Salami','Prosciutto','Chicken nuggets','Beef patties']},
   {name:'🧀 Dairy & eggs',keys:['Eggs','Parmesan','Cheddar','Butter','Burrata','Cheese','Sour cream']},
   {name:'🍝 Pasta, rice & grains',keys:['Pasta','Arborio rice','Rice','Flour','Breadcrumbs']},
-  {name:'🥦 Fresh produce',keys:['Vegetables','Onion','Garlic','Lemon','Tomato','Bell pepper','Red pepper','Lettuce','Rocket','Mushrooms','Parsley']},
+  {name:'🥦 Fresh produce',keys:['Vegetables','Onion','Garlic','Lemon','Tomato','Bell pepper','Red pepper','Lettuce','Rucola','Mushrooms','Parsley','Green beans','Crème fraîche']},
   {name:'🧴 Pantry & sauces',keys:['Tomato sauce','Tomato purée','Chorizo','Guanciale','Broth','Oil','White wine','Knorr packet']},
   {name:'🍞 Bread & wraps',keys:['Bread','Burger buns','Wraps','Sandwich bread','Box pizza']},
   {name:'🧊 Frozen & ready',keys:['Mixed snacks','Fries','Sushi','Snacks']},
@@ -591,12 +683,12 @@ function renderList(){
     renderAhTotal();return;
   }
 
-  // Build ingredient → meals map (deduplicated)
-  const ingrMap={}; // ing -> {meals:Set of names, ck: bool}
+  // Build ingredient → meals map with count
+  const ingrMap={}; // ing -> {meals: [{name,date}], count}
   planned.forEach(({date,meal})=>{
     meal.ingr.forEach(ing=>{
-      if(!ingrMap[ing])ingrMap[ing]={meals:new Set(),key:`list|${ing}`};
-      ingrMap[ing].meals.add(meal.name);
+      if(!ingrMap[ing])ingrMap[ing]={meals:[],key:`list|${ing}`};
+      ingrMap[ing].meals.push(meal.name);
     });
   });
 
@@ -617,16 +709,21 @@ function renderList(){
       ${items.map(({ing,meals,key})=>{
         const ck=S.ckd[key];
         const pd=getPrice(ing);
+        const count=meals.length;
+        const uniqueMeals=[...new Set(meals)];
+        const mealTag=`<span class="ingr-meals">${uniqueMeals.join(', ')}</span>`;
+        const qtyTag=count>1?`<span class="ingr-qty">x${count}</span>`:'';
+        // Adjust price badge for quantity
         let pBadge='';
         if(pd.price!=null){
+          const totalPrice=pd.price*count;
           const cls=pd.bonus?'price-bonus':'price-found';
-          pBadge=`<span class="price-badge ${cls}">€${pd.price.toFixed(2)}${pd.bonus?' ★':''}</span>`;
+          pBadge=`<span class="price-badge ${cls}">€${totalPrice.toFixed(2)}${pd.bonus?' ★':''}${count>1?' (x'+count+')':''}</span>`;
         }
-        const mealTag=meals.size>0?`<span class="ingr-meals">${[...meals].join(', ')}</span>`:'';
         return`<div class="iitem${ck?' ckd':''}" onclick="togCkd('${key}')">
           <input type="checkbox"${ck?' checked':''} onclick="togCkd('${key}',event)">
           <div class="ingr-info">
-            <span class="ilbl${ck?' ckd':''}">${ing}</span>
+            <span class="ilbl${ck?' ckd':''}">${ing} ${qtyTag}</span>
             ${mealTag}
           </div>
           ${pBadge}
@@ -642,31 +739,21 @@ function clrChecked(){S.ckd={};save();renderList()}
 function renderAhTotal(){
   const tot=document.getElementById('ahTotal');
   const dates=wkDates(S.wk);
-  const ingrs=[...new Set(dates.flatMap(d=>{const m=MEALS.find(x=>x.id===S.plan[dk(d)]);return m?m.ingr:[]}))];
+  // Build ingr counts
+  const ingrCount={};
+  dates.forEach(d=>{const m=MEALS.find(x=>x.id===S.plan[dk(d)]);if(m)m.ingr.forEach(i=>{ingrCount[i]=(ingrCount[i]||0)+1;})});
+  const ingrs=Object.keys(ingrCount);
   const priced=ingrs.filter(i=>getPrice(i).price!=null);
   if(!priced.length){tot.style.display='none';return}
-  const sum=priced.reduce((a,i)=>a+getPrice(i).price,0);
+  const sum=priced.reduce((a,i)=>a+getPrice(i).price*ingrCount[i],0);
   const bonus=priced.filter(i=>getPrice(i).bonus).length;
   tot.style.display='flex';
-  tot.innerHTML=`<span class="ah-total-lbl">Estimated this week · ${priced.length} ingredients${bonus?' · '+bonus+' on Bonus':''}</span><span class="ah-total-val">€${sum.toFixed(2)}</span>`;
+  tot.innerHTML=`<span class="ah-total-lbl">Estimated this week · ${ingrs.length} ingredients${bonus?' · '+bonus+' on Bonus':''}</span><span class="ah-total-val">€${sum.toFixed(2)}</span>`;
 }
 
 /* ---- PRECIOS MANUALES ---- */
 // Precios por defecto basados en AH (€)
-const DEFAULT_PRICES={
-  "Steak":12.00,"Fries":1.50,"Chicken breast":10.00,"Breadcrumbs":1.29,"Eggs":2.00,
-  "Garlic":0.79,"Vegetables":2.49,"Pasta":1.49,"Guanciale":2.50,"Parmesan":2.99,
-  "Shrimps":5.99,"Lemon":0.59,"Parsley":0.79,"Butter":2.29,"Chorizo":2.49,
-  "Tomato sauce":1.29,"Tomato purée":0.99,"Red pepper":1.49,"Arborio rice":2.29,
-  "Mushrooms":1.99,"White wine":4.99,"Onion":0.69,"Broth":1.29,"Parmesan":2.99,
-  "Minced meat":6.80,"Bell pepper":1.29,"Wraps":1.00,"Lettuce":1.29,"Cheddar":1.35,
-  "Box pizza":3.99,"Mixed snacks":3.45,"Chicken nuggets":3.49,
-  "Beef patties":4.99,"Burger buns":1.49,"Tomato":1.29,
-  "AH marinated ribs":10.00,"Sushi":20.00,"Cheese":2.99,"Salami":2.49,
-  "Prosciutto":3.99,"Burrata":2.10,"Rocket":1.49,"Bread":1.99,"Snacks":1.99,
-  "AH frozen fish mix":5.99,"Knorr packet":1.99,"Rice":1.49,
-  "Hake fillet":12.00,"Flour":0.99,"Oil":3.49,"Sandwich bread":1.79
-};
+const DEFAULT_PRICES={"AH frozen fish mix":6.3,"AH marinated ribs":10.0,"Arborio rice":2.1,"Beef patties":5.0,"Bell pepper":1.3,"Box pizza":4.0,"Bread":2.0,"Breadcrumbs":0.8,"Broth":0.8,"Burger buns":1.6,"Burrata":2.1,"Cheddar":1.35,"Cheese":1.5,"Chicken breast":10.0,"Chicken nuggets":5.0,"Chicken patties":6.0,"Chorizo":3.15,"Eggs":2.0,"Fish fillet":12.0,"Flour":0.85,"Fries":1.5,"Garlic":0.8,"Green beans":2.4,"Guanciale":2.5,"Knorr Seasoned Rice":4.7,"Lemon":1.5,"Lettuce":1.3,"Minced meat":6.8,"Mixed snacks":3.45,"Mushrooms":1.8,"Oil":0.72,"Onion":0.4,"Parmesan":3.7,"Parsley":1.3,"Pasta":2.8,"Prosciutto":3.7,"Red pepper":1.2,"Rucola":1.1,"Salami":4.0,"Sandwich bread":0.7,"Shrimps":10.8,"Steak":12.0,"Sushi":30.0,"Tomato":1.2,"Tomato peeled":0.75,"Tomato purée":0.6,"Tomato sauce":0.75,"Vegetables":2.5,"Wraps":1.0};
 
 // Estado de precios: { ingredient: { price: number, bonus: bool } }
 let manualPrices={};
@@ -691,6 +778,14 @@ function allIngredients(){
 }
 
 function getPrice(ing){return manualPrices[ing]||{price:null,bonus:false}}
+
+function getMealPrice(meal){
+  const total=meal.ingr.reduce((sum,ing)=>{
+    const p=getPrice(ing);
+    return sum+(p.price||0);
+  },0);
+  return total>0?total:null;
+}
 
 function renderPrices(){
   const ingrs=allIngredients();
@@ -767,7 +862,7 @@ function showToast(msg){
 const AH_PROXY='https://withered-hall-4097.jterrada.workers.dev';
 const SYNC_URL = AH_PROXY + '/sync';
 let syncTimer = null;
-let lastSyncedHash = null;
+let lastSyncedHash = null; // null = always push on first sync
 
 function stateHash(){
   return JSON.stringify({plan:S.plan,ckd:S.ckd,lc:S.lc,prices:manualPrices});
@@ -786,14 +881,14 @@ async function syncToCloud(){
   clearTimeout(syncTimer);
   syncTimer = setTimeout(async () => {
     const payload = stateHash();
-    if(payload === lastSyncedHash) return;
+    if(payload === lastSyncedHash && lastSyncedHash !== null) return;
     setSyncStatus('syncing', '↑ syncing...');
     try {
       await fetch(SYNC_URL, {
         method: 'POST',
         headers: {'Content-Type':'application/json'},
         body: JSON.stringify({
-          plan: S.plan, ckd: S.ckd, lc: S.lc,
+          plan: S.plan, ckd: S.ckd, lc: S.lc, manual: S.manual,
           prices: manualPrices,
           updatedAt: Date.now()
         })
@@ -822,6 +917,7 @@ async function loadFromCloud(){
       if(cloud.plan && Object.keys(cloud.plan).length) S.plan = cloud.plan;
       if(cloud.ckd  && Object.keys(cloud.ckd).length)  S.ckd  = cloud.ckd;
       if(cloud.lc   && Object.keys(cloud.lc).length)   S.lc   = cloud.lc;
+    if(cloud.manual && Object.keys(cloud.manual).length) Object.assign(S.manual, cloud.manual);
 
       // Merge prices: cloud wins per key, but keep local defaults for missing keys
       if(cloud.prices && Object.keys(cloud.prices).length){
@@ -838,6 +934,7 @@ async function loadFromCloud(){
       if(S.tab==='p') renderPrices();
     }
     lastSyncedHash = stateHash();
+    localStorage.setItem('cenas_lastPulled', Date.now());
     cloudLoaded = true;
     setSyncStatus('synced','✓ synced');
     setTimeout(()=>setSyncStatus('',''),3000);
@@ -923,6 +1020,7 @@ const _origSelMeal=selMeal;
 function selMeal(id){
   const meal=MEALS.find(m=>m.id===id);
   S.plan[S.pendDay]=id;
+  S.manual[S.pendDay]=true; // user-chosen
   // Derive lastCooked from plan history
   const pd=new Date(S.pendDay+'T12:00:00');
   if(pd<=new Date())S.lc[id]=S.pendDay;
@@ -994,6 +1092,7 @@ function renderWidget(){
 function twAccept(id){
   const todayKey=dk(new Date());
   S.plan[todayKey]=id;
+  S.manual[todayKey]=true;
   S.lc[id]=todayKey;
   save();
   renderWidget();
@@ -1009,8 +1108,50 @@ function dismissWidget(){
   document.getElementById('todayWidget').classList.add('dismissed');
 }
 
+
+let _pendingCloud = null;
+
+async function pollCloud(){
+  try {
+    const res = await fetch(SYNC_URL);
+    if(!res.ok) return;
+    const cloud = await res.json();
+    if(!cloud.updatedAt) return;
+    const localTs = parseInt(localStorage.getItem('cenas_updatedAt')||'0');
+    if(cloud.updatedAt > localTs && cloud.updatedAt !== parseInt(localStorage.getItem('cenas_lastPulled')||'0')){
+      _pendingCloud = cloud;
+      const banner = document.getElementById('syncBanner');
+      const mins = Math.round((Date.now() - cloud.updatedAt) / 60000);
+      const ago = mins < 1 ? 'just now' : mins + ' min ago';
+      banner.textContent = '✦ New changes from ' + ago + ' — tap to update';
+      banner.style.display = 'block';
+    }
+  } catch(e) {}
+}
+
+function applyCloudUpdate(){
+  if(!_pendingCloud) return;
+  const cloud = _pendingCloud;
+  if(cloud.plan && Object.keys(cloud.plan).length) S.plan = cloud.plan;
+  if(cloud.ckd  && Object.keys(cloud.ckd).length)  S.ckd  = cloud.ckd;
+  if(cloud.lc   && Object.keys(cloud.lc).length)   S.lc   = cloud.lc;
+  if(cloud.prices && Object.keys(cloud.prices).length) Object.assign(manualPrices, cloud.prices);
+  localStorage.setItem('cenas2', JSON.stringify({plan:S.plan,ckd:S.ckd,lc:S.lc}));
+  localStorage.setItem('cenas_prices', JSON.stringify(manualPrices));
+  localStorage.setItem('cenas_updatedAt', cloud.updatedAt);
+  localStorage.setItem('cenas_lastPulled', cloud.updatedAt);
+  _pendingCloud = null;
+  document.getElementById('syncBanner').style.display = 'none';
+  if(S.tab==='s') renderWeek();
+  if(S.tab==='l') renderList();
+  if(S.tab==='r') renderGrid();
+  if(S.tab==='p') renderPrices();
+  renderWidget();
+  showToast('Updated ✓');
+}
+
 /* ---- INIT ---- */
-load();loadPrices();renderFbar();renderGrid();renderWidget();loadFromCloud();
+load();loadPrices();renderFbar();renderGrid();renderWidget();loadFromCloud();setInterval(pollCloud, 120000);
 </script>
 </body>
 </html>
