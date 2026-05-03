@@ -92,6 +92,8 @@ html,body{min-height:100%;background:var(--bg);color:var(--text);font-family:'Ou
 .wgrid{display:grid;grid-template-columns:repeat(7,1fr);gap:7px}
 @media(max-width:680px){.wgrid{grid-template-columns:1fr}}
 .dc{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:11px;min-height:115px;display:flex;flex-direction:column;gap:7px;cursor:pointer;transition:border-color .18s}
+.dc.out{background:var(--surface2);opacity:.6}
+.dc-out-lbl{flex:1;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:4px;color:var(--muted);font-size:12px}
 .dc:hover{border-color:var(--gold)}
 .dc.today{border-color:var(--gold)}
 .dc.today .dname{color:var(--gold)}
@@ -283,7 +285,14 @@ html,body{min-height:100%;background:var(--bg);color:var(--text);font-family:'Ou
   <div class="tc" id="tc-l">
     <div class="lhdr">
       <h2>Shopping list</h2>
-      <button class="btn-clr" onclick="clrChecked()">Clear checked</button>
+      <div style="display:flex;align-items:center;gap:6px">
+        <div class="wnav">
+          <button onclick="chgWeek(-1);renderList()">&#8249;</button>
+          <span class="wlbl" id="listWkLbl" style="min-width:120px;font-size:12px"></span>
+          <button onclick="chgWeek(1);renderList()">&#8250;</button>
+        </div>
+        <button class="btn-clr" onclick="clrChecked()">Clear checked</button>
+      </div>
     </div>
     <div id="ahTotal" style="display:none"></div>
     <div id="slist"></div>
@@ -303,7 +312,10 @@ html,body{min-height:100%;background:var(--bg);color:var(--text);font-family:'Ou
   <div class="modal">
     <div class="mhdr">
       <h3 id="mtitle">Choose a dish</h3>
-      <button class="mclose" onclick="closeMod()">×</button>
+      <div style="display:flex;align-items:center;gap:8px">
+        <button class="btn-clr" style="font-size:12px;padding:5px 10px" onclick="setEatingOut()">🍽 Eating out</button>
+        <button class="mclose" onclick="closeMod()">×</button>
+      </div>
     </div>
     <div class="mfbar" id="mfbar"></div>
     <div class="mlist" id="mlist"></div>
@@ -380,12 +392,12 @@ const MEALS=[
 const DNAMES=['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
 const DFULL=['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'];
 
-let S={tab:'r',wk:0,plan:{},ckd:{},lc:{},manual:{},tf:{t:'all',c:'all'},mf:{t:'all',c:'all'},pendDay:null};
+let S={tab:'r',wk:0,plan:{},ckd:{},lc:{},manual:{},out:{},tf:{t:'all',c:'all'},mf:{t:'all',c:'all'},pendDay:null};
 
-function load(){try{const d=localStorage.getItem('cenas2');if(d){const p=JSON.parse(d);S={...S,plan:p.plan||{},ckd:p.ckd||{},lc:p.lc||{},manual:p.manual||{}}}}catch(e){}}
+function load(){try{const d=localStorage.getItem('cenas2');if(d){const p=JSON.parse(d);S={...S,plan:p.plan||{},ckd:p.ckd||{},lc:p.lc||{},manual:p.manual||{},out:p.out||{}}}}catch(e){}}
 function save(){
   const now = Date.now();
-  localStorage.setItem('cenas2',JSON.stringify({plan:S.plan,ckd:S.ckd,lc:S.lc,manual:S.manual}));
+  localStorage.setItem('cenas2',JSON.stringify({plan:S.plan,ckd:S.ckd,lc:S.lc,manual:S.manual,out:S.out}));
   localStorage.setItem('cenas_updatedAt', now);
   syncToCloud();
 }
@@ -472,23 +484,31 @@ function renderWeek(){
   const g=document.getElementById('wgrid');
   g.innerHTML=dates.map((d,i)=>{
     const key=dk(d);const mid=S.plan[key];const meal=mid?MEALS.find(m=>m.id===mid):null;
-    return`<div class="dc${isToday(d)?' today':''}" onclick="openDayMod('${key}')">
+    const isOut=S.out[key];
+    return`<div class="dc${isToday(d)?' today':''}${isOut?' out':''}" onclick="${isOut?`toggleOut(event,'${key}')`:`openDayMod('${key}')`}">
       <div class="dc-hdr">
         <div><div class="dname">${DNAMES[i]}</div><div class="ddate">${d.getDate()}</div></div>
         <div style="display:flex;gap:4px">
-        ${meal&&S.manual[key]?`<button class="btn-rm" style="color:var(--gold)" onclick="toggleLock(event,'${key}')" title="Locked — click to unlock">🔒</button>`:''}
-        ${meal&&!S.manual[key]?`<button class="btn-rm" style="color:var(--faint)" onclick="toggleLock(event,'${key}')" title="Click to lock">🔓</button>`:''}
-        ${meal?`<button class="btn-rm" onclick="rmDay(event,'${key}')">✕</button>`:''}
+        ${!isOut&&meal&&S.manual[key]?`<button class="btn-rm" style="color:var(--gold)" onclick="toggleLock(event,'${key}')" title="Locked — click to unlock">🔒</button>`:''}
+        ${!isOut&&meal&&!S.manual[key]?`<button class="btn-rm" style="color:var(--faint)" onclick="toggleLock(event,'${key}')" title="Click to lock">🔓</button>`:''}
+        ${!isOut&&meal?`<button class="btn-rm" onclick="rmDay(event,'${key}')">✕</button>`:''}
+        ${isOut?`<button class="btn-rm" onclick="toggleOut(event,'${key}')" title="Click to re-enable">✕</button>`:''}
+        </div>
       </div>
-      </div>
-      ${meal?`<div class="dmeal"><div class="dmeal-name">${meal.emoji||''} ${meal.name}</div>
-        <div class="dmeal-bdgs"><span class="bdg bdg-t">⏱${meal.t}m</span><span class="bdg bdg-${meal.cost==='$$$'?'high':meal.cost==='$$'?'mid':'low'}">${meal.cost}</span></div>
-      </div>`:`<div class="dempty">+</div>`}
+      ${isOut
+        ?`<div class="dc-out-lbl"><span style="font-size:20px">🍽</span><span>Eating out</span></div>`
+        :meal
+          ?`<div class="dmeal"><div class="dmeal-name">${meal.emoji||''} ${meal.name}</div>
+            <div class="dmeal-bdgs"><span class="bdg bdg-t">⏱${meal.t}m</span><span class="bdg bdg-${meal.cost==='$$$'?'high':meal.cost==='$$'?'mid':'low'}">${meal.cost}</span></div>
+          </div>`
+          :`<div class="dempty">+</div>`
+      }
     </div>`;
   }).join('');
   updateHdr();
 }
 function rmDay(ev,key){ev.stopPropagation();delete S.plan[key];delete S.manual[key];save();renderWeek();if(S.tab==='l')renderList()}
+function toggleOut(ev,key){if(ev)ev.stopPropagation();if(S.out[key]){delete S.out[key];}else{S.out[key]=true;delete S.plan[key];delete S.manual[key];}save();renderWeek();if(S.tab==='l')renderList();}
 function toggleLock(ev,key){ev.stopPropagation();S.manual[key]=!S.manual[key];if(!S.manual[key])delete S.manual[key];save();renderWeek();}
 function chgWeek(dir){S.wk+=dir;renderWeek()}
 
@@ -497,6 +517,7 @@ function clearWeek(){
   dates.forEach(d=>{
     delete S.plan[dk(d)];
     delete S.manual[dk(d)];
+    delete S.out[dk(d)];
   });
   save();renderWeek();showToast('Week cleared');
 }
@@ -571,6 +592,7 @@ function autoFill(){
   const freeKeys=[...keys].filter(k=>!S.manual[k]).sort(()=>Math.random()-.5);
   const pastaSlots=freeKeys.slice(0,2);
   let slotsLeft=freeKeys.length;
+  const freeNonOutKeys=freeKeys.filter(k=>!S.out[k]);
   pastaSlots.forEach(key=>{
     const maxP=budgetRemaining(slotsLeft);
     const pasta=pickBestWithBudget(MEALS.filter(m=>PASTA_IDS.includes(m.id)),key,maxP);
@@ -579,6 +601,7 @@ function autoFill(){
 
   // Step 2: fill remaining days respecting budget (skip manual)
   keys.forEach(key=>{
+    if(S.out[key])return; // eating out
     if(S.plan[key])return; // already filled (manual or pasta slot)
     const maxP=budgetRemaining(slotsLeft);
     const best=pickBestWithBudget(MEALS,key,maxP);
@@ -653,6 +676,9 @@ function selMeal(id){
   if(S.tab==='l')renderList();
   showToast(`${meal.name} assigned`);
 }
+function setEatingOut(){
+  if(S.pendDay){toggleOut(null,S.pendDay);closeMod();}
+}
 function closeMod(ev){
   if(ev&&ev.target!==document.getElementById('moverlay'))return;
   document.getElementById('moverlay').classList.remove('open');
@@ -676,7 +702,11 @@ function getCategory(ing){
 
 function renderList(){
   const dates=wkDates(S.wk);
-  const planned=dates.map(d=>({date:d,meal:MEALS.find(m=>m.id===S.plan[dk(d)])})).filter(x=>x.meal);
+  const lbl=document.getElementById('listWkLbl');
+  if(lbl){const ds=dates;lbl.innerHTML=`${ds[0].getDate()} ${ds[0].toLocaleDateString('en-GB',{month:'short'})} — ${ds[6].getDate()} ${ds[6].toLocaleDateString('en-GB',{month:'short'})}${S.wk===0?' <span style="color:var(--gold)">• now</span>':''}`;}
+  function dkLocal(d){return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
+  const today=dkLocal(new Date());
+  const planned=dates.map(d=>({date:d,meal:MEALS.find(m=>m.id===S.plan[dk(d)])})).filter(x=>x.meal&&!S.out[dk(x.date)]&&dkLocal(x.date)>=today);
   const c=document.getElementById('slist');
   if(!planned.length){
     c.innerHTML=`<div class="lempty"><p>No dinners planned for this week.</p><small>Go to "This week" and assign dishes to see the list here.</small></div>`;
@@ -888,7 +918,7 @@ async function syncToCloud(){
         method: 'POST',
         headers: {'Content-Type':'application/json'},
         body: JSON.stringify({
-          plan: S.plan, ckd: S.ckd, lc: S.lc, manual: S.manual,
+          plan: S.plan, ckd: S.ckd, lc: S.lc, manual: S.manual, out: S.out,
           prices: manualPrices,
           updatedAt: Date.now()
         })
@@ -908,16 +938,18 @@ async function loadFromCloud(){
     const res = await fetch(SYNC_URL);
     if(!res.ok) throw new Error('fetch failed');
     const cloud = await res.json();
-    if(!cloud.updatedAt){ setSyncStatus('synced','✓ synced'); return; }
+    if(!cloud.updatedAt){ cloudLoaded=true; syncToCloud(); setSyncStatus('synced','✓ synced'); return; }
 
     const localTs = parseInt(localStorage.getItem('cenas_updatedAt')||'0');
 
     if(cloud.updatedAt > localTs){
       // Cloud is newer — merge carefully
-      if(cloud.plan && Object.keys(cloud.plan).length) S.plan = cloud.plan;
+      cloudLoaded = true; // mark as loaded regardless of content
+    if(cloud.plan && Object.keys(cloud.plan).length) S.plan = cloud.plan;
       if(cloud.ckd  && Object.keys(cloud.ckd).length)  S.ckd  = cloud.ckd;
       if(cloud.lc   && Object.keys(cloud.lc).length)   S.lc   = cloud.lc;
     if(cloud.manual && Object.keys(cloud.manual).length) Object.assign(S.manual, cloud.manual);
+    if(cloud.out && Object.keys(cloud.out).length) Object.assign(S.out, cloud.out);
 
       // Merge prices: cloud wins per key, but keep local defaults for missing keys
       if(cloud.prices && Object.keys(cloud.prices).length){
