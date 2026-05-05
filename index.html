@@ -413,28 +413,28 @@ html,body{min-height:100%;background:var(--bg);color:var(--text);font-family:'Ou
 
 <script>
 const MEALS=[
-  {id:1,name:"Steak with fries",emoji:"🥩",ingr:["Steak","Fries"],cx:2,t:20,cost:"$$",y:9,who:"Mateo",nutrition:{kcal:710,protein:58,carbs:40,fat:28}},
-  {id:2,name:"Milanesas",emoji:"🍗",ingr:["Chicken breast","Breadcrumbs","Eggs","Garlic","Oil"],cx:5,t:60,cost:"$$",y:10,who:"Both",nutrition:{kcal:620,protein:52,carbs:28,fat:30}},
-  {id:3,name:"Chicken with veggies",emoji:"🥦",ingr:["Chicken breast","Vegetables"],cx:3,t:60,cost:"$$",y:7,who:"Both",nutrition:{kcal:380,protein:48,carbs:14,fat:9}},
-  {id:4,name:"Pasta Carbonara",emoji:"🍝",ingr:["Pasta","Eggs","Guanciale","Parmesan"],cx:2,t:30,cost:"$$",y:10,who:"Both",nutrition:{kcal:680,protein:32,carbs:72,fat:28}},
-  {id:5,name:"Pasta with shrimps",emoji:"🦐",ingr:["Pasta","Shrimps","Lemon","Garlic","Parsley"],cx:3,t:30,cost:"$$$",y:9,who:"Both",nutrition:{kcal:570,protein:38,carbs:68,fat:12}},
-  {id:6,name:"Pasta with chorizo",emoji:"🌶️",ingr:["Pasta","Chorizo","Tomato sauce","Tomato peeled","Red pepper"],cx:3,t:30,cost:"$",y:8,who:"Both",nutrition:{kcal:690,protein:28,carbs:74,fat:28}},
-  {id:7,name:"Shrimp & lemon risotto",emoji:"🦐",ingr:["Arborio rice","Shrimps","Lemon","Garlic","Parmesan","Onion","Broth"],cx:4,t:60,cost:"$$$",y:8,who:"Both",nutrition:{kcal:610,protein:34,carbs:72,fat:14}},
-  {id:8,name:"Mushroom risotto",emoji:"🍄",ingr:["Arborio rice","Mushrooms","Parmesan","Onion","Garlic","Broth"],cx:4,t:60,cost:"$",y:7,who:"Both",nutrition:{kcal:520,protein:16,carbs:78,fat:12}},
-  {id:9,name:"Burritos",emoji:"🌯",ingr:["Minced meat","Bell pepper","Onion","Wraps","Lettuce","Cheddar"],cx:4,t:30,cost:"$$",y:8,who:"Both",nutrition:{kcal:780,protein:46,carbs:62,fat:32}},
-  {id:10,name:"Chicken Fajitas",emoji:"🌮",ingr:["Chicken breast","Wraps","Onion","Bell pepper","Lettuce"],cx:4,t:30,cost:"$$",y:8,who:"Both",nutrition:{kcal:580,protein:44,carbs:52,fat:14}},
-  {id:11,name:"AH Pizzas",emoji:"🍕",ingr:["Box pizza"],cx:1,t:20,cost:"$",y:7,who:"Both",nutrition:{kcal:850,protein:36,carbs:98,fat:32}},
-  {id:12,name:"Dutch snacks",emoji:"🍟",ingr:["Mixed snacks","Chicken nuggets","Fries"],cx:1,t:15,cost:"$",y:7,who:"Both",nutrition:{kcal:830,protein:22,carbs:90,fat:42}},
-  {id:13,name:"Meat burgers",emoji:"🍔",ingr:["Beef patties","Burger buns","Cheddar","Tomato","Lettuce"],cx:3,t:20,cost:"$$",y:8,who:"Both",nutrition:{kcal:780,protein:46,carbs:50,fat:40}},
-  {id:14,name:"Chicken burgers",emoji:"🍔",ingr:["Chicken patties","Tomato","Burger buns","Lettuce","Cheddar"],cx:2,t:20,cost:"$$",y:9,who:"Both",nutrition:{kcal:640,protein:50,carbs:50,fat:22}},
-  {id:15,name:"Pork Ribs",emoji:"🍖",ingr:["AH marinated ribs"],cx:2,t:90,cost:"$",y:8,who:"Both",nutrition:{kcal:680,protein:44,carbs:8,fat:50}},
-  {id:16,name:"Sushi",emoji:"🍣",ingr:["Sushi"],cx:1,t:5,cost:"$$$",y:8,who:"Both",nutrition:{kcal:520,protein:24,carbs:80,fat:10}},
-  {id:17,name:"Picada",emoji:"🧀",ingr:["Cheese","Salami","Prosciutto","Burrata","Rucola","Bread"],cx:2,t:15,cost:"$$",y:9,who:"Both",nutrition:{kcal:750,protein:32,carbs:22,fat:58}},
-  {id:18,name:"Fish mix",emoji:"🐟",ingr:["AH frozen fish mix"],cx:1,t:20,cost:"$",y:9,who:"Both",nutrition:{kcal:420,protein:38,carbs:22,fat:18}},
-  {id:19,name:"Chicken Madras",emoji:"🍛",ingr:["Knorr Seasoned Rice","Chicken breast (½ kg)","Green beans","Crème fraîche"],cx:4,t:30,cost:"$$$",y:8,who:"Both",nutrition:{kcal:580,protein:40,carbs:58,fat:14}},
-  {id:20,name:"Breaded fish fillet",emoji:"🐟",ingr:["Fish fillet","Flour","Eggs","Lemon","Oil"],cx:4,t:30,cost:"$$$",y:9,who:"Both",nutrition:{kcal:480,protein:42,carbs:28,fat:18}},
-  {id:21,name:"Pasta Bolognese",emoji:"🍝",ingr:["Pasta","Minced meat","Tomato sauce"],cx:3,t:30,cost:"$$",y:8,who:"Both",nutrition:{kcal:620,protein:34,carbs:70,fat:18}},
-  {id:22,name:"Cheese toast",emoji:"🧀",ingr:["Cheese","Sandwich bread"],cx:1,t:10,cost:"$",y:7,who:"Both",nutrition:{kcal:380,protein:18,carbs:36,fat:18}},
+  {id:1,name:"Steak with fries",emoji:"🥩",ingr:["Steak","Fries"],cx:2,t:20,cost:null,y:9,who:"Mateo",nutrition:{kcal:710,protein:58,carbs:40,fat:28}},
+  {id:2,name:"Milanesas",emoji:"🍗",ingr:["Chicken breast","Breadcrumbs","Eggs","Garlic","Oil","Fries"],cx:5,t:60,cost:null,y:10,who:"Both",nutrition:{kcal:620,protein:52,carbs:28,fat:30}},
+  {id:3,name:"Chicken with veggies",emoji:"🥦",ingr:["Chicken breast","Vegetables"],cx:3,t:60,cost:null,y:7,who:"Both",nutrition:{kcal:380,protein:48,carbs:14,fat:9}},
+  {id:4,name:"Pasta Carbonara",emoji:"🍝",ingr:["Pasta","Eggs","Guanciale","Parmesan"],cx:2,t:30,cost:null,y:10,who:"Both",nutrition:{kcal:680,protein:32,carbs:72,fat:28}},
+  {id:5,name:"Pasta with shrimps",emoji:"🦐",ingr:["Pasta","Shrimps","Lemon","Garlic","Parsley"],cx:3,t:30,cost:null,y:9,who:"Both",nutrition:{kcal:570,protein:38,carbs:68,fat:12}},
+  {id:6,name:"Pasta with chorizo",emoji:"🌶️",ingr:["Pasta","Chorizo","Tomato sauce","Tomato peeled","Red pepper"],cx:3,t:30,cost:null,y:8,who:"Both",nutrition:{kcal:690,protein:28,carbs:74,fat:28}},
+  {id:7,name:"Shrimp & lemon risotto",emoji:"🦐",ingr:["Arborio rice","Shrimps","Lemon","Garlic","Parmesan","Onion","Broth"],cx:4,t:60,cost:null,y:8,who:"Both",nutrition:{kcal:610,protein:34,carbs:72,fat:14}},
+  {id:8,name:"Mushroom risotto",emoji:"🍄",ingr:["Arborio rice","Mushrooms","Parmesan","Onion","Garlic","Broth"],cx:4,t:60,cost:null,y:7,who:"Both",nutrition:{kcal:520,protein:16,carbs:78,fat:12}},
+  {id:9,name:"Burritos",emoji:"🌯",ingr:["Minced meat","Bell pepper","Onion","Wraps","Lettuce","Cheddar"],cx:4,t:30,cost:null,y:8,who:"Both",nutrition:{kcal:780,protein:46,carbs:62,fat:32}},
+  {id:10,name:"Chicken Fajitas",emoji:"🌮",ingr:["Chicken breast","Wraps","Onion","Bell pepper","Lettuce"],cx:4,t:30,cost:null,y:8,who:"Both",nutrition:{kcal:580,protein:44,carbs:52,fat:14}},
+  {id:11,name:"AH Pizzas",emoji:"🍕",ingr:["Box pizza"],cx:1,t:20,cost:null,y:7,who:"Both",nutrition:{kcal:850,protein:36,carbs:98,fat:32}},
+  {id:12,name:"Dutch snacks",emoji:"🍟",ingr:["Mixed snacks","Chicken nuggets","Fries"],cx:1,t:15,cost:null,y:7,who:"Both",nutrition:{kcal:830,protein:22,carbs:90,fat:42}},
+  {id:13,name:"Meat burgers",emoji:"🍔",ingr:["Beef patties","Burger buns","Cheddar","Tomato","Lettuce"],cx:3,t:20,cost:null,y:8,who:"Both",nutrition:{kcal:780,protein:46,carbs:50,fat:40}},
+  {id:14,name:"Chicken burgers",emoji:"🍔",ingr:["Chicken patties","Tomato","Burger buns","Lettuce","Cheddar"],cx:2,t:20,cost:null,y:9,who:"Both",nutrition:{kcal:640,protein:50,carbs:50,fat:22}},
+  {id:15,name:"Pork Ribs",emoji:"🍖",ingr:["AH marinated ribs"],cx:2,t:90,cost:null,y:8,who:"Both",nutrition:{kcal:680,protein:44,carbs:8,fat:50}},
+  {id:16,name:"Sushi",emoji:"🍣",ingr:["Sushi"],cx:1,t:5,cost:null,y:8,who:"Both",nutrition:{kcal:520,protein:24,carbs:80,fat:10}},
+  {id:17,name:"Picada",emoji:"🧀",ingr:["Cheese","Salami","Prosciutto","Burrata","Rucola","Bread"],cx:2,t:15,cost:null,y:9,who:"Both",nutrition:{kcal:750,protein:32,carbs:22,fat:58}},
+  {id:18,name:"Fish mix",emoji:"🐟",ingr:["AH frozen fish mix","Fries"],cx:1,t:20,cost:null,y:9,who:"Both",nutrition:{kcal:420,protein:38,carbs:22,fat:18}},
+  {id:19,name:"Chicken Madras",emoji:"🍛",ingr:["Knorr Seasoned Rice","Chicken breast (½ kg)","Green beans","Crème fraîche"],cx:4,t:30,cost:null,y:8,who:"Both",nutrition:{kcal:580,protein:40,carbs:58,fat:14}},
+  {id:20,name:"Breaded fish fillet",emoji:"🐟",ingr:["Fish fillet","Flour","Eggs","Lemon","Oil"],cx:4,t:30,cost:null,y:9,who:"Both",nutrition:{kcal:480,protein:42,carbs:28,fat:18}},
+  {id:21,name:"Pasta Bolognese",emoji:"🍝",ingr:["Pasta","Minced meat","Tomato sauce"],cx:3,t:30,cost:null,y:8,who:"Both",nutrition:{kcal:620,protein:34,carbs:70,fat:18}},
+  {id:22,name:"Cheese toast",emoji:"🧀",ingr:["Cheese","Sandwich bread"],cx:1,t:10,cost:null,y:7,who:"Both",nutrition:{kcal:380,protein:18,carbs:36,fat:18}},
 ];
 
 const DNAMES=['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
@@ -456,7 +456,7 @@ function wkDates(off=0){
   mon.setDate(t.getDate()-(d===0?6:d-1)+off*7);
   return Array.from({length:7},(_,i)=>{const x=new Date(mon);x.setDate(mon.getDate()+i);return x});
 }
-function dk(d){return d.toISOString().slice(0,10)}
+function dk(d){return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')}
 function isToday(d){return dk(d)===dk(new Date())}
 function daysSince(s){if(!s)return 9999;return Math.floor((new Date()-new Date(s))/86400000)}
 function fmtDate(d){return d.toLocaleDateString('en-GB',{day:'numeric',month:'short'})}
@@ -487,7 +487,7 @@ function fMeals(){
     if(S.tf.t==='q'&&m.t>20)return false;
     if(S.tf.t==='m'&&m.t>30)return false;
     if(S.tf.t==='sl'&&m.t<=30)return false;
-    if(S.tf.c!=='all'&&m.cost!==S.tf.c)return false;
+    if(S.tf.c!=='all'&&getMealCat(m)!==S.tf.c)return false;
     return true;
   });
 }
@@ -527,8 +527,8 @@ function renderGrid(){
       <div class="mc-ingr">${m.ingr.join(', ')}</div>
       <div class="mc-foot">
         <span class="bdg bdg-t">⏱ ${m.t}min</span>
-        <span class="bdg bdg-${m.cost==='$$$'?'high':m.cost==='$$'?'mid':'low'}">${m.cost}</span>
-        ${(()=>{const p=getMealPrice(m);const cls=m.cost==='$$$'?'high':m.cost==='$$'?'mid':'low';return p?`<span class="bdg bdg-${cls}">~€${p.toFixed(2)}</span>`:''})()}
+        <span class="bdg bdg-${getMealCat(m)==='$$$'?'high':getMealCat(m)==='$$'?'mid':'low'}">${getMealCat(m)}</span>
+        ${(()=>{const p=getMealPrice(m);const cls=getMealCat(m)==='$$$'?'high':getMealCat(m)==='$$'?'mid':'low';return p?`<span class="bdg bdg-${cls}">~€${p.toFixed(2)}</span>`:''})()}
         <span class="yummy">★ ${m.y}</span>
       </div>${lastTxt}
       ${getNutriTags(m)}
@@ -541,7 +541,7 @@ function openMealDetail(id){
   const lastD=lastCookedDate(m.id)||S.lc[m.id];
   const days=daysSince(lastD);
   const lastTxt=days<9999?days+' days ago':'Never';
-  const costCls=m.cost==='$$$'?'high':m.cost==='$$'?'mid':'low';
+  const costCls=getMealCat(m)==='$$$'?'high':getMealCat(m)==='$$'?'mid':'low';
   const cx='★'.repeat(m.cx)+'☆'.repeat(5-m.cx);
   const totalPrice=getMealPrice(m);
   const ingrRows=m.ingr.map(ing=>{
@@ -605,7 +605,7 @@ function renderWeek(){
         ?`<div class="dc-out-lbl"><span style="font-size:20px">🍽</span><span>Eating out</span></div>`
         :meal
           ?`<div class="dmeal"><div class="dmeal-name">${meal.emoji||''} ${meal.name}</div>
-            <div class="dmeal-bdgs"><span class="bdg bdg-t">⏱${meal.t}m</span><span class="bdg bdg-${meal.cost==='$$$'?'high':meal.cost==='$$'?'mid':'low'}">${meal.cost}</span></div>
+            <div class="dmeal-bdgs"><span class="bdg bdg-t">⏱${meal.t}m</span><span class="bdg bdg-${getMealCat(meal)==='$$$'?'high':getMealCat(meal)==='$$'?'mid':'low'}">${getMealCat(meal)}</span></div>
             ${getNutriTags(meal)}
           </div>`
           :`<div class="dempty">+</div>`
@@ -747,7 +747,7 @@ function renderMlist(){
   let meals=MEALS.filter(m=>{
     if(S.mf.t==='q'&&m.t>20)return false;
     if(S.mf.t==='m'&&m.t>30)return false;
-    if(S.mf.c!=='all'&&m.cost!==S.mf.c)return false;
+    if(S.mf.c!=='all'&&getMealCat(m)!==S.mf.c)return false;
     return true;
   }).sort((a,b)=>{
     const ai=usedWk.has(a.id)?1:0,bi=usedWk.has(b.id)?1:0;
@@ -767,7 +767,7 @@ function renderMlist(){
       </div>
       <div class="mitem-bdgs">
         <span class="bdg bdg-t">⏱${m.t}m</span>
-        <span class="bdg bdg-${m.cost==='$$$'?'high':m.cost==='$$'?'mid':'low'}">${m.cost}</span>
+        <span class="bdg bdg-${getMealCat(m)==='$$$'?'high':getMealCat(m)==='$$'?'mid':'low'}">${getMealCat(m)}</span>
         <span style="font-size:12px;color:var(--gold)">★${m.y}</span>
       </div>
     </div>`;
@@ -793,11 +793,11 @@ function closeMod(ev){
 
 /* ---- LISTA ---- */
 const CAT_ORDER=[
-  {name:'🥩 Meat & fish',keys:['Steak','Chicken breast','Chicken breast (½ kg)','Minced meat','AH marinated ribs','Fish fillet','Shrimps','AH frozen fish mix','Salami','Prosciutto','Chicken nuggets','Beef patties']},
+  {name:'🥩 Meat & fish',keys:['Steak','Chicken breast','Chicken breast (½ kg)','Chicken patties','Minced meat','AH marinated ribs','Fish fillet','Shrimps','AH frozen fish mix','Salami','Prosciutto','Chicken nuggets','Beef patties']},
   {name:'🧀 Dairy & eggs',keys:['Eggs','Parmesan','Cheddar','Butter','Burrata','Cheese','Sour cream']},
   {name:'🍝 Pasta, rice & grains',keys:['Pasta','Arborio rice','Rice','Flour','Breadcrumbs']},
   {name:'🥦 Fresh produce',keys:['Vegetables','Onion','Garlic','Lemon','Tomato','Bell pepper','Red pepper','Lettuce','Rucola','Mushrooms','Parsley','Green beans','Crème fraîche']},
-  {name:'🧴 Pantry & sauces',keys:['Tomato sauce','Tomato purée','Chorizo','Guanciale','Broth','Oil','White wine','Knorr packet']},
+  {name:'🧴 Pantry & sauces',keys:['Tomato sauce','Tomato purée','Tomato peeled','Chorizo','Guanciale','Broth','Oil','Knorr Seasoned Rice']},
   {name:'🍞 Bread & wraps',keys:['Bread','Burger buns','Wraps','Sandwich bread','Box pizza']},
   {name:'🧊 Frozen & ready',keys:['Mixed snacks','Fries','Sushi','Snacks']},
 ];
@@ -811,9 +811,8 @@ function renderList(){
   const dates=wkDates(S.wk);
   const lbl=document.getElementById('listWkLbl');
   if(lbl){const ds=dates;lbl.innerHTML=`${ds[0].getDate()} ${ds[0].toLocaleDateString('en-GB',{month:'short'})} — ${ds[6].getDate()} ${ds[6].toLocaleDateString('en-GB',{month:'short'})}${S.wk===0?' <span style="color:var(--gold)">• now</span>':''}`;}
-  function dkLocal(d){return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
-  const today=dkLocal(new Date());
-  const planned=dates.map(d=>({date:d,meal:MEALS.find(m=>m.id===S.plan[dk(d)])})).filter(x=>x.meal&&!S.out[dk(x.date)]&&dkLocal(x.date)>=today);
+  const today=dk(new Date());
+  const planned=dates.map(d=>({date:d,meal:MEALS.find(m=>m.id===S.plan[dk(d)])})).filter(x=>x.meal&&!S.out[dk(x.date)]&&dk(x.date)>=today);
   const c=document.getElementById('slist');
   if(!planned.length){
     c.innerHTML=`<div class="lempty"><p>No dinners planned for this week.</p><small>Go to "This week" and assign dishes to see the list here.</small></div>`;
@@ -915,6 +914,14 @@ function allIngredients(){
 }
 
 function getPrice(ing){return manualPrices[ing]||{price:null,bonus:false}}
+
+function getMealCat(meal){
+  const p=getMealPrice(meal);
+  if(p==null)return'$$';
+  if(p<=10)return'$';
+  if(p<=15)return'$$';
+  return'$$$';
+}
 
 function getMealPrice(meal){
   const total=meal.ingr.reduce((sum,ing)=>{
