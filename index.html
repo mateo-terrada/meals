@@ -257,14 +257,18 @@ html,body{min-height:100%;background:var(--bg);color:var(--text);font-family:'Ou
 .detail-section-title{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.7px;color:var(--muted);margin-bottom:10px}
 .detail-ingr-list{display:flex;flex-direction:column;gap:6px}
 .detail-ingr-row{display:flex;align-items:center;justify-content:space-between;font-size:14px}
-.nutrition-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;padding:14px 20px;border-bottom:1px solid var(--border)}
-.nutrition-cell{background:var(--surface2);border-radius:var(--rs);padding:10px 8px;text-align:center}
-.nutrition-val{font-family:'Fraunces',serif;font-size:18px;font-weight:600}
-.nutrition-lbl{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-top:2px}
-.nutrition-kcal{color:var(--terra)}
-.nutrition-protein{color:var(--sage)}
-.nutrition-carbs{color:var(--gold)}
-.nutrition-fat{color:#8a6a9a}
+.nutri-bars{padding:14px 20px;border-bottom:1px solid var(--border);display:flex;flex-direction:column;gap:10px}
+.nutri-row{display:flex;flex-direction:column;gap:4px}
+.nutri-row-hdr{display:flex;justify-content:space-between;align-items:baseline}
+.nutri-row-lbl{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;color:var(--muted)}
+.nutri-row-val{font-size:12px;color:var(--text);font-weight:500}
+.nutri-row-pct{font-size:11px;color:var(--muted)}
+.nutri-track{height:8px;background:var(--surface2);border-radius:4px;overflow:hidden;position:relative}
+.nutri-bar{height:100%;border-radius:4px;transition:width .4s ease}
+.nutri-ref{position:absolute;top:0;bottom:0;width:2px;background:rgba(0,0,0,.15);border-radius:1px}
+.bar-good{background:var(--sage)}
+.bar-warn{background:var(--gold)}
+.bar-bad{background:var(--terra)}
 .detail-ingr-name{color:var(--text)}
 .detail-ingr-price{color:var(--muted);font-size:13px}
 .detail-total{display:flex;justify-content:space-between;align-items:center;padding:14px 20px}
@@ -423,7 +427,7 @@ const MEALS=[
   {id:8,name:"Mushroom risotto",emoji:"🍄",ingr:["Arborio rice","Mushrooms","Parmesan","Onion","Garlic","Broth"],cx:4,t:60,cost:null,y:7,who:"Both",nutrition:{kcal:520,protein:16,carbs:78,fat:12}},
   {id:9,name:"Burritos",emoji:"🌯",ingr:["Minced meat","Bell pepper","Onion","Wraps","Lettuce","Cheddar"],cx:4,t:30,cost:null,y:8,who:"Both",nutrition:{kcal:780,protein:46,carbs:62,fat:32}},
   {id:10,name:"Chicken Fajitas",emoji:"🌮",ingr:["Chicken breast","Wraps","Onion","Bell pepper","Lettuce"],cx:4,t:30,cost:null,y:8,who:"Both",nutrition:{kcal:580,protein:44,carbs:52,fat:14}},
-  {id:11,name:"AH Pizzas",emoji:"🍕",ingr:["Box pizza"],cx:1,t:20,cost:null,y:7,who:"Both",nutrition:{kcal:850,protein:36,carbs:98,fat:32}},
+  {id:11,name:"AH Pizzas",emoji:"🍕",ingr:["Box pizza"],cx:1,t:20,cost:null,y:7,who:"Both",nutrition:{kcal:855,protein:32,carbs:83,fat:42}},
   {id:12,name:"Dutch snacks",emoji:"🍟",ingr:["Mixed snacks","Chicken nuggets","Fries"],cx:1,t:15,cost:null,y:7,who:"Both",nutrition:{kcal:830,protein:22,carbs:90,fat:42}},
   {id:13,name:"Meat burgers",emoji:"🍔",ingr:["Beef patties","Burger buns","Cheddar","Tomato","Lettuce"],cx:3,t:20,cost:null,y:8,who:"Both",nutrition:{kcal:780,protein:46,carbs:50,fat:40}},
   {id:14,name:"Chicken burgers",emoji:"🍔",ingr:["Chicken patties","Tomato","Burger buns","Lettuce","Cheddar"],cx:2,t:20,cost:null,y:9,who:"Both",nutrition:{kcal:640,protein:50,carbs:50,fat:22}},
@@ -557,21 +561,48 @@ function openMealDetail(id){
       +'<div class="detail-name">'+m.name+'</div>'
       +'<div class="detail-badges">'
         +'<span class="bdg bdg-t">⏱ '+m.t+' min</span>'
-        +'<span class="bdg bdg-'+costCls+'">'+m.cost+'</span>'
+        +'<span class="bdg bdg-'+costCls+'">'+getMealCat(m)+'</span>'
         +'<span class="bdg bdg-t">★ '+m.y+'/10</span>'
       +'</div></div>'
     +'<div class="detail-stats">'
       +'<div class="detail-stat"><div class="detail-stat-lbl">Complexity</div><div class="detail-stat-val" style="font-size:13px;letter-spacing:1px">'+cx+'</div></div>'
       +'<div class="detail-stat"><div class="detail-stat-lbl">Last cooked</div><div class="detail-stat-val" style="font-size:14px">'+lastTxt+'</div></div>'
     +'</div>'
-    +(m.nutrition?
-    '<div class="nutrition-grid">'
-      +'<div class="nutrition-cell"><div class="nutrition-val nutrition-kcal">'+m.nutrition.kcal+'</div><div class="nutrition-lbl">kcal</div></div>'
-      +'<div class="nutrition-cell"><div class="nutrition-val nutrition-protein">'+m.nutrition.protein+'g</div><div class="nutrition-lbl">protein</div></div>'
-      +'<div class="nutrition-cell"><div class="nutrition-val nutrition-carbs">'+m.nutrition.carbs+'g</div><div class="nutrition-lbl">carbs</div></div>'
-      +'<div class="nutrition-cell"><div class="nutrition-val nutrition-fat">'+m.nutrition.fat+'g</div><div class="nutrition-lbl">fat</div></div>'
-    +'</div>'
-  :'')
+    +(m.nutrition?(()=>{
+    // Absolute dinner ranges (green = ideal, yellow = acceptable, red = too low/high)
+    // Ranges based on 60% of daily targets: 1680kcal / 84g protein / 204g carbs / 45g fat
+    const RANGES={
+      kcal:   {low:400, okLow:550, okHigh:900, high:1100, max:1300, unit:'kcal', label:'Calories'},
+      protein:{low:25,  okLow:35,  okHigh:65,  high:80,   max:100,  unit:'g',   label:'Protein'},
+      carbs:  {low:40,  okLow:60,  okHigh:130, high:170,  max:220,  unit:'g',   label:'Carbs'},
+      fat:    {low:10,  okLow:18,  okHigh:52,  high:68,   max:90,   unit:'g',   label:'Fat'},
+    };
+    const macros=[
+      {key:'kcal',   val:m.nutrition.kcal},
+      {key:'protein',val:m.nutrition.protein},
+      {key:'carbs',  val:m.nutrition.carbs},
+      {key:'fat',    val:m.nutrition.fat},
+    ];
+    const rows=macros.map(({key,val})=>{
+      const r=RANGES[key];
+      const barW=Math.min(val/r.max*100,100);
+      const idealW=Math.min(r.okLow/r.max*100,100);
+      const idealW2=Math.min(r.okHigh/r.max*100,100);
+      const cls=val>=r.okLow&&val<=r.okHigh?'bar-good':val>=r.low&&val<=r.high?'bar-warn':'bar-bad';
+      const hint=val<r.low?'Too low':val<r.okLow?'A bit low':val<=r.okHigh?'On target':val<=r.high?'A bit high':'Too high';
+      return '<div class="nutri-row">'
+        +'<div class="nutri-row-hdr">'
+          +'<span class="nutri-row-lbl">'+r.label+'</span>'
+          +'<span class="nutri-row-val">'+val+r.unit+' <span class="nutri-row-pct">— '+hint+'</span></span>'
+        +'</div>'
+        +'<div class="nutri-track">'
+          +'<div style="position:absolute;left:'+idealW+'%;right:'+(100-idealW2)+'%;top:0;bottom:0;background:rgba(58,140,54,.12);border-radius:4px"></div>'
+          +'<div class="nutri-bar '+cls+'" style="width:'+barW+'%;position:relative;z-index:1"></div>'
+        +'</div>'
+      +'</div>';
+    }).join('');
+    return '<div class="nutri-bars">'+rows+'</div>';
+  })():'')
 +'<div class="detail-section"><div class="detail-section-title">Ingredients</div><div class="detail-ingr-list">'+ingrRows+'</div></div>'
     +'<div class="detail-total"><span class="detail-total-lbl">Estimated cost</span><span class="detail-total-val">'+(totalPrice?'€'+totalPrice.toFixed(2):'—')+'</span></div>'
     +'<button class="detail-plan-btn" onclick="closeDetail();openDayMod(dk(new Date()))">+ Plan for tonight</button>';
@@ -820,10 +851,11 @@ function renderList(){
   }
 
   // Build ingredient → meals map with count
+  const weekKey=dk(wkDates(S.wk)[0]); // Monday of week = unique key per week
   const ingrMap={}; // ing -> {meals: [{name,date}], count}
   planned.forEach(({date,meal})=>{
     meal.ingr.forEach(ing=>{
-      if(!ingrMap[ing])ingrMap[ing]={meals:[],key:`list|${ing}`};
+      if(!ingrMap[ing])ingrMap[ing]={meals:[],key:`${weekKey}|${ing}`};
       ingrMap[ing].meals.push(meal.name);
     });
   });
