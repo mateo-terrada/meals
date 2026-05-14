@@ -281,12 +281,98 @@ html,body{min-height:100%;background:var(--bg);color:var(--text);font-family:'Ou
 .detail-plan-btn{margin:14px 20px;width:calc(100% - 40px);padding:11px;background:var(--gold);border:none;color:#fff;border-radius:var(--rs);font-family:'Outfit',sans-serif;font-size:14px;font-weight:500;cursor:pointer;transition:opacity .15s}
 .detail-plan-btn:hover{opacity:.88}
 
+
+/* NUTRITION TAB */
+.nmeal-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);overflow:hidden}
+.nmeal-presets{padding:8px 12px;display:flex;flex-wrap:wrap;gap:5px;border-bottom:1px solid var(--border);background:var(--bg)}
+.preset-chip{padding:5px 10px;border-radius:20px;border:1px solid var(--border);background:var(--surface);color:var(--muted);font-family:'Outfit',sans-serif;font-size:12px;cursor:pointer;transition:all .15s;white-space:nowrap}
+.preset-chip:hover{border-color:var(--gold);color:var(--gold)}
+.preset-chip.on{background:var(--gold-dim);border-color:var(--gold);color:var(--gold);font-weight:500}
+.nmeal-hdr{display:flex;align-items:center;justify-content:space-between;padding:11px 14px;background:var(--surface2)}
+.nmeal-hdr-left{display:flex;align-items:center;gap:8px;min-width:0;flex:1}
+.nmeal-icon{font-size:17px;flex-shrink:0}
+.nmeal-title{font-size:13px;font-weight:600;flex-shrink:0}
+.nmeal-subtitle{font-size:12px;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+/* Name row full-width, then macros in 2x2 grid */
+.nmeal-body{padding:10px 12px;display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.nmeal-name-row{grid-column:1/-1}
+.nmeal-dinner-body{padding:11px 14px}
+.nfield{display:flex;align-items:center;gap:8px;background:var(--surface2);border-radius:var(--rs);padding:8px 10px;border:1px solid var(--border)}
+.nfield label{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.4px;color:var(--muted);flex-shrink:0;width:52px}
+.nfield input{border:none;background:transparent;font-family:'Outfit',sans-serif;font-size:15px;font-weight:500;color:var(--text);text-align:right;flex:1;min-width:0;padding:0}
+.nfield input:focus{outline:none}
+.nfield input::placeholder{color:var(--faint)}
+.nfield-name{background:transparent;border:1px solid var(--border);border-radius:var(--rs);padding:8px 10px;display:flex;align-items:center;gap:8px}
+.nfield-name label{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.4px;color:var(--muted);flex-shrink:0}
+.nfield-name input{border:none;background:transparent;font-family:'Outfit',sans-serif;font-size:14px;color:var(--text);flex:1;min-width:0;padding:0}
+.nfield-name input:focus{outline:none}
+.ndinner-macros{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.ndinner-macro{font-size:13px;background:var(--surface2);padding:7px 10px;border-radius:var(--rs);color:var(--text);display:flex;justify-content:space-between;align-items:center}
+.ndinner-macro-lbl{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px}
+.ndinner-empty{font-size:13px;color:var(--faint);font-style:italic;padding:4px 0}
+.ntotals{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:14px 16px}
+.ntotals-title{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);margin-bottom:14px}
+
 /* TOAST */
 .toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%) translateY(16px);background:var(--text);border:1px solid transparent;color:#faf6f0;padding:9px 16px;border-radius:var(--rs);font-size:13px;opacity:0;transition:all .2s;z-index:200;white-space:nowrap;pointer-events:none}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 
 .tc{display:none}.tc.on{display:block}
 .no-results{color:var(--muted);padding:16px 0;font-size:14px}
+
+/* ===== NUTRITION GAMIFICATION ===== */
+.nutri-topbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:8px}
+.streak-badge{display:inline-flex;align-items:center;gap:5px;background:rgba(220,88,24,.1);border:1px solid rgba(220,88,24,.3);border-radius:20px;padding:5px 11px;font-size:12px;font-weight:600;color:#c84c10;white-space:nowrap;flex-shrink:0;transition:all .2s}
+.streak-badge.zero{background:var(--surface2);border-color:var(--border);color:var(--muted)}
+
+/* Progress card */
+.nutri-progress-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:16px;margin-bottom:12px;display:flex;gap:16px;align-items:center}
+.nutri-main-ring-wrap{position:relative;width:120px;height:120px;flex-shrink:0}
+.ring-center{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;pointer-events:none}
+.ring-main-val{font-family:'Fraunces',serif;font-size:23px;font-weight:600;line-height:1}
+.ring-main-lbl{font-size:9px;color:var(--muted);margin-top:2px;letter-spacing:.2px}
+.ring-remaining{font-size:11px;margin-top:4px;font-weight:500}
+.daily-grade-badge{position:absolute;bottom:-3px;right:-3px;width:27px;height:27px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;border:2.5px solid var(--bg)}
+.grade-s{background:#2d7a29;color:#fff}
+.grade-a{background:var(--sage);color:#fff}
+.grade-b{background:var(--gold);color:#fff}
+.grade-c{background:#b87820;color:#fff}
+.grade-d{background:var(--terra);color:#fff}
+.grade-f{background:var(--muted);color:#fff}
+.grade-none{background:var(--surface2);color:var(--faint);border-color:var(--border)}
+
+/* Macro rings */
+.nutri-macro-rings{flex:1;display:flex;flex-direction:column;gap:7px}
+.macro-ring-row{display:flex;align-items:center;gap:10px}
+.macro-mini-ring{position:relative;width:44px;height:44px;flex-shrink:0}
+.macro-mini-center{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;pointer-events:none}
+.macro-ring-info{flex:1;min-width:0}
+.macro-ring-name{font-size:9px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;color:var(--muted)}
+.macro-ring-val{font-size:13px;font-weight:600;line-height:1.2}
+.macro-ring-sub{font-size:10px;color:var(--faint);margin-top:1px}
+
+/* Week strip */
+.week-strip{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:10px 14px;margin-bottom:12px;display:flex;justify-content:space-between;align-items:flex-end}
+.wstrip-day{display:flex;flex-direction:column;align-items:center;gap:4px;flex:1;cursor:default}
+.wstrip-dot{width:22px;height:22px;border-radius:50%;background:var(--surface2);border:2px solid var(--border);transition:all .2s;position:relative}
+.wstrip-dot.s-none{background:var(--surface2);border-color:var(--border)}
+.wstrip-dot.s-bad{background:rgba(184,72,48,.12);border-color:var(--terra)}
+.wstrip-dot.s-ok{background:rgba(184,114,30,.12);border-color:var(--gold)}
+.wstrip-dot.s-good{background:rgba(58,140,54,.15);border-color:var(--sage)}
+.wstrip-dot.s-great{background:var(--sage);border-color:var(--sage)}
+.wstrip-lbl{font-size:9px;font-weight:600;letter-spacing:.3px;color:var(--muted);text-transform:uppercase}
+.wstrip-day.today .wstrip-lbl{color:var(--gold)}
+.wstrip-day.today .wstrip-dot{box-shadow:0 0 0 3px rgba(184,114,30,.18);border-color:var(--gold)}
+.wstrip-day.active-nav .wstrip-dot::after{content:'';position:absolute;bottom:-5px;left:50%;transform:translateX(-50%);width:4px;height:4px;border-radius:50%;background:var(--gold)}
+
+/* Achievements */
+.nutri-achievements{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}
+.ach{display:inline-flex;align-items:center;gap:4px;padding:5px 10px;border-radius:20px;font-size:12px;font-weight:500;border:1px solid;animation:achpop .22s ease both}
+.ach-green{background:rgba(58,140,54,.1);border-color:rgba(58,140,54,.3);color:#2d7a29}
+.ach-gold{background:var(--gold-dim);border-color:var(--gold);color:var(--gold)}
+.ach-fire{background:rgba(220,88,24,.1);border-color:rgba(220,88,24,.3);color:#c84c10}
+.ach-purple{background:rgba(138,80,160,.1);border-color:rgba(138,80,160,.3);color:#7a3e9a}
+@keyframes achpop{from{transform:scale(.8) translateY(4px);opacity:0}to{transform:scale(1) translateY(0);opacity:1}}
 </style>
 </head>
 <body>
@@ -301,6 +387,7 @@ html,body{min-height:100%;background:var(--bg);color:var(--text);font-family:'Ou
     <button class="tab" onclick="setTab('s')">This week</button>
     <button class="tab" onclick="setTab('l')">Shopping list</button>
     <button class="tab" onclick="setTab('p')">Prices</button>
+    <button class="tab" onclick="setTab('n')">Nutrition</button>
   </div>
 
   <div class="sync-banner" id="syncBanner" onclick="applyCloudUpdate()"></div>
@@ -363,6 +450,27 @@ html,body{min-height:100%;background:var(--bg);color:var(--text);font-family:'Ou
     <div class="mlist" id="mlist"></div>
   </div>
 </div>
+
+  <div class="tc" id="tc-n">
+    <div class="nutri-topbar">
+      <h2 style="font-family:'Fraunces',serif;font-size:20px;font-weight:600">Daily nutrition</h2>
+      <div style="display:flex;align-items:center;gap:8px">
+        <span class="streak-badge zero" id="nutriStreak">—</span>
+        <div class="wnav">
+          <button onclick="nutriNav(-1)">&#8249;</button>
+          <span class="wlbl" id="nutriDayLbl" style="min-width:140px;font-size:13px"></span>
+          <button onclick="nutriNav(1)">&#8250;</button>
+        </div>
+      </div>
+    </div>
+    <div id="nutriProgressCard"></div>
+    <div id="nutriWeekStrip"></div>
+    <div id="nutriAchievements"></div>
+    <div id="nutriMeals" style="display:flex;flex-direction:column;gap:10px;margin-bottom:20px"></div>
+    <div style="text-align:center;padding-bottom:8px">
+      <button id="nutriRestoreBtn" class="btn-clr" style="font-size:11px;color:var(--faint);border-color:var(--border)" onclick="restoreNutritionBackup()">↩ Restore backup</button>
+    </div>
+  </div>
 
 <div class="toast" id="toast"></div>
 
@@ -439,12 +547,13 @@ const MEALS=[
   {id:20,name:"Breaded fish fillet",emoji:"🐟",ingr:["Fish fillet","Flour","Eggs","Lemon","Oil"],cx:4,t:30,cost:null,y:9,who:"Both",nutrition:{kcal:480,protein:42,carbs:28,fat:18}},
   {id:21,name:"Pasta Bolognese",emoji:"🍝",ingr:["Pasta","Minced meat","Tomato sauce"],cx:3,t:30,cost:null,y:8,who:"Both",nutrition:{kcal:620,protein:34,carbs:70,fat:18}},
   {id:22,name:"Cheese toast",emoji:"🧀",ingr:["Cheese","Sandwich bread"],cx:1,t:10,cost:null,y:7,who:"Both",nutrition:{kcal:380,protein:18,carbs:36,fat:18}},
+  {id:23,name:"Pasta Chicken Alfredo",emoji:"🍗",ingr:["Pasta","Heavy cream","Chicken breast (½ kg)","Parmesan"],cx:3,t:30,cost:null,y:8,who:"Both",nutrition:{kcal:900,protein:46,carbs:45,fat:60}},
 ];
 
 const DNAMES=['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
 const DFULL=['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'];
 
-let S={tab:'r',wk:0,plan:{},ckd:{},lc:{},manual:{},out:{},tf:{t:'all',c:'all'},mf:{t:'all',c:'all'},pendDay:null};
+let S={tab:'r',wk:0,plan:{},ckd:{},lc:{},manual:{},out:{},ntf:'all',tf:{t:'all',c:'all'},mf:{t:'all',c:'all'},pendDay:null};
 
 function load(){try{const d=localStorage.getItem('cenas2');if(d){const p=JSON.parse(d);S={...S,plan:p.plan||{},ckd:p.ckd||{},lc:p.lc||{},manual:p.manual||{},out:p.out||{}}}}catch(e){}}
 function save(){
@@ -467,13 +576,14 @@ function fmtDate(d){return d.toLocaleDateString('en-GB',{day:'numeric',month:'sh
 
 function setTab(t){
   S.tab=t;
-  document.querySelectorAll('.tab').forEach((el,i)=>el.classList.toggle('on',['r','s','l','p'][i]===t));
+  document.querySelectorAll('.tab').forEach((el,i)=>el.classList.toggle('on',['r','s','l','p','n'][i]===t));
   document.querySelectorAll('.tc').forEach(el=>el.classList.remove('on'));
   document.getElementById('tc-'+t).classList.add('on');
   if(t==='r'){renderFbar();renderGrid()}
   if(t==='s'){renderWeek()}
   if(t==='l'){renderList()}
   if(t==='p'){renderPrices()}
+  if(t==='n'){renderNutri()}
   updateHdr();
 }
 
@@ -492,18 +602,41 @@ function fMeals(){
     if(S.tf.t==='m'&&m.t>30)return false;
     if(S.tf.t==='sl'&&m.t<=30)return false;
     if(S.tf.c!=='all'&&getMealCat(m)!==S.tf.c)return false;
+    if(S.ntf&&S.ntf!=='all'){
+      const tags=getNutriTagKeys(m);
+      if(!tags.includes(S.ntf))return false;
+    }
     return true;
   });
 }
+
+function getNutriTagKeys(m){
+  if(!m.nutrition)return['Balanced'];
+  const {kcal,protein}=m.nutrition;
+  const tags=[];
+  if(protein>=40)tags.push('High protein');
+  else if(protein>=30)tags.push('Good protein');
+  if(kcal<450)tags.push('Light');
+  if(kcal>=750)tags.push(kcal+' kcal');
+  if(m.nutrition.carbs>=70)tags.push('Carb-heavy');
+  if(m.nutrition.fat>=40)tags.push('Fat-heavy');
+  if(!tags.length)tags.push('Balanced');
+  return tags;
+}
 function renderFbar(){
   const b=document.getElementById('fbar');
-  const tF=[{k:'all',l:'All'},{k:'q',l:'≤ 20 min'},{k:'m',l:'≤ 30 min'},{k:'sl',l:'+ 30 min'}];
-  const cF=[{k:'all',l:'Cualquier precio'},{k:'$',l:'€ Barato'},{k:'$$',l:'€€ Medio'},{k:'$$$',l:'€€€ Caro'}];
-  b.innerHTML=tF.map(f=>`<button class="chip${S.tf.t===f.k?' on':''}" onclick="setTF('t','${f.k}')">${f.l}</button>`).join('')
+  const tF=[{k:'all',l:'All'},{k:'q',l:'≤ 20 min'},{k:'m',l:'≤ 30 min'},{k:'sl',l:'+30 min'}];
+  const cF=[{k:'all',l:'Any price'},{k:'$',l:'$'},{k:'$$',l:'$$'},{k:'$$$',l:'$$$'}];
+  const nF=[{k:'all',l:'Any'},{k:'High protein',l:'High protein'},{k:'Good protein',l:'Good protein'},{k:'Light',l:'Light'},{k:'Carb-heavy',l:'Carb-heavy'},{k:'Fat-heavy',l:'Fat-heavy'},{k:'Balanced',l:'Balanced'}];
+  b.innerHTML=
+    tF.map(f=>`<button class="chip${S.tf.t===f.k?' on':''}" onclick="setTF('t','${f.k}')">${f.l}</button>`).join('')
     +`<div class="fbar-div"></div>`
-    +cF.map(f=>`<button class="chip${S.tf.c===f.k?' on':''}" onclick="setTF('c','${f.k}')">${f.l}</button>`).join('');
+    +cF.map(f=>`<button class="chip${S.tf.c===f.k?' on':''}" onclick="setTF('c','${f.k}')">${f.l}</button>`).join('')
+    +`<div class="fbar-div"></div>`
+    +nF.map(f=>`<button class="chip${(S.ntf||'all')===f.k?' on':''}" onclick="setNF('${f.k}')">${f.l}</button>`).join('');
 }
 function setTF(k,v){S.tf[k]=v;renderFbar();renderGrid()}
+function setNF(v){S.ntf=v;renderFbar();renderGrid()}
 
 function getNutriTags(m){
   if(!m.nutrition)return'';
@@ -571,11 +704,12 @@ function openMealDetail(id){
     +(m.nutrition?(()=>{
     // Absolute dinner ranges (green = ideal, yellow = acceptable, red = too low/high)
     // Ranges based on 60% of daily targets: 1680kcal / 84g protein / 204g carbs / 45g fat
+    // Dinner = ~60% of day. Targets: 2800kcal/140g P/300g C/70g F
     const RANGES={
-      kcal:   {low:400, okLow:550, okHigh:900, high:1100, max:1300, unit:'kcal', label:'Calories'},
-      protein:{low:25,  okLow:35,  okHigh:65,  high:80,   max:100,  unit:'g',   label:'Protein'},
-      carbs:  {low:40,  okLow:60,  okHigh:130, high:170,  max:220,  unit:'g',   label:'Carbs'},
-      fat:    {low:10,  okLow:18,  okHigh:52,  high:68,   max:90,   unit:'g',   label:'Fat'},
+      kcal:   {low:400, okLow:550, okHigh:920, high:1100, max:1300, unit:'kcal', label:'Calories'},
+      protein:{low:22,  okLow:32,  okHigh:62,  high:78,   max:100,  unit:'g',   label:'Protein'},
+      carbs:  {low:35,  okLow:55,  okHigh:120, high:160,  max:210,  unit:'g',   label:'Carbs'},
+      fat:    {low:10,  okLow:16,  okHigh:48,  high:64,   max:88,   unit:'g',   label:'Fat'},
     };
     const macros=[
       {key:'kcal',   val:m.nutrition.kcal},
@@ -825,7 +959,7 @@ function closeMod(ev){
 /* ---- LISTA ---- */
 const CAT_ORDER=[
   {name:'🥩 Meat & fish',keys:['Steak','Chicken breast','Chicken breast (½ kg)','Chicken patties','Minced meat','AH marinated ribs','Fish fillet','Shrimps','AH frozen fish mix','Salami','Prosciutto','Chicken nuggets','Beef patties']},
-  {name:'🧀 Dairy & eggs',keys:['Eggs','Parmesan','Cheddar','Butter','Burrata','Cheese','Sour cream']},
+  {name:'🧀 Dairy & eggs',keys:['Eggs','Parmesan','Cheddar','Butter','Burrata','Cheese','Sour cream','Heavy cream']},
   {name:'🍝 Pasta, rice & grains',keys:['Pasta','Arborio rice','Rice','Flour','Breadcrumbs']},
   {name:'🥦 Fresh produce',keys:['Vegetables','Onion','Garlic','Lemon','Tomato','Bell pepper','Red pepper','Lettuce','Rucola','Mushrooms','Parsley','Green beans','Crème fraîche']},
   {name:'🧴 Pantry & sauces',keys:['Tomato sauce','Tomato purée','Tomato peeled','Chorizo','Guanciale','Broth','Oil','Knorr Seasoned Rice']},
@@ -921,7 +1055,7 @@ function renderAhTotal(){
 
 /* ---- PRECIOS MANUALES ---- */
 // Precios por defecto basados en AH (€)
-const DEFAULT_PRICES={"AH frozen fish mix":6.3,"AH marinated ribs":10.0,"Arborio rice":2.1,"Beef patties":5.0,"Bell pepper":1.3,"Box pizza":4.0,"Bread":2.0,"Breadcrumbs":0.8,"Broth":0.8,"Burger buns":1.6,"Burrata":2.1,"Cheddar":1.35,"Cheese":1.5,"Chicken breast":10.0,"Chicken nuggets":5.0,"Chicken patties":6.0,"Chorizo":3.15,"Eggs":2.0,"Fish fillet":12.0,"Flour":0.85,"Fries":1.5,"Garlic":0.8,"Green beans":2.4,"Guanciale":2.5,"Knorr Seasoned Rice":4.7,"Lemon":1.5,"Lettuce":1.3,"Minced meat":6.8,"Mixed snacks":3.45,"Mushrooms":1.8,"Oil":0.72,"Onion":0.4,"Parmesan":3.7,"Parsley":1.3,"Pasta":2.8,"Prosciutto":3.7,"Red pepper":1.2,"Rucola":1.1,"Salami":4.0,"Sandwich bread":0.7,"Shrimps":10.8,"Steak":12.0,"Sushi":30.0,"Tomato":1.2,"Tomato peeled":0.75,"Tomato purée":0.6,"Tomato sauce":0.75,"Vegetables":2.5,"Wraps":1.0,"Crème fraîche":1.40,"Chicken breast (½ kg)":5.00};
+const DEFAULT_PRICES={"AH Choco Karamel Bar":3.0,"AH Macadamia Mix":2.79,"AH Protein mousse":1.5,"AH frozen fish mix":6.3,"AH kip bacon wrap":4.25,"AH marinated ribs":10.0,"Arborio rice":2.1,"Banana":0.4,"Beef patties":5.0,"Bell pepper":1.3,"Bolletjes (bag of 10)":2.0,"Box pizza":4.0,"Bread":2.0,"Breadcrumbs":0.8,"Broth":0.8,"Burger buns":1.6,"Burrata":2.1,"Cheddar":1.35,"Cheese":1.5,"Cherry tomatoes":1.1,"Chicken breast":10.0,"Chicken breast (½ kg)":5.0,"Chicken nuggets":5.0,"Chicken patties":6.0,"Chorizo":3.15,"Crème fraîche":1.4,"Eggs":2.0,"Fish fillet":12.0,"Flour":0.85,"Fries":1.5,"Garlic":0.8,"Green beans":2.4,"Guanciale":2.5,"Heavy cream":2.0,"Holie's Chocolate Bar":3.3,"Knorr Seasoned Rice":4.7,"Lemon":1.5,"Lettuce":1.3,"Minced meat":6.8,"Mixed snacks":3.45,"Mushrooms":1.8,"Nona Rossa Copa Di Parma sandwich":11.0,"Oil":0.72,"Onion":0.4,"Parmesan":3.7,"Parsley":1.3,"Pasta":2.8,"Pesto":1.8,"Prosciutto":4.0,"Red pepper":1.2,"Rucola":1.1,"Salami":4.0,"Sandwich bread":0.7,"Shrimps":10.8,"Steak":12.0,"Sushi":30.0,"Tomato":1.2,"Tomato peeled":0.75,"Tomato purée":0.6,"Tomato sauce":0.75,"Vegetables":2.5,"Wraps":1.0};
 
 // Estado de precios: { ingredient: { price: number, bonus: bool } }
 let manualPrices={};
@@ -1096,6 +1230,7 @@ async function loadFromCloud(){
       if(cloud.lc   && Object.keys(cloud.lc).length)   S.lc   = cloud.lc;
     if(cloud.manual && Object.keys(cloud.manual).length) Object.assign(S.manual, cloud.manual);
     if(cloud.out && Object.keys(cloud.out).length) Object.assign(S.out, cloud.out);
+    // Note: nutrition is local-only — not read from household_state
 
       // Merge prices: cloud wins per key, but keep local defaults for missing keys
       if(cloud.prices && Object.keys(cloud.prices).length){
@@ -1110,6 +1245,7 @@ async function loadFromCloud(){
       if(S.tab==='l') renderList();
       if(S.tab==='r') renderGrid();
       if(S.tab==='p') renderPrices();
+      if(S.tab==='n') renderNutri();
     }
     lastSyncedHash = stateHash();
     localStorage.setItem('cenas_lastPulled', Date.now());
@@ -1314,6 +1450,7 @@ function applyCloudUpdate(){
   if(cloud.ckd  && Object.keys(cloud.ckd).length)  S.ckd  = cloud.ckd;
   if(cloud.lc   && Object.keys(cloud.lc).length)   S.lc   = cloud.lc;
   if(cloud.prices && Object.keys(cloud.prices).length) Object.assign(manualPrices, cloud.prices);
+  // Note: nutrition is local-only — not read from household_state
   localStorage.setItem('cenas2', JSON.stringify({plan:S.plan,ckd:S.ckd,lc:S.lc}));
   localStorage.setItem('cenas_prices', JSON.stringify(manualPrices));
   localStorage.setItem('cenas_updatedAt', cloud.updatedAt);
@@ -1324,12 +1461,391 @@ function applyCloudUpdate(){
   if(S.tab==='l') renderList();
   if(S.tab==='r') renderGrid();
   if(S.tab==='p') renderPrices();
+  if(S.tab==='n') renderNutri();
   renderWidget();
   showToast('Updated ✓');
 }
 
+/* ---- NUTRITION TAB ---- */
+const MEAL_PRESETS={"breakfasts": [{"name": "Yogurt natural + granola", "kcal": 180, "protein": 10, "carbs": 24, "fat": 5}, {"name": "Yogurt natural (solo)", "kcal": 90, "protein": 8, "carbs": 10, "fat": 2}, {"name": "Barrita de cereal (e.g. Liga)", "kcal": 90, "protein": 2, "carbs": 16, "fat": 2}, {"name": "2 barritas de cereal", "kcal": 180, "protein": 4, "carbs": 32, "fat": 4}, {"name": "Tostadas con mantequilla", "kcal": 220, "protein": 5, "carbs": 30, "fat": 10}, {"name": "Tostadas con peanut butter", "kcal": 280, "protein": 9, "carbs": 30, "fat": 14}, {"name": "Fruta (manzana/pera)", "kcal": 80, "protein": 1, "carbs": 20, "fat": 0}, {"name": "Café con leche", "kcal": 60, "protein": 3, "carbs": 8, "fat": 2}], "lunches": [{"name": "Nona Rossa - Coppa di Parma sandwich", "kcal": 850, "protein": 38, "carbs": 76, "fat": 44}, {"name": "Mini wrap AH (kaas)", "kcal": 310, "protein": 14, "carbs": 30, "fat": 12}, {"name": "Sandwichito (2 boterhammen + kaas)", "kcal": 320, "protein": 16, "carbs": 36, "fat": 10}, {"name": "Sandwichito con pavo", "kcal": 290, "protein": 20, "carbs": 34, "fat": 6}, {"name": "Ensalada AH (pequeña)", "kcal": 150, "protein": 8, "carbs": 12, "fat": 7}, {"name": "2 bolletjes (jamon, queso, tomate cherry, rúcula, pesto)", "kcal": 450, "protein": 19, "carbs": 54, "fat": 18}, {"name": "Croissant Hamkaas (x2)", "kcal": 610, "protein": 17, "carbs": 58, "fat": 34}, {"name": "Nada / ayuno", "kcal": 0, "protein": 0, "carbs": 0, "fat": 0}, {"name": "AH kip bacon wrap", "kcal": 352, "protein": 15, "carbs": 25, "fat": 21}], "snacks": [{"name": "AH Choco Karamel Bar", "kcal": 170, "protein": 15, "carbs": 14, "fat": 7.5}, {"name": "Holie's Chocolate Bar", "kcal": 130, "protein": 8, "carbs": 15, "fat": 5}, {"name": "Fruta Random", "kcal": 80, "protein": 1, "carbs": 20, "fat": 0}, {"name": "AH Macadamia Mix", "kcal": 190, "protein": 5.5, "carbs": 5, "fat": 16}, {"name": "Coffee", "kcal": 5, "protein": 0, "carbs": 1, "fat": 0}, {"name": "Banana", "kcal": 100, "protein": 1, "carbs": 27, "fat": 0}, {"name": "AH Protein mousse", "kcal": 76, "protein": 10, "carbs": 5, "fat": 1.6}]};
+const DAILY={kcal:2800,protein:140,carbs:300,fat:70};
+const MEAL_SLOTS=[
+  {key:'breakfast',icon:'☀️',label:'Breakfast'},
+  {key:'lunch',    icon:'🥗',label:'Lunch'},
+  {key:'snack',    icon:'🍎',label:'Snack'},
+];
+
+let nutriDate=dk(new Date());
+
+function nutriNav(dir){
+  const d=new Date(nutriDate+'T12:00:00');
+  d.setDate(d.getDate()+dir);
+  nutriDate=dk(d);
+  renderNutri();
+}
+
+/* ---- NUTRITION HELPERS ---- */
+function calcDailyTotals(dayData, dinner){
+  const tot={kcal:0,protein:0,carbs:0,fat:0};
+  MEAL_SLOTS.forEach(({key})=>{
+    const m=dayData[key]||{};
+    tot.kcal+=(m.kcal||0);tot.protein+=(m.protein||0);tot.carbs+=(m.carbs||0);tot.fat+=(m.fat||0);
+  });
+  if(dinner?.nutrition){
+    tot.kcal+=dinner.nutrition.kcal;tot.protein+=dinner.nutrition.protein;
+    tot.carbs+=dinner.nutrition.carbs;tot.fat+=dinner.nutrition.fat;
+  }
+  return tot;
+}
+
+function calcDailyScore(totals){
+  if(totals.kcal<200)return 0;
+  let s=0;
+  // Calories: 25 pts — target 2600–3000
+  if(totals.kcal>=2600&&totals.kcal<=3000)s+=25;
+  else if(totals.kcal>=2200&&totals.kcal<=3400)s+=12;
+  // Protein: 35 pts — target 130–155g (priority)
+  if(totals.protein>=130&&totals.protein<=155)s+=35;
+  else if(totals.protein>=110&&totals.protein<=175)s+=17;
+  // Carbs: 20 pts — target 250–350g
+  if(totals.carbs>=250&&totals.carbs<=350)s+=20;
+  else if(totals.carbs>=200&&totals.carbs<=420)s+=10;
+  // Fat: 20 pts — target 60–82g
+  if(totals.fat>=60&&totals.fat<=82)s+=20;
+  else if(totals.fat>=45&&totals.fat<=105)s+=10;
+  return s;
+}
+
+function getDayGrade(score){
+  if(score===0)return{letter:'—',cls:'grade-none'};
+  if(score>=90)return{letter:'S',cls:'grade-s'};
+  if(score>=75)return{letter:'A',cls:'grade-a'};
+  if(score>=55)return{letter:'B',cls:'grade-b'};
+  if(score>=38)return{letter:'C',cls:'grade-c'};
+  if(score>=20)return{letter:'D',cls:'grade-d'};
+  return{letter:'F',cls:'grade-f'};
+}
+
+function dayIsLogged(key){
+  const dayData=S.nutrition?.[key]||{};
+  const dinnerId=S.plan[key];
+  const dinner=dinnerId?MEALS.find(m=>m.id===dinnerId):null;
+  const totals=calcDailyTotals(dayData,dinner);
+  const manualFilled=MEAL_SLOTS.filter(s=>(dayData[s.key]?.kcal||0)>0).length;
+  return totals.kcal>=800||manualFilled>=2;
+}
+
+function calcStreak(){
+  let streak=0;
+  const today=dk(new Date());
+  const d=new Date();
+  d.setDate(d.getDate()-1);
+  for(let i=0;i<730;i++){
+    const key=dk(d);
+    if(!dayIsLogged(key))break;
+    streak++;
+    d.setDate(d.getDate()-1);
+  }
+  if(dayIsLogged(today))streak++;
+  return streak;
+}
+
+function makeSVGRing(val,max,color,r,sw,size){
+  const cx=size/2;
+  const circ=(2*Math.PI*r).toFixed(2);
+  const pct=max>0?Math.min(val/max,1):0;
+  const offset=(circ*(1-pct)).toFixed(2);
+  return`<svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}" style="transform:rotate(-90deg);display:block;overflow:visible">
+    <circle cx="${cx}" cy="${cx}" r="${r}" fill="none" stroke="var(--surface2)" stroke-width="${sw}"/>
+    <circle cx="${cx}" cy="${cx}" r="${r}" fill="none" stroke="${color}" stroke-width="${sw}"
+      stroke-linecap="round" stroke-dasharray="${circ}" stroke-dashoffset="${offset}"
+      style="transition:stroke-dashoffset .55s ease"/>
+  </svg>`;
+}
+
+function getMacroColor(val,low,high){
+  if(val>=low&&val<=high)return'var(--sage)';
+  if(val>=low*.78&&val<=high*1.28)return'var(--gold)';
+  return'var(--terra)';
+}
+
+/* ---- RENDER: PROGRESS CARD ---- */
+function renderNutriProgress(totals){
+  const{kcal,protein,carbs,fat}=totals;
+  const score=calcDailyScore(totals);
+  const grade=getDayGrade(score);
+  const kcalColor=kcal===0?'var(--faint)':getMacroColor(kcal,2600,3000);
+
+  // Main ring: r=50, size=120
+  const kcalRing=makeSVGRing(kcal,3200,kcalColor,50,9,120);
+
+  // Remaining label
+  let remainHTML;
+  if(kcal===0)remainHTML=`<span style="color:var(--faint)">— to go</span>`;
+  else if(kcal>3000)remainHTML=`<span style="color:var(--terra)">+${kcal-2800} over</span>`;
+  else if(kcal>=2600)remainHTML=`<span style="color:var(--sage)">On target ✓</span>`;
+  else remainHTML=`<span style="color:var(--gold)">${2800-kcal} to go</span>`;
+
+  // Macro rows
+  const macros=[
+    {label:'Protein',val:protein,target:140,low:130,high:155,unit:'g'},
+    {label:'Carbs',  val:carbs,  target:300,low:250,high:350,unit:'g'},
+    {label:'Fat',    val:fat,    target:70, low:60, high:82, unit:'g'},
+  ];
+  const macroRows=macros.map(m=>{
+    const color=m.val===0?'var(--faint)':getMacroColor(m.val,m.low,m.high);
+    const ring=makeSVGRing(m.val,m.target*1.2,color,17,4,44);
+    const diff=m.target-m.val;
+    const sub=m.val===0?`${m.target}${m.unit} target`:diff>0?`${diff}${m.unit} to go`:`+${-diff}${m.unit} over`;
+    return`<div class="macro-ring-row">
+      <div class="macro-mini-ring">${ring}<div class="macro-mini-center" style="color:${color}">${m.val}</div></div>
+      <div class="macro-ring-info">
+        <div class="macro-ring-name">${m.label}</div>
+        <div class="macro-ring-val" style="color:${color}">${m.val}${m.unit}</div>
+        <div class="macro-ring-sub">${sub}</div>
+      </div>
+    </div>`;
+  }).join('');
+
+  document.getElementById('nutriProgressCard').innerHTML=
+    `<div class="nutri-progress-card">
+      <div class="nutri-main-ring-wrap">
+        ${kcalRing}
+        <div class="ring-center">
+          <div class="ring-main-val" style="color:${kcalColor}">${kcal}</div>
+          <div class="ring-main-lbl">/ 2800 kcal</div>
+          <div class="ring-remaining">${remainHTML}</div>
+        </div>
+        <div class="daily-grade-badge ${grade.cls}">${grade.letter}</div>
+      </div>
+      <div class="nutri-macro-rings">${macroRows}</div>
+    </div>`;
+}
+
+/* ---- RENDER: WEEK STRIP ---- */
+function renderWeekStrip(){
+  const dates=wkDates(0); // always current week
+  const todayKey=dk(new Date());
+  const DLET=['M','T','W','T','F','S','S'];
+  const days=dates.map((d,i)=>{
+    const key=dk(d);
+    const dayData=S.nutrition?.[key]||{};
+    const dinnerId=S.plan[key];
+    const dinner=dinnerId?MEALS.find(m=>m.id===dinnerId):null;
+    const totals=calcDailyTotals(dayData,dinner);
+    const score=calcDailyScore(totals);
+    const isToday=key===todayKey;
+    const isNav=key===nutriDate&&key!==todayKey;
+    let dotCls='s-none';
+    if(totals.kcal>=200){
+      if(score>=75)dotCls='s-great';
+      else if(score>=55)dotCls='s-good';
+      else if(score>=30)dotCls='s-ok';
+      else dotCls='s-bad';
+    }
+    const title=score>0?`Score: ${score}/100`:'No data';
+    return`<div class="wstrip-day${isToday?' today':''}${isNav?' active-nav':''}" onclick="nutriJump('${key}')" style="cursor:pointer" title="${title}">
+      <div class="wstrip-dot ${dotCls}"></div>
+      <div class="wstrip-lbl">${DLET[i]}</div>
+    </div>`;
+  }).join('');
+  document.getElementById('nutriWeekStrip').innerHTML=`<div class="week-strip">${days}</div>`;
+}
+
+function nutriJump(key){
+  nutriDate=key;
+  renderNutri();
+}
+
+/* ---- RENDER: ACHIEVEMENTS ---- */
+function renderAchievements(totals,streak){
+  const{protein,kcal,carbs,fat}=totals;
+  const score=calcDailyScore(totals);
+  const dayData=S.nutrition?.[nutriDate]||{};
+  const badges=[];
+
+  if(streak>=7) badges.push({cls:'ach-fire',icon:'🔥',text:`${streak}-day streak`});
+  else if(streak>=3) badges.push({cls:'ach-fire',icon:'🔥',text:`${streak} days`});
+
+  if(protein>=130) badges.push({cls:'ach-green',icon:'🎯',text:'Protein goal'});
+  if(score>=75) badges.push({cls:'ach-gold',icon:'⚖️',text:'Balanced day'});
+  if(score>=90) badges.push({cls:'ach-purple',icon:'🏆',text:'Perfect day'});
+  if(protein>=150) badges.push({cls:'ach-green',icon:'💪',text:'High protein'});
+
+  const allLogged=MEAL_SLOTS.every(s=>(dayData[s.key]?.kcal||0)>0);
+  if(allLogged&&S.plan[nutriDate]) badges.push({cls:'ach-gold',icon:'⚡',text:'Full log'});
+
+  const el=document.getElementById('nutriAchievements');
+  if(!el)return;
+  if(!badges.length){el.innerHTML='';return;}
+  el.innerHTML=`<div class="nutri-achievements">${badges.map((b,idx)=>
+    `<span class="ach ${b.cls}" style="animation-delay:${idx*0.06}s">${b.icon} ${b.text}</span>`
+  ).join('')}</div>`;
+}
+
+/* ---- RENDER: MAIN NUTRITION VIEW ---- */
+function renderNutri(){
+  const d=new Date(nutriDate+'T12:00:00');
+  const lbl=document.getElementById('nutriDayLbl');
+  const isToday=nutriDate===dk(new Date());
+  lbl.innerHTML=`<strong>${d.toLocaleDateString('en-GB',{weekday:'short',day:'numeric',month:'short'})}</strong>${isToday?' <span style="color:var(--gold);font-size:11px">• today</span>':''}`;
+
+  // Streak badge
+  const streak=calcStreak();
+  const streakEl=document.getElementById('nutriStreak');
+  if(streakEl){
+    if(streak>0){
+      streakEl.className='streak-badge';
+      streakEl.innerHTML=`🔥 ${streak} day${streak===1?'':'s'}`;
+    } else {
+      streakEl.className='streak-badge zero';
+      streakEl.textContent='Start streak';
+    }
+  }
+
+  const dinnerId=S.plan[nutriDate];
+  const dinner=dinnerId?MEALS.find(m=>m.id===dinnerId):null;
+  const dayData=S.nutrition?.[nutriDate]||{};
+  const totals=calcDailyTotals(dayData,dinner);
+
+  renderNutriProgress(totals);
+  renderWeekStrip();
+  renderAchievements(totals,streak);
+
+  // Meal cards
+  const container=document.getElementById('nutriMeals');
+  const cards=MEAL_SLOTS.map(({key,icon,label})=>{
+    const d=dayData[key]||{};
+    const presetKey=key==='breakfast'?'breakfasts':key==='lunch'?'lunches':'snacks';
+    const presetList=MEAL_PRESETS[presetKey]||[];
+    const presetChips=presetList.map(p=>{
+      const sel=d.name===p.name;
+      return`<button class="preset-chip${sel?' on':''}" onclick="applyPreset('${nutriDate}','${key}',${JSON.stringify(p).replace(/'/g,'&#39;')})">${p.name}</button>`;
+    }).join('');
+    return`<div class="nmeal-card">
+      <div class="nmeal-hdr">
+        <div class="nmeal-hdr-left">
+          <span class="nmeal-icon">${icon}</span>
+          <span class="nmeal-title">${label}</span>
+          ${d.name?`<span class="nmeal-subtitle">— ${d.name}</span>`:''}
+        </div>
+      </div>
+      <div class="nmeal-presets">${presetChips}
+        <button class="preset-chip${!d.name||presetList.every(p=>p.name!==d.name)?' on':''}" onclick="clearNutriMeal('${nutriDate}','${key}')">Custom</button>
+      </div>
+      <div class="nmeal-body">
+        <div class="nmeal-name-row nfield-name">
+          <label>What</label>
+          <input type="text" placeholder="or type custom..." value="${d.name||''}" oninput="saveNutriField('${key}','name',this.value)">
+        </div>
+        <div class="nfield"><label>kcal</label><input type="number" min="0" placeholder="—" value="${d.kcal||''}" oninput="saveNutriField('${key}','kcal',+this.value)"></div>
+        <div class="nfield"><label>Protein</label><input type="number" min="0" placeholder="—" value="${d.protein||''}" oninput="saveNutriField('${key}','protein',+this.value)"></div>
+        <div class="nfield"><label>Carbs</label><input type="number" min="0" placeholder="—" value="${d.carbs||''}" oninput="saveNutriField('${key}','carbs',+this.value)"></div>
+        <div class="nfield"><label>Fat</label><input type="number" min="0" placeholder="—" value="${d.fat||''}" oninput="saveNutriField('${key}','fat',+this.value)"></div>
+      </div>
+    </div>`;
+  });
+
+  // Dinner card
+  const dinnerCard=`<div class="nmeal-card">
+    <div class="nmeal-hdr">
+      <div class="nmeal-hdr-left">
+        <span class="nmeal-icon">🍽</span>
+        <span class="nmeal-title">Dinner</span>
+        ${dinner?`<span class="nmeal-subtitle">— ${dinner.name}</span>`:''}
+      </div>
+      <button class="btn-clr" style="font-size:11px;padding:4px 9px" onclick="openDayMod('${nutriDate}')">Change</button>
+    </div>
+    <div class="nmeal-dinner-body">
+      ${dinner&&dinner.nutrition
+        ?`<div class="ndinner-macros">
+            <span class="ndinner-macro">${dinner.nutrition.kcal} kcal</span>
+            <span class="ndinner-macro">${dinner.nutrition.protein}g protein</span>
+            <span class="ndinner-macro">${dinner.nutrition.carbs}g carbs</span>
+            <span class="ndinner-macro">${dinner.nutrition.fat}g fat</span>
+          </div>`
+        :`<div class="ndinner-empty">${dinner?'No nutritional data for this dish':'No dinner planned — go to This week to assign one'}</div>`
+      }
+    </div>
+  </div>`;
+
+  container.innerHTML=[...cards,dinnerCard].join('');
+}
+
+function applyPreset(date,meal,preset){
+  if(!S.nutrition)S.nutrition={};
+  if(!S.nutrition[date])S.nutrition[date]={};
+  S.nutrition[date][meal]={name:preset.name,kcal:preset.kcal,protein:preset.protein,carbs:preset.carbs,fat:preset.fat};
+  saveNutriStore();renderNutri();
+}
+function clearNutriMeal(date,meal){
+  if(S.nutrition?.[date]?.[meal])delete S.nutrition[date][meal];
+  saveNutriStore();renderNutri();
+}
+function saveNutriField(meal,field,val){
+  if(!S.nutrition)S.nutrition={};
+  if(!S.nutrition[nutriDate])S.nutrition[nutriDate]={};
+  if(!S.nutrition[nutriDate][meal])S.nutrition[nutriDate][meal]={};
+  S.nutrition[nutriDate][meal][field]=val;
+  saveNutriStore();
+  // Lightweight update — only refresh rings + achievements without re-rendering all cards
+  const dayData=S.nutrition[nutriDate]||{};
+  const dinner=S.plan[nutriDate]?MEALS.find(m=>m.id===S.plan[nutriDate]):null;
+  const totals=calcDailyTotals(dayData,dinner);
+  renderNutriProgress(totals);
+  renderWeekStrip();
+  renderAchievements(totals,calcStreak());
+}
+
+function saveNutriStore(){
+  localStorage.setItem('cenas_nutrition',JSON.stringify(S.nutrition||{}));
+  maybeDailyBackup(); // once per day, silent
+}
+
+function loadNutri(){
+  try{const d=localStorage.getItem('cenas_nutrition');if(d)S.nutrition=JSON.parse(d);}catch(e){}
+  if(!S.nutrition)S.nutrition={};
+}
+
+/* ---- NUTRITION BACKUP (local-only with daily cloud backup) ---- */
+async function maybeDailyBackup(){
+  const last=parseInt(localStorage.getItem('cenas_nutrition_lastBackup')||'0');
+  if(Date.now()-last<86400000)return; // less than 24h ago — skip
+  try{
+    const payload=JSON.stringify({nutrition:S.nutrition||{},backedUpAt:Date.now()});
+    const res=await fetch(AH_PROXY+'/sync-nutrition',{method:'POST',headers:{'Content-Type':'application/json'},body:payload});
+    if(res.ok)localStorage.setItem('cenas_nutrition_lastBackup',Date.now());
+  }catch(e){/* silent — it's just a backup */}
+}
+
+async function restoreNutritionBackup(){
+  const btn=document.getElementById('nutriRestoreBtn');
+  if(btn){btn.textContent='Restoring…';btn.disabled=true;}
+  try{
+    const res=await fetch(AH_PROXY+'/sync-nutrition');
+    if(!res.ok)throw new Error();
+    const cloud=await res.json();
+    if(!cloud.nutrition||!Object.keys(cloud.nutrition).length){
+      showToast('No backup found in cloud');
+      if(btn){btn.textContent='Restore backup';btn.disabled=false;}
+      return;
+    }
+    // Merge: local wins for keys that exist, cloud fills in the rest
+    S.nutrition={...cloud.nutrition,...S.nutrition};
+    localStorage.setItem('cenas_nutrition',JSON.stringify(S.nutrition));
+    const d=new Date(cloud.backedUpAt);
+    const lbl=d.toLocaleDateString('en-GB',{day:'numeric',month:'short'});
+    showToast(`Nutrition restored from ${lbl} ✓`);
+    renderNutri();
+  }catch(e){
+    showToast('Restore failed — check connection');
+  }finally{
+    if(btn){btn.textContent='Restore backup';btn.disabled=false;}
+  }
+}
+
 /* ---- INIT ---- */
-load();loadPrices();renderFbar();renderGrid();renderWidget();loadFromCloud();setInterval(pollCloud, 120000);
+load();loadPrices();loadNutri();renderFbar();renderGrid();renderWidget();loadFromCloud();setInterval(pollCloud, 120000);
 </script>
 </body>
 </html>
