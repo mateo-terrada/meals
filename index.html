@@ -294,12 +294,13 @@ html,body{min-height:100%;background:var(--bg);color:var(--text);font-family:'Ou
 .nmeal-title{font-size:13px;font-weight:600;flex-shrink:0}
 .nmeal-subtitle{font-size:12px;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 /* Name row full-width, then macros in 2x2 grid */
-.nmeal-body{padding:10px 12px;display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.nmeal-body{padding:10px 12px;display:flex;flex-direction:column;gap:8px}
 .nmeal-name-row{grid-column:1/-1}
 .nmeal-dinner-body{padding:11px 14px}
-.nfield{display:flex;align-items:center;gap:8px;background:var(--surface2);border-radius:var(--rs);padding:8px 10px;border:1px solid var(--border)}
-.nfield label{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.4px;color:var(--muted);flex-shrink:0;width:52px}
-.nfield input{border:none;background:transparent;font-family:'Outfit',sans-serif;font-size:15px;font-weight:500;color:var(--text);text-align:right;flex:1;min-width:0;padding:0}
+.nmeal-macros{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--border);border:1px solid var(--border);border-radius:var(--rs);overflow:hidden}
+.nfield{background:var(--surface2);padding:8px 4px 7px;display:flex;flex-direction:column;align-items:center;gap:3px;border:none}
+.nfield label{font-size:9px;font-weight:600;text-transform:uppercase;letter-spacing:.4px;color:var(--muted);flex-shrink:0;width:auto}
+.nfield input{border:none;background:transparent;font-family:'Outfit',sans-serif;font-size:15px;font-weight:600;color:var(--text);text-align:center;width:100%;min-width:0;padding:0}
 .nfield input:focus{outline:none}
 .nfield input::placeholder{color:var(--faint)}
 .nfield-name{background:transparent;border:1px solid var(--border);border-radius:var(--rs);padding:8px 10px;display:flex;align-items:center;gap:8px}
@@ -536,7 +537,7 @@ html,body{min-height:100%;background:var(--bg);color:var(--text);font-family:'Ou
 const MEALS=[
   {id:1,name:"Steak with fries",emoji:"🥩",ingr:["Steak","Fries"],cx:2,t:20,cost:null,y:9,who:"Mateo",nutrition:{kcal:710,protein:58,carbs:40,fat:28}},
   {id:2,name:"Milanesas",emoji:"🍗",ingr:["Chicken breast","Breadcrumbs","Eggs","Garlic","Oil","Fries"],cx:5,t:60,cost:null,y:10,who:"Both",nutrition:{kcal:620,protein:52,carbs:28,fat:30}},
-  {id:3,name:"Chicken with veggies",emoji:"🥦",ingr:["Chicken breast","Vegetables"],cx:3,t:60,cost:null,y:7,who:"Both",nutrition:{kcal:540,protein:39,carbs:12,fat:39}},
+  {id:3,name:"Chicken with veggies",emoji:"🥦",ingr:["Chicken breast","Vegetables","Oil"],cx:3,t:60,cost:null,y:7,who:"Both",nutrition:{kcal:540,protein:39,carbs:12,fat:39}},
   {id:4,name:"Pasta Carbonara",emoji:"🍝",ingr:["Pasta","Eggs","Guanciale","Parmesan"],cx:2,t:30,cost:null,y:10,who:"Both",nutrition:{kcal:680,protein:32,carbs:72,fat:28}},
   {id:5,name:"Pasta with shrimps",emoji:"🦐",ingr:["Pasta","Shrimps","Lemon","Garlic","Parsley"],cx:3,t:30,cost:null,y:9,who:"Both",nutrition:{kcal:570,protein:38,carbs:68,fat:12}},
   {id:6,name:"Pasta with chorizo",emoji:"🌶️",ingr:["Pasta","Chorizo","Tomato sauce","Tomato peeled","Red pepper"],cx:3,t:30,cost:null,y:8,who:"Both",nutrition:{kcal:690,protein:28,carbs:74,fat:28}},
@@ -1064,7 +1065,7 @@ function renderAhTotal(){
 
 /* ---- PRECIOS MANUALES ---- */
 // Precios por defecto basados en AH (€)
-const DEFAULT_PRICES={"AH Choco Karamel Bar":3.0,"AH Macadamia Mix":2.79,"AH Protein mousse":1.5,"AH frozen fish mix":6.3,"AH kip bacon wrap":4.25,"AH marinated ribs":10.0,"Arborio rice":2.1,"Banana":0.4,"Beef patties":5.0,"Bell pepper":1.3,"Bolletjes (bag of 10)":2.0,"Box pizza":4.0,"Bread":2.0,"Breadcrumbs":0.8,"Broth":0.8,"Burger buns":1.6,"Burrata":2.1,"Cheddar":1.35,"Cheese":1.5,"Cherry tomatoes":1.1,"Chicken breast":10.0,"Chicken breast (½ kg)":5.0,"Chicken nuggets":5.0,"Chicken patties":6.0,"Chorizo":3.15,"Crème fraîche":1.4,"Eggs":2.0,"Fish fillet":12.0,"Flour":0.85,"Fries":1.5,"Garlic":0.8,"Green beans":2.4,"Guanciale":2.5,"Heavy cream":2.0,"Holie's Chocolate Bar":3.3,"Knorr Seasoned Rice":4.7,"Lemon":1.5,"Lettuce":1.3,"Minced meat":6.8,"Mixed snacks":3.45,"Mushrooms":1.8,"Nona Rossa Copa Di Parma sandwich":11.0,"Oil":0.72,"Onion":0.4,"Parmesan":3.7,"Parsley":1.3,"Pasta":2.8,"Pesto":1.8,"Prosciutto":4.0,"Red pepper":1.2,"Rucola":1.1,"Salami":4.0,"Sandwich bread":0.7,"Shrimps":10.8,"Steak":12.0,"Sushi":30.0,"Tomato":1.2,"Tomato peeled":0.75,"Tomato purée":0.6,"Tomato sauce":0.75,"Vegetables":2.5,"Wraps":1.0};
+const DEFAULT_PRICES={"AH Choco Karamel Bar":3.0,"AH Chocolate Bread":5.0,"AH Chocolate croissants":3.9,"AH Macadamia Mix":2.79,"AH Protein mousse":1.5,"AH frozen fish mix":6.3,"AH kip bacon wrap":4.25,"AH marinated ribs":10.0,"Alfajor":0,"Almhof Roomyoghurt aardbei":2.59,"Arborio rice":2.1,"Banana":0.4,"Beef patties":5.0,"Bell pepper":1.3,"Ben & Jerry's":8.0,"Bolletjes (bag of 10)":2.0,"Box pizza":4.0,"Bread":2.0,"Breadcrumbs":0.8,"Broth":0.8,"Burger buns":1.6,"Burrata":2.1,"Cheddar":1.35,"Cheese":1.5,"Cherry tomatoes":1.1,"Chicken breast":10.0,"Chicken breast (½ kg)":5.0,"Chicken nuggets":5.0,"Chicken patties":6.0,"Chorizo":3.15,"Crème fraîche":1.4,"Eggs":2.0,"Fish fillet":12.0,"Flour":0.85,"Fries":1.5,"Garlic":0.8,"Green beans":2.4,"Guanciale":2.5,"Heavy cream":2.0,"HiPRO Skyr Vanilla":3.0,"Holie's Chocolate Bar":3.3,"Knorr Seasoned Rice":4.7,"Lemon":1.5,"Lettuce":1.3,"Minced meat":6.8,"Mixed snacks":3.45,"Mushrooms":1.8,"Nona Rossa Copa Di Parma sandwich":11.0,"Oil":0.72,"Onion":0.4,"Parmesan":3.7,"Parsley":1.3,"Pasta":2.8,"Pesto":1.8,"Prosciutto":4.0,"Red pepper":1.2,"Rucola":1.1,"Salami":4.0,"Sandwich bread":0.7,"Shrimps":10.8,"Steak":12.0,"Sushi":30.0,"Tomato":1.2,"Tomato peeled":0.75,"Tomato purée":0.6,"Tomato sauce":0.75,"Vegetables":2.5,"Wraps":1.0};
 
 // Estado de precios: { ingredient: { price: number, bonus: bool } }
 let manualPrices={};
@@ -1476,7 +1477,7 @@ function applyCloudUpdate(){
 }
 
 /* ---- NUTRITION TAB ---- */
-const MEAL_PRESETS={"breakfasts": [{"name": "Yogurt natural + granola", "kcal": 180, "protein": 10, "carbs": 24, "fat": 5}, {"name": "Yogurt natural (solo)", "kcal": 90, "protein": 8, "carbs": 10, "fat": 2}, {"name": "Barrita de cereal (e.g. Liga)", "kcal": 90, "protein": 2, "carbs": 16, "fat": 2}, {"name": "2 barritas de cereal", "kcal": 180, "protein": 4, "carbs": 32, "fat": 4}, {"name": "Tostadas con mantequilla", "kcal": 220, "protein": 5, "carbs": 30, "fat": 10}, {"name": "Tostadas con peanut butter", "kcal": 280, "protein": 9, "carbs": 30, "fat": 14}, {"name": "Fruta (manzana/pera)", "kcal": 80, "protein": 1, "carbs": 20, "fat": 0}, {"name": "Café con leche", "kcal": 60, "protein": 3, "carbs": 8, "fat": 2}], "lunches": [{"name": "Nona Rossa - Coppa di Parma sandwich", "kcal": 850, "protein": 38, "carbs": 76, "fat": 44}, {"name": "Mini wrap AH (kaas)", "kcal": 310, "protein": 14, "carbs": 30, "fat": 12}, {"name": "Sandwichito (2 boterhammen + kaas)", "kcal": 320, "protein": 16, "carbs": 36, "fat": 10}, {"name": "Sandwichito con pavo", "kcal": 290, "protein": 20, "carbs": 34, "fat": 6}, {"name": "Ensalada AH (pequeña)", "kcal": 150, "protein": 8, "carbs": 12, "fat": 7}, {"name": "2 bolletjes (jamon, queso, tomate cherry, rúcula, pesto)", "kcal": 450, "protein": 19, "carbs": 54, "fat": 18}, {"name": "Croissant Hamkaas (x2)", "kcal": 610, "protein": 17, "carbs": 58, "fat": 34}, {"name": "Nada / ayuno", "kcal": 0, "protein": 0, "carbs": 0, "fat": 0}, {"name": "AH kip bacon wrap", "kcal": 352, "protein": 15, "carbs": 25, "fat": 21}], "snacks": [{"name": "AH Choco Karamel Bar", "kcal": 170, "protein": 15, "carbs": 14, "fat": 7.5}, {"name": "Holie's Chocolate Bar", "kcal": 130, "protein": 8, "carbs": 15, "fat": 5}, {"name": "Fruta Random", "kcal": 80, "protein": 1, "carbs": 20, "fat": 0}, {"name": "AH Macadamia Mix", "kcal": 190, "protein": 5.5, "carbs": 5, "fat": 16}, {"name": "Coffee", "kcal": 5, "protein": 0, "carbs": 1, "fat": 0}, {"name": "Banana", "kcal": 100, "protein": 1, "carbs": 27, "fat": 0}, {"name": "AH Protein mousse", "kcal": 76, "protein": 10, "carbs": 5, "fat": 1.6}]};
+const MEAL_PRESETS={"breakfasts":[{"name":"AH Chocolate Croissant","kcal":337,"protein":5.5,"carbs":35,"fat":19},{"name":"AH Chocolate Bread","kcal":521,"protein":10.5,"carbs":52,"fat":29},{"name":"HiPRO Skyr Vanilla","kcal":53,"protein":9.5,"carbs":3.5,"fat":0},{"name":"HiPRO Skyr Vanilla w/ Honey & Nuts","kcal":203,"protein":12.5,"carbs":22.5,"fat":8},{"name":"Almhof Yogurt","kcal":138,"protein":2.7,"carbs":13,"fat":8},{"name":"Banana","kcal":100,"protein":1,"carbs":27,"fat":0},{"name":"Fruit","kcal":80,"protein":1,"carbs":20,"fat":0},{"name":"Coffee w/ milk","kcal":60,"protein":3,"carbs":8,"fat":2}],"lunches":[{"name":"Nona Rossa - Coppa di Parma sandwich","kcal":850,"protein":38,"carbs":76,"fat":44},{"name":"AH kip bacon wrap","kcal":352,"protein":15,"carbs":25,"fat":21},{"name":"AH Broodje","kcal":356,"protein":15,"carbs":50,"fat":4},{"name":"Tosti kaas","kcal":320,"protein":16,"carbs":36,"fat":10},{"name":"2 bolletjes (jamon, queso, tomate cherry, rúcula, pesto)","kcal":450,"protein":19,"carbs":54,"fat":18},{"name":"Croissant Hamkaas (x2)","kcal":610,"protein":17,"carbs":58,"fat":34},{"name":"Nada / ayuno","kcal":0,"protein":0,"carbs":0,"fat":0}],"snacks":[{"name":"AH Choco Karamel Bar","kcal":170,"protein":15,"carbs":14,"fat":7.5},{"name":"Holie's Chocolate Bar","kcal":130,"protein":8,"carbs":15,"fat":5},{"name":"Fruta Random","kcal":80,"protein":1,"carbs":20,"fat":0},{"name":"AH Macadamia Mix","kcal":190,"protein":5.5,"carbs":5,"fat":16},{"name":"Coffee","kcal":5,"protein":0,"carbs":1,"fat":0},{"name":"Banana","kcal":100,"protein":1,"carbs":27,"fat":0},{"name":"AH Protein mousse","kcal":76,"protein":10,"carbs":5,"fat":1.6},{"name":"Ben & Jerry's","kcal":1232,"protein":20,"carbs":149,"fat":60},{"name":"Alfajor","kcal":250,"protein":4,"carbs":36,"fat":10}]};
 const DAILY={kcal:2800,protein:140,carbs:300,fat:70};
 const MEAL_SLOTS=[
   {key:'breakfast',icon:'☀️',label:'Breakfast'},
@@ -1525,8 +1526,13 @@ function calcDailyTotals(dayData, dinner){
     tot.kcal+=(m.kcal||0);tot.protein+=(m.protein||0);tot.carbs+=(m.carbs||0);tot.fat+=(m.fat||0);
   });
   if(dinner?.nutrition){
+    // Planned dinner from meal library
     tot.kcal+=dinner.nutrition.kcal;tot.protein+=dinner.nutrition.protein;
     tot.carbs+=dinner.nutrition.carbs;tot.fat+=dinner.nutrition.fat;
+  } else {
+    // Manual dinner entry (eating out or unplanned)
+    const d=dayData.dinner||{};
+    tot.kcal+=(d.kcal||0);tot.protein+=(d.protein||0);tot.carbs+=(d.carbs||0);tot.fat+=(d.fat||0);
   }
   return tot;
 }
@@ -1790,35 +1796,48 @@ function renderNutri(){
           <label>What</label>
           <input type="text" placeholder="or type custom..." value="${d.name||''}" oninput="saveNutriField('${key}','name',this.value)">
         </div>
-        <div class="nfield"><label>kcal</label><input type="number" min="0" placeholder="—" value="${d.kcal||''}" oninput="saveNutriField('${key}','kcal',+this.value)"></div>
-        <div class="nfield"><label>Protein</label><input type="number" min="0" placeholder="—" value="${d.protein||''}" oninput="saveNutriField('${key}','protein',+this.value)"></div>
-        <div class="nfield"><label>Carbs</label><input type="number" min="0" placeholder="—" value="${d.carbs||''}" oninput="saveNutriField('${key}','carbs',+this.value)"></div>
-        <div class="nfield"><label>Fat</label><input type="number" min="0" placeholder="—" value="${d.fat||''}" oninput="saveNutriField('${key}','fat',+this.value)"></div>
+        <div class="nmeal-macros">
+          <div class="nfield"><label>kcal</label><input type="number" min="0" placeholder="—" value="${d.kcal||''}" oninput="saveNutriField('${key}','kcal',+this.value)"></div>
+          <div class="nfield"><label>Prot</label><input type="number" min="0" placeholder="—" value="${d.protein||''}" oninput="saveNutriField('${key}','protein',+this.value)"></div>
+          <div class="nfield"><label>Carbs</label><input type="number" min="0" placeholder="—" value="${d.carbs||''}" oninput="saveNutriField('${key}','carbs',+this.value)"></div>
+          <div class="nfield"><label>Fat</label><input type="number" min="0" placeholder="—" value="${d.fat||''}" oninput="saveNutriField('${key}','fat',+this.value)"></div>
+        </div>
       </div>
     </div>`;
   });
 
   // Dinner card
+  const manualDinner=dayData.dinner||{};
+  const isOut=S.out?.[nutriDate];
   const dinnerCard=`<div class="nmeal-card">
     <div class="nmeal-hdr">
       <div class="nmeal-hdr-left">
         <span class="nmeal-icon">🍽</span>
         <span class="nmeal-title">Dinner</span>
-        ${dinner?`<span class="nmeal-subtitle">— ${dinner.name}</span>`:''}
+        ${dinner?`<span class="nmeal-subtitle">— ${dinner.name}</span>`:isOut?`<span class="nmeal-subtitle" style="color:var(--gold)">— eating out</span>`:''}
       </div>
-      <button class="btn-clr" style="font-size:11px;padding:4px 9px" onclick="openDayMod('${nutriDate}')">Change</button>
+      <button class="btn-clr" style="font-size:11px;padding:4px 9px" onclick="openDayMod('${nutriDate}')">${dinner?'Change':'Assign meal'}</button>
     </div>
-    <div class="nmeal-dinner-body">
-      ${dinner&&dinner.nutrition
-        ?`<div class="ndinner-macros">
-            <span class="ndinner-macro">${dinner.nutrition.kcal} kcal</span>
-            <span class="ndinner-macro">${dinner.nutrition.protein}g protein</span>
-            <span class="ndinner-macro">${dinner.nutrition.carbs}g carbs</span>
-            <span class="ndinner-macro">${dinner.nutrition.fat}g fat</span>
-          </div>`
-        :`<div class="ndinner-empty">${dinner?'No nutritional data for this dish':'No dinner planned — go to This week to assign one'}</div>`
-      }
-    </div>
+    ${dinner&&dinner.nutrition
+      ?`<div class="nmeal-dinner-body"><div class="ndinner-macros">
+          <span class="ndinner-macro">${dinner.nutrition.kcal} kcal</span>
+          <span class="ndinner-macro">${dinner.nutrition.protein}g protein</span>
+          <span class="ndinner-macro">${dinner.nutrition.carbs}g carbs</span>
+          <span class="ndinner-macro">${dinner.nutrition.fat}g fat</span>
+        </div></div>`
+      :`<div class="nmeal-body">
+          <div class="nmeal-name-row nfield-name">
+            <label>What</label>
+            <input type="text" placeholder="e.g. Pizza Napoli…" value="${manualDinner.name||''}" oninput="saveNutriField('dinner','name',this.value)">
+          </div>
+          <div class="nmeal-macros">
+            <div class="nfield"><label>kcal</label><input type="number" min="0" placeholder="—" value="${manualDinner.kcal||''}" oninput="saveNutriField('dinner','kcal',+this.value)"></div>
+            <div class="nfield"><label>Prot</label><input type="number" min="0" placeholder="—" value="${manualDinner.protein||''}" oninput="saveNutriField('dinner','protein',+this.value)"></div>
+            <div class="nfield"><label>Carbs</label><input type="number" min="0" placeholder="—" value="${manualDinner.carbs||''}" oninput="saveNutriField('dinner','carbs',+this.value)"></div>
+            <div class="nfield"><label>Fat</label><input type="number" min="0" placeholder="—" value="${manualDinner.fat||''}" oninput="saveNutriField('dinner','fat',+this.value)"></div>
+          </div>
+        </div>`
+    }
   </div>`;
 
   container.innerHTML=[...cards,dinnerCard].join('');
