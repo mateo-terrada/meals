@@ -1634,11 +1634,13 @@ function applyCloudUpdate(){
   if(cloud.plan && Object.keys(cloud.plan).length) S.plan = cloud.plan;
   if(cloud.ckd  && Object.keys(cloud.ckd).length)  S.ckd  = cloud.ckd;
   if(cloud.lc   && Object.keys(cloud.lc).length)   S.lc   = cloud.lc;
+  if(cloud.manual && Object.keys(cloud.manual).length) S.manual = cloud.manual;
+  if(cloud.out  && Object.keys(cloud.out).length)  S.out  = cloud.out;
   if(cloud.wkExtras && Object.keys(cloud.wkExtras).length) S.wkExtras = cloud.wkExtras;
   if(cloud.qtyOverrides && Object.keys(cloud.qtyOverrides).length) S.qtyOverrides = cloud.qtyOverrides;
   if(cloud.prices && Object.keys(cloud.prices).length) Object.assign(manualPrices, cloud.prices);
   // Note: nutrition is local-only — not read from household_state
-  localStorage.setItem('cenas2', JSON.stringify({plan:S.plan,ckd:S.ckd,lc:S.lc}));
+  localStorage.setItem('cenas2', JSON.stringify({plan:S.plan,ckd:S.ckd,lc:S.lc,manual:S.manual,out:S.out,wkExtras:S.wkExtras||{},qtyOverrides:S.qtyOverrides||{}}));
   localStorage.setItem('cenas_prices', JSON.stringify(manualPrices));
   localStorage.setItem('cenas_updatedAt', cloud.updatedAt);
   localStorage.setItem('cenas_lastPulled', cloud.updatedAt);
@@ -1647,7 +1649,6 @@ function applyCloudUpdate(){
   if(S.tab==='s') renderWeek();
   if(S.tab==='l') renderList();
   if(S.tab==='r') renderGrid();
-  if(S.tab==='p') renderPrices();
   if(S.tab==='n') renderNutri();
   renderWidget();
   showToast('Updated ✓');
