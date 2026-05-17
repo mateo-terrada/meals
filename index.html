@@ -383,6 +383,47 @@ html,body{min-height:100%;background:var(--bg);color:var(--text);font-family:'Ou
 .mpicker-chip{background:var(--surface2);border:1px solid var(--border);border-radius:20px;padding:5px 10px;font-size:12px;cursor:pointer;color:var(--text);white-space:nowrap;transition:all .15s}
 .mpicker-chip:hover{border-color:var(--gold);color:var(--gold)}
 .mpicker-chip.on{background:var(--gold-dim);border-color:var(--gold);color:var(--gold)}
+
+/* ===== WEEKLY EXTRAS ===== */
+.extras-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);margin-top:14px;overflow:hidden}
+.extras-header{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;cursor:pointer;user-select:none;gap:10px}
+.extras-header:active{background:var(--surface2)}
+.extras-title{font-family:'Fraunces',serif;font-size:15px;font-weight:600;display:flex;align-items:center;gap:8px}
+.extras-count{background:var(--gold-dim);border:1px solid var(--gold);color:var(--gold);border-radius:20px;padding:1px 8px;font-size:11px;font-weight:600;font-family:'Outfit',sans-serif}
+.extras-chevron{font-size:12px;color:var(--muted);flex-shrink:0}
+.extras-body{border-top:1px solid var(--border);padding:12px 14px;display:flex;flex-direction:column;gap:14px}
+.extra-cat-lbl{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);margin-bottom:6px}
+.extra-chips{display:flex;flex-wrap:wrap;gap:6px}
+.extra-chip{background:var(--surface2);border:1px solid var(--border);border-radius:20px;padding:5px 10px;font-size:12px;cursor:pointer;color:var(--text);transition:all .15s;display:inline-flex;align-items:center;gap:5px}
+.extra-chip:active{transform:scale(.97)}
+.extra-chip.on{background:var(--gold-dim);border-color:var(--gold);color:var(--gold)}
+.extra-qty-badge{background:var(--gold);color:#fff;border-radius:10px;padding:1px 6px;font-size:10px;font-weight:700}
+.extras-pills{display:flex;flex-wrap:wrap;gap:6px;padding:10px 14px;border-top:1px solid var(--border)}
+.extra-pill{display:inline-flex;align-items:center;gap:6px;background:var(--surface2);border:1px solid var(--border);border-radius:20px;padding:4px 6px 4px 10px;font-size:12px}
+.extra-pill-name{color:var(--text)}
+.extra-pill-stepper{display:flex;align-items:center;gap:4px;margin-left:2px}
+.extra-pill-btn{background:var(--surface);border:1px solid var(--border);border-radius:50%;width:20px;height:20px;display:flex;align-items:center;justify-content:center;font-size:14px;line-height:1;cursor:pointer;color:var(--text);padding:0;flex-shrink:0}
+.extra-pill-btn:active{background:var(--surface2)}
+.extra-pill-qty{min-width:18px;text-align:center;font-weight:700;color:var(--gold);font-size:12px}
+.extra-pill-rm{color:var(--muted);font-size:14px;line-height:1;cursor:pointer;padding:2px 4px;background:none;border:none;font-family:inherit;margin-left:2px}
+.extra-pill-qty-tap{color:var(--gold);font-weight:700;font-size:12px;cursor:pointer;padding:2px 5px;border-radius:10px;border:1px solid var(--border);background:var(--surface);transition:all .15s}
+.extra-pill-qty-tap:active{background:var(--gold-dim);border-color:var(--gold)}
+
+/* Shopping list qty editing */
+.ingr-qty{cursor:pointer;transition:background .15s;border-radius:6px;padding:1px 3px}
+.ingr-qty:active,.ingr-qty:hover{background:var(--gold-dim)}
+.ingr-qty.override{color:var(--sage);border-bottom:1px dotted var(--sage)}
+.ingr-qty-edit{font-size:11px;color:var(--faint);cursor:pointer;padding:1px 4px;border-radius:6px;border:1px dashed var(--border);margin-left:2px}
+.ingr-qty-edit:hover{border-color:var(--gold);color:var(--gold)}
+.ingr-stepper{display:inline-flex;align-items:center;gap:3px;margin-left:4px;vertical-align:middle}
+.ingr-stepper button{background:var(--surface2);border:1px solid var(--border);border-radius:50%;width:18px;height:18px;font-size:12px;line-height:1;cursor:pointer;color:var(--text);padding:0;display:inline-flex;align-items:center;justify-content:center}
+.ingr-stepper span{min-width:14px;text-align:center;font-weight:700;font-size:12px;color:var(--gold)}
+
+/* Preset chip qty */
+.preset-qty-tap{background:rgba(184,114,30,.2);border-radius:8px;padding:1px 5px;font-size:10px;font-weight:700;margin-left:4px;cursor:pointer}
+.preset-stepper{display:inline-flex;align-items:center;gap:3px;margin-left:5px;vertical-align:middle}
+.preset-stepper button{background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);border-radius:50%;width:16px;height:16px;font-size:12px;line-height:1;cursor:pointer;color:inherit;padding:0;display:inline-flex;align-items:center;justify-content:center}
+.preset-stepper span{min-width:12px;text-align:center;font-weight:700;font-size:11px}
 </style>
 </head>
 <body>
@@ -396,7 +437,6 @@ html,body{min-height:100%;background:var(--bg);color:var(--text);font-family:'Ou
     <button class="tab on" onclick="setTab('r')">Recipes</button>
     <button class="tab" onclick="setTab('s')">This week</button>
     <button class="tab" onclick="setTab('l')">Shopping list</button>
-    <button class="tab" onclick="setTab('p')">Prices</button>
     <button class="tab" onclick="setTab('n')">Nutrition</button>
   </div>
 
@@ -419,6 +459,7 @@ html,body{min-height:100%;background:var(--bg);color:var(--text);font-family:'Ou
       </div>
     </div>
     <div class="wgrid" id="wgrid"></div>
+    <div id="wkExtras"></div>
   </div>
 
   <div class="tc" id="tc-l">
@@ -437,14 +478,7 @@ html,body{min-height:100%;background:var(--bg);color:var(--text);font-family:'Ou
     <div id="slist"></div>
   </div>
 
-  <div class="tc" id="tc-p">
-    <div class="lhdr">
-      <h2>Prices</h2>
-      <button class="p-save" onclick="savePrices()">Save</button>
-    </div>
-    <p style="font-size:13px;color:var(--muted);margin-bottom:20px">Normal AH price. Mark <strong style="color:var(--terra)">Bonus</strong> when on offer that week — updates automatically in the shopping list.</p>
-    <div id="pgrid"></div>
-  </div>
+
 </div>
 
 <div class="moverlay" id="moverlay" onclick="closeMod(event)">
@@ -563,12 +597,12 @@ const MEALS=[
 const DNAMES=['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
 const DFULL=['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'];
 
-let S={tab:'r',wk:0,plan:{},ckd:{},lc:{},manual:{},out:{},ntf:'all',tf:{t:'all',c:'all'},mf:{t:'all',c:'all'},pendDay:null};
+let S={tab:'r',wk:0,plan:{},ckd:{},lc:{},manual:{},out:{},wkExtras:{},qtyOverrides:{},ntf:'all',tf:{t:'all',c:'all'},mf:{t:'all',c:'all'},pendDay:null};
 
-function load(){try{const d=localStorage.getItem('cenas2');if(d){const p=JSON.parse(d);S={...S,plan:p.plan||{},ckd:p.ckd||{},lc:p.lc||{},manual:p.manual||{},out:p.out||{}}}}catch(e){}}
+function load(){try{const d=localStorage.getItem('cenas2');if(d){const p=JSON.parse(d);S={...S,plan:p.plan||{},ckd:p.ckd||{},lc:p.lc||{},manual:p.manual||{},out:p.out||{},wkExtras:p.wkExtras||{},qtyOverrides:p.qtyOverrides||{}}}}catch(e){}if(S.tab==='p')S.tab='r';}
 function save(){
   const now = Date.now();
-  localStorage.setItem('cenas2',JSON.stringify({plan:S.plan,ckd:S.ckd,lc:S.lc,manual:S.manual,out:S.out}));
+  localStorage.setItem('cenas2',JSON.stringify({plan:S.plan,ckd:S.ckd,lc:S.lc,manual:S.manual,out:S.out,wkExtras:S.wkExtras||{},qtyOverrides:S.qtyOverrides||{}}));
   localStorage.setItem('cenas_updatedAt', now);
   syncToCloud();
 }
@@ -585,14 +619,14 @@ function daysSince(s){if(!s)return 9999;return Math.floor((new Date()-new Date(s
 function fmtDate(d){return d.toLocaleDateString('en-GB',{day:'numeric',month:'short'})}
 
 function setTab(t){
+  if(t==='p')t='r'; // Prices tab removed — redirect to Recipes
   S.tab=t;
-  document.querySelectorAll('.tab').forEach((el,i)=>el.classList.toggle('on',['r','s','l','p','n'][i]===t));
+  document.querySelectorAll('.tab').forEach((el,i)=>el.classList.toggle('on',['r','s','l','n'][i]===t));
   document.querySelectorAll('.tc').forEach(el=>el.classList.remove('on'));
   document.getElementById('tc-'+t).classList.add('on');
   if(t==='r'){renderFbar();renderGrid()}
   if(t==='s'){renderWeek()}
   if(t==='l'){renderList()}
-  if(t==='p'){renderPrices()}
   if(t==='n'){renderNutri()}
   updateHdr();
 }
@@ -788,11 +822,106 @@ function renderWeek(){
     </div>`;
   }).join('');
   updateHdr();
+  renderExtras();
 }
 function rmDay(ev,key){ev.stopPropagation();delete S.plan[key];delete S.manual[key];save();renderWeek();if(S.tab==='l')renderList()}
 function toggleOut(ev,key){if(ev)ev.stopPropagation();if(S.out[key]){delete S.out[key];}else{S.out[key]=true;delete S.plan[key];delete S.manual[key];}save();renderWeek();if(S.tab==='l')renderList();}
 function toggleLock(ev,key){ev.stopPropagation();S.manual[key]=!S.manual[key];if(!S.manual[key])delete S.manual[key];save();renderWeek();}
 function chgWeek(dir){S.wk+=dir;renderWeek()}
+
+/* ---- WEEKLY EXTRAS ---- */
+let extrasOpen=false;
+let editingExtraName=null;
+
+function extrasKey(){return dk(wkDates(S.wk)[0]);}
+function getExtras(){return S.wkExtras?.[extrasKey()]||[];}
+
+function addExtra(name,cat){
+  if(!S.wkExtras)S.wkExtras={};
+  const key=extrasKey();
+  if(!S.wkExtras[key])S.wkExtras[key]=[];
+  const idx=S.wkExtras[key].findIndex(e=>e.name===name);
+  if(idx>=0) S.wkExtras[key].splice(idx,1);
+  else S.wkExtras[key].push({name,qty:1,cat});
+  editingExtraName=null;
+  save();renderExtras();
+}
+
+function removeExtra(name){
+  const key=extrasKey();
+  if(!S.wkExtras?.[key])return;
+  S.wkExtras[key]=S.wkExtras[key].filter(e=>e.name!==name);
+  editingExtraName=null;
+  save();renderExtras();
+}
+
+function incrExtra(name,delta){
+  const key=extrasKey();
+  const ex=S.wkExtras?.[key]?.find(e=>e.name===name);
+  if(!ex)return;
+  ex.qty=Math.max(1,ex.qty+delta);
+  save();renderExtras();
+}
+
+function toggleEditExtra(name){
+  editingExtraName=editingExtraName===name?null:name;
+  renderExtras();
+}
+function toggleExtras(){
+  extrasOpen=!extrasOpen;
+  renderExtras();
+}
+
+function renderExtras(){
+  const el=document.getElementById('wkExtras');
+  if(!el)return;
+  const extras=getExtras();
+  const CATS=[
+    {key:'breakfast',icon:'🌅',label:'Breakfast',presets:MEAL_PRESETS.breakfasts},
+    {key:'lunch',    icon:'🥗',label:'Lunch',     presets:MEAL_PRESETS.lunches},
+    {key:'snacks',   icon:'🍎',label:'Snacks',    presets:MEAL_PRESETS.snacks},
+    {key:'drinks',   icon:'🍺',label:'Drinks',    presets:MEAL_PRESETS.drinks},
+  ];
+
+  const sections=CATS.map(c=>{
+    const chips=c.presets.map(p=>{
+      const added=extras.find(e=>e.name===p.name);
+      const badge=added?`<span class="extra-qty-badge">×${added.qty}</span>`:'';
+      return`<button class="extra-chip${added?' on':''}" onclick="addExtra(${JSON.stringify(p.name).replace(/"/g,'&quot;')},'${c.key}')">${p.name}${badge}</button>`;
+    }).join('');
+    return`<div>
+      <div class="extra-cat-lbl">${c.icon} ${c.label}</div>
+      <div class="extra-chips">${chips}</div>
+    </div>`;
+  }).join('');
+
+  const pills=extras.map(e=>{
+    const nm=JSON.stringify(e.name).replace(/"/g,'&quot;');
+    const editing=editingExtraName===e.name;
+    const qtyPart=editing
+      ?`<div class="extra-pill-stepper">
+          <button class="extra-pill-btn" onclick="incrExtra(${nm},-1)">−</button>
+          <span class="extra-pill-qty">${e.qty}</span>
+          <button class="extra-pill-btn" onclick="incrExtra(${nm},1)">+</button>
+        </div>`
+      :`<span class="extra-pill-qty-tap" onclick="toggleEditExtra(${nm})">×${e.qty}</span>`;
+    return`<div class="extra-pill">
+      <span class="extra-pill-name">${e.name}</span>
+      ${qtyPart}
+      <button class="extra-pill-rm" onclick="removeExtra(${nm})">×</button>
+    </div>`;
+  }).join('');
+
+  el.innerHTML=`<div class="extras-card">
+    <div class="extras-header" onclick="toggleExtras()">
+      <div class="extras-title">🛒 Weekly extras${extras.length?` <span class="extras-count">${extras.length} item${extras.length>1?'s':''}</span>`:''}
+      </div>
+      <span class="extras-chevron">${extrasOpen?'▴':'▾'}</span>
+    </div>
+    ${extrasOpen?`<div class="extras-body">${sections}</div>`:''}
+    ${extras.length?`<div class="extras-pills">${pills}</div>`:''}
+  </div>`;
+}
 
 function clearWeek(){
   const dates=wkDates(S.wk);
@@ -989,13 +1118,15 @@ function renderList(){
   const today=dk(new Date());
   const planned=dates.map(d=>({date:d,meal:MEALS.find(m=>m.id===S.plan[dk(d)])})).filter(x=>x.meal&&!S.out[dk(x.date)]&&dk(x.date)>=today);
   const c=document.getElementById('slist');
+  const weekKey=dk(wkDates(S.wk)[0]);
+
   if(!planned.length){
     c.innerHTML=`<div class="lempty"><p>No dinners planned for this week.</p><small>Go to "This week" and assign dishes to see the list here.</small></div>`;
+    renderExtrasList(c, weekKey);
     renderAhTotal();return;
   }
 
   // Build ingredient → meals map with count
-  const weekKey=dk(wkDates(S.wk)[0]); // Monday of week = unique key per week
   const ingrMap={}; // ing -> {meals: [{name,date}], count}
   planned.forEach(({date,meal})=>{
     meal.ingr.forEach(ing=>{
@@ -1021,16 +1152,25 @@ function renderList(){
       ${items.map(({ing,meals,key})=>{
         const ck=S.ckd[key];
         const pd=getPrice(ing);
-        const count=meals.length;
+        const autoQty=meals.length;
+        const qty=S.qtyOverrides?.[key]??autoQty;
+        const isOverride=S.qtyOverrides?.[key]!=null;
+        const editing=editingIngr===key;
         const uniqueMeals=[...new Set(meals)];
         const mealTag=`<span class="ingr-meals">${uniqueMeals.join(', ')}</span>`;
-        const qtyTag=count>1?`<span class="ingr-qty">x${count}</span>`:'';
-        // Adjust price badge for quantity
+        const qtyTag=editing
+          ?`<span class="ingr-stepper" onclick="event.stopPropagation()">
+              <button onclick="incrIngr('${key}',${qty},-1)">−</button>
+              <span>${qty}</span>
+              <button onclick="incrIngr('${key}',${qty},1)">+</button>
+            </span>`
+          :qty>1?`<span class="ingr-qty${isOverride?' override':''}" onclick="toggleEditIngr('${key}');event.stopPropagation()">×${qty}</span>`
+                :`<span class="ingr-qty-edit" onclick="toggleEditIngr('${key}');event.stopPropagation()">+</span>`;
         let pBadge='';
         if(pd.price!=null){
-          const totalPrice=pd.price*count;
+          const totalPrice=pd.price*qty;
           const cls=pd.bonus?'price-bonus':'price-found';
-          pBadge=`<span class="price-badge ${cls}">€${totalPrice.toFixed(2)}${pd.bonus?' ★':''}${count>1?' (x'+count+')':''}</span>`;
+          pBadge=`<span class="price-badge ${cls}">€${totalPrice.toFixed(2)}${pd.bonus?' ★':''}${qty>1?` (×${qty})`:''}</span>`;
         }
         return`<div class="iitem${ck?' ckd':''}" onclick="togCkd('${key}')">
           <input type="checkbox"${ck?' checked':''} onclick="togCkd('${key}',event)">
@@ -1043,10 +1183,44 @@ function renderList(){
       }).join('')}
     </div>`;
   }).join('');
+
+  renderExtrasList(c, weekKey);
   renderAhTotal();
+}
+
+function renderExtrasList(c, weekKey){
+  const extras=S.wkExtras?.[weekKey]||[];
+  if(!extras.length)return;
+  const extItems=extras.map(e=>{
+    const ck=S.ckd[`${weekKey}|extra|${e.name}`];
+    const pd=manualPrices[e.name]||{price:DEFAULT_PRICES[e.name]??null,bonus:false};
+    let pBadge='';
+    if(pd.price!=null){
+      const cls=pd.bonus?'price-bonus':'price-found';
+      pBadge=`<span class="price-badge ${cls}">€${(pd.price*e.qty).toFixed(2)}${pd.bonus?' ★':''}${e.qty>1?` (×${e.qty})`:''}</span>`;
+    }
+    const key=`${weekKey}|extra|${e.name}`;
+    return`<div class="iitem${ck?' ckd':''}" onclick="togCkd('${key}')">
+      <input type="checkbox"${ck?' checked':''} onclick="togCkd('${key}',event)">
+      <div class="ingr-info">
+        <span class="ilbl${ck?' ckd':''}">${e.name}${e.qty>1?` <span class="ingr-qty">×${e.qty}</span>`:''}</span>
+        <span class="ingr-meals">${e.cat}</span>
+      </div>
+      ${pBadge}
+    </div>`;
+  }).join('');
+  c.innerHTML+=`<div class="msec"><div class="msec-ttl">🛒 Weekly extras</div>${extItems}</div>`;
 }
 function togCkd(key,ev){if(ev)ev.stopPropagation();S.ckd[key]=!S.ckd[key];save();renderList()}
 function clrChecked(){S.ckd={};save();renderList()}
+
+let editingIngr=null;
+function toggleEditIngr(key){editingIngr=editingIngr===key?null:key;renderList();}
+function incrIngr(key,cur,delta){
+  if(!S.qtyOverrides)S.qtyOverrides={};
+  S.qtyOverrides[key]=Math.max(1,cur+delta);
+  save();renderList();
+}
 
 function renderAhTotal(){
   const tot=document.getElementById('ahTotal');
@@ -1065,7 +1239,7 @@ function renderAhTotal(){
 
 /* ---- PRECIOS MANUALES ---- */
 // Precios por defecto basados en AH (€)
-const DEFAULT_PRICES={"AH Choco Karamel Bar":3.0,"AH Chocolate Bread":5.0,"AH Chocolate croissants":3.9,"AH Macadamia Mix":2.79,"AH Protein mousse":1.5,"AH frozen fish mix":6.3,"AH kip bacon wrap":4.25,"AH marinated ribs":10.0,"Alfajor":0,"Almhof Roomyoghurt aardbei":2.59,"Arborio rice":2.1,"Banana":0.4,"Beef patties":5.0,"Bell pepper":1.3,"Ben & Jerry's":8.0,"Bolletjes (bag of 10)":2.0,"Box pizza":4.0,"Bread":2.0,"Breadcrumbs":0.8,"Broth":0.8,"Burger buns":1.6,"Burrata":2.1,"Cheddar":1.35,"Cheese":1.5,"Cherry tomatoes":1.1,"Chicken breast":10.0,"Chicken breast (½ kg)":5.0,"Chicken nuggets":5.0,"Chicken patties":6.0,"Chorizo":3.15,"Crème fraîche":1.4,"Eggs":2.0,"Fish fillet":12.0,"Flour":0.85,"Fries":1.5,"Garlic":0.8,"Green beans":2.4,"Guanciale":2.5,"Heavy cream":2.0,"HiPRO Skyr Vanilla":3.0,"Holie's Chocolate Bar":3.3,"Knorr Seasoned Rice":4.7,"Lemon":1.5,"Lettuce":1.3,"Minced meat":6.8,"Mixed snacks":3.45,"Mushrooms":1.8,"Nona Rossa Copa Di Parma sandwich":11.0,"Oil":0.72,"Onion":0.4,"Parmesan":3.7,"Parsley":1.3,"Pasta":2.8,"Pesto":1.8,"Prosciutto":4.0,"Red pepper":1.2,"Rucola":1.1,"Salami":4.0,"Sandwich bread":0.7,"Shrimps":10.8,"Steak":12.0,"Sushi":30.0,"Tomato":1.2,"Tomato peeled":0.75,"Tomato purée":0.6,"Tomato sauce":0.75,"Vegetables":2.5,"Wraps":1.0};
+const DEFAULT_PRICES={"Bolletjes (JQTRP)":11.5,"AH Broodje":0,"AH Choco Karamel Bar":3.0,"AH Chocolate Bread":5.0,"AH Chocolate croissants":3.9,"AH Macadamia Mix":2.79,"AH Pasta filled w/ Sauce":0,"AH Protein mousse":1.5,"AH frozen fish mix":6.3,"AH kip bacon wrap":4.25,"AH marinated ribs":10.0,"Alfajor":0,"Almhof Roomyoghurt aardbei":2.59,"Arborio rice":2.1,"Banana":0.4,"Beef patties":5.0,"Bell pepper":1.3,"Ben & Jerry's":4.0,"Bolletjes (bag of 10)":2.0,"Box pizza":4.0,"Bread":2.0,"Breadcrumbs":0.8,"Broth":0.8,"Burger buns":1.6,"Burrata":2.1,"Cheddar":1.35,"Cheese":1.5,"Cherry tomatoes":1.1,"Chicken breast":10.0,"Chicken breast (½ kg)":5.0,"Chicken nuggets":5.0,"Chicken patties":6.0,"Chorizo":3.15,"Crème fraîche":1.4,"Eggs":2.0,"Fish fillet":12.0,"Flour":0.85,"Fries":1.5,"Garlic":0.8,"Green beans":2.4,"Guanciale":2.5,"Heavy cream":2.0,"HiPRO Skyr Vanilla":3.0,"Holie's Chocolate Bar":3.3,"Knorr Seasoned Rice":4.7,"Lemon":1.5,"Lettuce":1.3,"Minced meat":6.8,"Mixed snacks":3.45,"Mushrooms":1.8,"Nona Rossa Copa Di Parma sandwich":11.0,"Oil":0.72,"Onion":0.4,"Parmesan":3.7,"Parsley":1.3,"Pasta":2.8,"Pesto":1.8,"Prosciutto":4.0,"Red pepper":1.2,"Rucola":1.1,"Salami":4.0,"Sandwich bread":0.7,"Shrimps":10.8,"Steak":12.0,"Sushi":30.0,"Tomato":1.2,"Tomato peeled":0.75,"Tomato purée":0.6,"Tomato sauce":0.75,"Vegetables":2.5,"Wraps":1.0};
 
 // Estado de precios: { ingredient: { price: number, bonus: bool } }
 let manualPrices={};
@@ -1208,7 +1382,7 @@ async function syncToCloud(){
         method: 'POST',
         headers: {'Content-Type':'application/json'},
         body: JSON.stringify({
-          plan: S.plan, ckd: S.ckd, lc: S.lc, manual: S.manual, out: S.out,
+          plan: S.plan, ckd: S.ckd, lc: S.lc, manual: S.manual, out: S.out, wkExtras: S.wkExtras||{}, qtyOverrides: S.qtyOverrides||{},
           prices: manualPrices,
           updatedAt: Date.now()
         })
@@ -1240,6 +1414,7 @@ async function loadFromCloud(){
       if(cloud.lc   && Object.keys(cloud.lc).length)   S.lc   = cloud.lc;
     if(cloud.manual && Object.keys(cloud.manual).length) Object.assign(S.manual, cloud.manual);
     if(cloud.out && Object.keys(cloud.out).length) Object.assign(S.out, cloud.out);
+    if(cloud.wkExtras && Object.keys(cloud.wkExtras).length) Object.assign(S.wkExtras, cloud.wkExtras);
     // Note: nutrition is local-only — not read from household_state
 
       // Merge prices: cloud wins per key, but keep local defaults for missing keys
@@ -1459,6 +1634,8 @@ function applyCloudUpdate(){
   if(cloud.plan && Object.keys(cloud.plan).length) S.plan = cloud.plan;
   if(cloud.ckd  && Object.keys(cloud.ckd).length)  S.ckd  = cloud.ckd;
   if(cloud.lc   && Object.keys(cloud.lc).length)   S.lc   = cloud.lc;
+  if(cloud.wkExtras && Object.keys(cloud.wkExtras).length) S.wkExtras = cloud.wkExtras;
+  if(cloud.qtyOverrides && Object.keys(cloud.qtyOverrides).length) S.qtyOverrides = cloud.qtyOverrides;
   if(cloud.prices && Object.keys(cloud.prices).length) Object.assign(manualPrices, cloud.prices);
   // Note: nutrition is local-only — not read from household_state
   localStorage.setItem('cenas2', JSON.stringify({plan:S.plan,ckd:S.ckd,lc:S.lc}));
@@ -1477,22 +1654,25 @@ function applyCloudUpdate(){
 }
 
 /* ---- NUTRITION TAB ---- */
-const MEAL_PRESETS={"breakfasts":[{"name":"AH Chocolate Croissant","kcal":337,"protein":5.5,"carbs":35,"fat":19},{"name":"AH Chocolate Bread","kcal":521,"protein":10.5,"carbs":52,"fat":29},{"name":"HiPRO Skyr Vanilla","kcal":53,"protein":9.5,"carbs":3.5,"fat":0},{"name":"HiPRO Skyr Vanilla w/ Honey & Nuts","kcal":203,"protein":12.5,"carbs":22.5,"fat":8},{"name":"Almhof Yogurt","kcal":138,"protein":2.7,"carbs":13,"fat":8},{"name":"Banana","kcal":100,"protein":1,"carbs":27,"fat":0},{"name":"Fruit","kcal":80,"protein":1,"carbs":20,"fat":0},{"name":"Coffee w/ milk","kcal":60,"protein":3,"carbs":8,"fat":2}],"lunches":[{"name":"Nona Rossa - Coppa di Parma sandwich","kcal":850,"protein":38,"carbs":76,"fat":44},{"name":"AH kip bacon wrap","kcal":352,"protein":15,"carbs":25,"fat":21},{"name":"AH Broodje","kcal":356,"protein":15,"carbs":50,"fat":4},{"name":"Tosti kaas","kcal":320,"protein":16,"carbs":36,"fat":10},{"name":"2 bolletjes (jamon, queso, tomate cherry, rúcula, pesto)","kcal":450,"protein":19,"carbs":54,"fat":18},{"name":"Croissant Hamkaas (x2)","kcal":610,"protein":17,"carbs":58,"fat":34},{"name":"Nada / ayuno","kcal":0,"protein":0,"carbs":0,"fat":0}],"snacks":[{"name":"AH Choco Karamel Bar","kcal":170,"protein":15,"carbs":14,"fat":7.5},{"name":"Holie's Chocolate Bar","kcal":130,"protein":8,"carbs":15,"fat":5},{"name":"Fruta Random","kcal":80,"protein":1,"carbs":20,"fat":0},{"name":"AH Macadamia Mix","kcal":190,"protein":5.5,"carbs":5,"fat":16},{"name":"Coffee","kcal":5,"protein":0,"carbs":1,"fat":0},{"name":"Banana","kcal":100,"protein":1,"carbs":27,"fat":0},{"name":"AH Protein mousse","kcal":76,"protein":10,"carbs":5,"fat":1.6},{"name":"Ben & Jerry's","kcal":1232,"protein":20,"carbs":149,"fat":60},{"name":"Alfajor","kcal":250,"protein":4,"carbs":36,"fat":10}]};
+const MEAL_PRESETS={"breakfasts":[{"name":"AH Chocolate Croissant","kcal":337,"protein":5.5,"carbs":35,"fat":19},{"name":"AH Chocolate Bread","kcal":521,"protein":10.5,"carbs":52,"fat":29},{"name":"HiPRO Skyr Vanilla","kcal":53,"protein":9.5,"carbs":3.5,"fat":0},{"name":"HiPRO Skyr Vanilla w/ Honey & Nuts","kcal":203,"protein":12.5,"carbs":22.5,"fat":8},{"name":"Almhof Yogurt","kcal":138,"protein":2.7,"carbs":13,"fat":8},{"name":"Banana","kcal":100,"protein":1,"carbs":27,"fat":0},{"name":"Fruit","kcal":80,"protein":1,"carbs":20,"fat":0},{"name":"Coffee w/ milk","kcal":60,"protein":3,"carbs":8,"fat":2}],"lunches":[{"name":"Nona Rossa - Coppa di Parma sandwich","kcal":850,"protein":38,"carbs":76,"fat":44},{"name":"AH kip bacon wrap","kcal":352,"protein":15,"carbs":25,"fat":21},{"name":"AH Broodje","kcal":356,"protein":15,"carbs":50,"fat":4},{"name":"Tosti kaas","kcal":320,"protein":16,"carbs":36,"fat":10},{"name":"Bolletjes (JQTRP)","kcal":450,"protein":19,"carbs":54,"fat":18},{"name":"Croissant Hamkaas (x2)","kcal":610,"protein":17,"carbs":58,"fat":34},{"name":"Nada / ayuno","kcal":0,"protein":0,"carbs":0,"fat":0},{"name":"AH Pasta filled w/ Sauce","kcal":420,"protein":17,"carbs":45,"fat":20}],"snacks":[{"name":"AH Choco Karamel Bar","kcal":170,"protein":15,"carbs":14,"fat":7.5},{"name":"Holie's Chocolate Bar","kcal":130,"protein":8,"carbs":15,"fat":5},{"name":"Fruta Random","kcal":80,"protein":1,"carbs":20,"fat":0},{"name":"AH Macadamia Mix","kcal":190,"protein":5.5,"carbs":5,"fat":16},{"name":"Coffee","kcal":5,"protein":0,"carbs":1,"fat":0},{"name":"Banana","kcal":100,"protein":1,"carbs":27,"fat":0},{"name":"AH Protein mousse","kcal":76,"protein":10,"carbs":5,"fat":1.6},{"name":"Ben & Jerry's","kcal":1232,"protein":20,"carbs":149,"fat":60},{"name":"Alfajor","kcal":250,"protein":4,"carbs":36,"fat":10}],"drinks":[{"name":"Beer 33cl","kcal":150,"protein":1,"carbs":13,"fat":0},{"name":"Beer 50cl","kcal":228,"protein":2,"carbs":20,"fat":0},{"name":"Wine — glass 15cl","kcal":122,"protein":0,"carbs":4,"fat":0},{"name":"Wine — 2 glasses","kcal":244,"protein":0,"carbs":8,"fat":0},{"name":"Cocktail","kcal":180,"protein":0,"carbs":18,"fat":0},{"name":"Shot 4cl","kcal":90,"protein":0,"carbs":0,"fat":0},{"name":"Soft drink 33cl","kcal":140,"protein":0,"carbs":35,"fat":0}]};
 const DAILY={kcal:2800,protein:140,carbs:300,fat:70};
 const MEAL_SLOTS=[
   {key:'breakfast',icon:'☀️',label:'Breakfast'},
   {key:'lunch',    icon:'🥗',label:'Lunch'},
   {key:'snack',    icon:'🍎',label:'Snack'},
+  {key:'drinks',   icon:'🍺',label:'Drinks'},
 ];
 
 let nutriDate=dk(new Date());
 let lunchMealPickerOpen=false;
+let editingPreset=null;
 
 function nutriNav(dir){
   const d=new Date(nutriDate+'T12:00:00');
   d.setDate(d.getDate()+dir);
   nutriDate=dk(d);
   lunchMealPickerOpen=false;
+  editingPreset=null;
   renderNutri();
 }
 
@@ -1755,12 +1935,23 @@ function renderNutri(){
   const container=document.getElementById('nutriMeals');
   const cards=MEAL_SLOTS.map(({key,icon,label})=>{
     const d=dayData[key]||{};
-    const presetKey=key==='breakfast'?'breakfasts':key==='lunch'?'lunches':'snacks';
+    const presetKey=key==='breakfast'?'breakfasts':key==='lunch'?'lunches':key==='snack'?'snacks':'drinks';
     const presetList=MEAL_PRESETS[presetKey]||[];
     const presetChips=presetList.map(p=>{
       const picks=d._picks||[];
+      const qtys=d._qtys||{};
       const sel=picks.includes(p.name);
-      return`<button class="preset-chip${sel?' on':''}" onclick="applyPreset('${nutriDate}','${key}',${JSON.stringify(p).replace(/"/g,'&quot;')})">${p.name}</button>`;
+      const qty=qtys[p.name]||1;
+      const editKey=`${nutriDate}|${key}|${p.name}`;
+      const isEditing=editingPreset===editKey;
+      const pnJson=JSON.stringify(p.name).replace(/"/g,'&quot;');
+      let badge='';
+      if(sel){
+        badge=isEditing
+          ?`<span class="preset-stepper" onclick="event.stopPropagation()"><button onclick="incrPreset('${nutriDate}','${key}',${pnJson},-1);event.stopPropagation()">−</button><span>${qty}</span><button onclick="incrPreset('${nutriDate}','${key}',${pnJson},1);event.stopPropagation()">+</button></span>`
+          :`<span class="preset-qty-tap" onclick="toggleEditPreset('${nutriDate}','${key}',${pnJson});event.stopPropagation()">×${qty}</span>`;
+      }
+      return`<button class="preset-chip${sel?' on':''}" onclick="applyPreset('${nutriDate}','${key}',${JSON.stringify(p).replace(/"/g,'&quot;')})">${p.name}${badge}</button>`;
     }).join('');
 
     // Custom chip is active when there's data but no preset picks (manual entry or dinner-as-lunch)
@@ -1848,20 +2039,45 @@ function applyPreset(date,meal,preset){
   if(!S.nutrition[date])S.nutrition[date]={};
   const cur=S.nutrition[date][meal]||{};
   const picks=[...(cur._picks||[])];
+  const qtys={...(cur._qtys||{})};
   const idx=picks.indexOf(preset.name);
-  if(idx>=0) picks.splice(idx,1); else picks.push(preset.name);
-  if(picks.length===0){
-    delete S.nutrition[date][meal];
-  } else {
-    const all=[...MEAL_PRESETS.breakfasts,...MEAL_PRESETS.lunches,...MEAL_PRESETS.snacks];
-    const selected=picks.map(n=>all.find(p=>p.name===n)).filter(Boolean);
-    const sum=selected.reduce((a,p)=>({kcal:a.kcal+(p.kcal||0),protein:a.protein+(p.protein||0),carbs:a.carbs+(p.carbs||0),fat:a.fat+(p.fat||0)}),{kcal:0,protein:0,carbs:0,fat:0});
-    S.nutrition[date][meal]={name:selected.map(p=>p.name).join(' + '),...sum,_picks:picks};
-  }
+  if(idx>=0){picks.splice(idx,1);delete qtys[preset.name];}
+  else{picks.push(preset.name);qtys[preset.name]=1;}
+  editingPreset=null;
+  if(picks.length===0){delete S.nutrition[date][meal];}
+  else{recomputeFromPicks(date,meal,picks,qtys);}
   saveNutriStore();renderNutri();
 }
+
+function recomputeFromPicks(date,meal,picks,qtys){
+  const all=[...MEAL_PRESETS.breakfasts,...MEAL_PRESETS.lunches,...MEAL_PRESETS.snacks,...MEAL_PRESETS.drinks];
+  const selected=picks.map(n=>all.find(p=>p.name===n)).filter(Boolean);
+  const sum=selected.reduce((a,p)=>{
+    const q=qtys[p.name]||1;
+    return{kcal:a.kcal+(p.kcal||0)*q,protein:a.protein+(p.protein||0)*q,carbs:a.carbs+(p.carbs||0)*q,fat:a.fat+(p.fat||0)*q};
+  },{kcal:0,protein:0,carbs:0,fat:0});
+  const name=selected.map(p=>(qtys[p.name]||1)>1?`${p.name} ×${qtys[p.name]}`:p.name).join(' + ');
+  S.nutrition[date][meal]={name,...sum,_picks:picks,_qtys:qtys};
+}
+
+function toggleEditPreset(date,meal,name){
+  const k=`${date}|${meal}|${name}`;
+  editingPreset=editingPreset===k?null:k;
+  renderNutri();
+}
+
+function incrPreset(date,meal,name,delta){
+  const cur=S.nutrition?.[date]?.[meal];
+  if(!cur?._picks?.includes(name))return;
+  if(!cur._qtys)cur._qtys={};
+  cur._qtys[name]=Math.max(1,(cur._qtys[name]||1)+delta);
+  recomputeFromPicks(date,meal,cur._picks,cur._qtys);
+  saveNutriStore();renderNutri();
+}
+
 function clearNutriMeal(date,meal){
   if(S.nutrition?.[date]?.[meal])delete S.nutrition[date][meal];
+  editingPreset=null;
   saveNutriStore();renderNutri();
 }
 function saveNutriField(meal,field,val){
