@@ -322,7 +322,7 @@ html,body{min-height:100%;background:var(--bg);color:var(--text);font-family:'Ou
 .no-results{color:var(--muted);padding:16px 0;font-size:14px}
 
 /* ===== NUTRITION GAMIFICATION ===== */
-.nutri-topbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:8px}
+.nutri-topbar{display:flex;align-items:center;justify-content:space-between;margin-top:0;margin-bottom:16px;flex-wrap:wrap;gap:8px}
 .streak-badge{display:inline-flex;align-items:center;gap:5px;background:rgba(220,88,24,.1);border:1px solid rgba(220,88,24,.3);border-radius:20px;padding:5px 11px;font-size:12px;font-weight:600;color:#c84c10;white-space:nowrap;flex-shrink:0;transition:all .2s}
 .streak-badge.zero{background:var(--surface2);border-color:var(--border);color:var(--muted)}
 
@@ -343,7 +343,7 @@ html,body{min-height:100%;background:var(--bg);color:var(--text);font-family:'Ou
 .grade-none{background:var(--surface2);color:var(--faint);border-color:var(--border)}
 
 /* Macro rings */
-.nutri-macro-rings{flex:1;display:flex;flex-direction:column;gap:7px}
+.nutri-macro-rings{flex:1;max-width:180px;display:flex;flex-direction:column;gap:7px}
 .macro-ring-row{display:flex;align-items:center;gap:10px}
 .macro-mini-ring{position:relative;width:44px;height:44px;flex-shrink:0}
 .macro-mini-center{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;pointer-events:none}
@@ -374,6 +374,33 @@ html,body{min-height:100%;background:var(--bg);color:var(--text);font-family:'Ou
 .ach-fire{background:rgba(220,88,24,.1);border-color:rgba(220,88,24,.3);color:#c84c10}
 .ach-purple{background:rgba(138,80,160,.1);border-color:rgba(138,80,160,.3);color:#7a3e9a}
 @keyframes achpop{from{transform:scale(.8) translateY(4px);opacity:0}to{transform:scale(1) translateY(0);opacity:1}}
+
+/* ===== MONTHLY VIEW ===== */
+.mcal-backdrop{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:200;display:flex;align-items:flex-end;justify-content:center;animation:mcalin .2s ease}
+@keyframes mcalin{from{opacity:0}to{opacity:1}}
+.mcal-sheet{background:var(--bg);border-radius:22px 22px 0 0;padding:20px 18px 36px;width:100%;max-width:480px;max-height:90vh;overflow-y:auto;animation:sheetin .25s ease}
+@keyframes sheetin{from{transform:translateY(40px);opacity:0}to{transform:translateY(0);opacity:1}}
+.mcal-handle{width:36px;height:4px;background:var(--border);border-radius:2px;margin:0 auto 18px}
+.mcal-hdr{display:flex;align-items:center;gap:8px;margin-bottom:18px}
+.mcal-lbl{font-family:'Fraunces',serif;font-size:19px;font-weight:600;flex:1}
+.mcal-nav{background:var(--surface2);border:1px solid var(--border);border-radius:50%;width:30px;height:30px;font-size:16px;cursor:pointer;color:var(--text);display:flex;align-items:center;justify-content:center}
+.mcal-close{background:var(--surface2);border:1px solid var(--border);border-radius:50%;width:30px;height:30px;font-size:16px;cursor:pointer;color:var(--muted);margin-left:4px;display:flex;align-items:center;justify-content:center}
+.mcal-dow{display:grid;grid-template-columns:repeat(7,1fr);margin-bottom:6px}
+.mcal-dow span{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;color:var(--muted);text-align:center}
+.mcal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:3px}
+.mcal-day{display:flex;flex-direction:column;align-items:center;gap:2px;padding:2px 0;cursor:pointer}
+.mcal-day.empty{visibility:hidden;pointer-events:none}
+.mcal-num{font-size:9px;color:var(--muted);font-weight:500}
+.mcal-day.today .mcal-num{color:var(--gold);font-weight:700}
+.mcal-day.future .mcal-num{color:var(--faint)}
+.mcal-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:20px;padding-top:16px;border-top:1px solid var(--border)}
+.mcal-stat{text-align:center}
+.mcal-stat-val{font-family:'Fraunces',serif;font-size:22px;font-weight:600;color:var(--gold)}
+.mcal-stat-lbl{font-size:10px;color:var(--muted);margin-top:2px;text-transform:uppercase;letter-spacing:.4px}
+
+/* Trigger button */
+.mcal-trigger{background:var(--surface2);border:1px solid var(--border);border-radius:50%;width:30px;height:30px;display:flex;align-items:center;justify-content:center;font-size:14px;cursor:pointer;flex-shrink:0;transition:all .15s}
+.mcal-trigger:active{background:var(--gold-dim);border-color:var(--gold)}
 
 /* Meal picker in lunch */
 .meal-picker-btn{border-color:var(--gold)!important;color:var(--gold)!important}
@@ -478,6 +505,27 @@ html,body{min-height:100%;background:var(--bg);color:var(--text);font-family:'Ou
     <div id="slist"></div>
   </div>
 
+  <div class="tc" id="tc-n">
+    <div class="nutri-topbar">
+      <h2 style="font-family:'Fraunces',serif;font-size:20px;font-weight:600;margin:0">Daily nutrition</h2>
+      <div style="display:flex;align-items:center;gap:8px">
+        <button class="mcal-trigger" onclick="openMcal()" title="Monthly overview">◉</button>
+        <span class="streak-badge zero" id="nutriStreak">—</span>
+        <div class="wnav">
+          <button onclick="nutriNav(-1)">&#8249;</button>
+          <span class="wlbl" id="nutriDayLbl" style="min-width:140px;font-size:13px"></span>
+          <button onclick="nutriNav(1)">&#8250;</button>
+        </div>
+      </div>
+    </div>
+    <div id="nutriProgressCard"></div>
+    <div id="nutriWeekStrip"></div>
+    <div id="nutriAchievements"></div>
+    <div id="nutriMeals" style="display:flex;flex-direction:column;gap:10px;margin-bottom:20px"></div>
+    <div style="text-align:center;padding-bottom:8px">
+      <button id="nutriRestoreBtn" class="btn-clr" style="font-size:11px;color:var(--faint);border-color:var(--border)" onclick="restoreNutritionBackup()">↩ Restore backup</button>
+    </div>
+  </div>
 
 </div>
 
@@ -495,26 +543,23 @@ html,body{min-height:100%;background:var(--bg);color:var(--text);font-family:'Ou
   </div>
 </div>
 
-  <div class="tc" id="tc-n">
-    <div class="nutri-topbar">
-      <h2 style="font-family:'Fraunces',serif;font-size:20px;font-weight:600">Daily nutrition</h2>
-      <div style="display:flex;align-items:center;gap:8px">
-        <span class="streak-badge zero" id="nutriStreak">—</span>
-        <div class="wnav">
-          <button onclick="nutriNav(-1)">&#8249;</button>
-          <span class="wlbl" id="nutriDayLbl" style="min-width:140px;font-size:13px"></span>
-          <button onclick="nutriNav(1)">&#8250;</button>
-        </div>
-      </div>
+<!-- Monthly nutrition view -->
+<div class="mcal-backdrop" id="mcalModal" style="display:none" onclick="closeMcalBackdrop(event)">
+  <div class="mcal-sheet">
+    <div class="mcal-handle"></div>
+    <div class="mcal-hdr">
+      <button class="mcal-nav" onclick="chgMonth(-1)">&#8249;</button>
+      <span class="mcal-lbl" id="mcalLbl"></span>
+      <button class="mcal-nav" onclick="chgMonth(1)">&#8250;</button>
+      <button class="mcal-close" onclick="closeMcal()">×</button>
     </div>
-    <div id="nutriProgressCard"></div>
-    <div id="nutriWeekStrip"></div>
-    <div id="nutriAchievements"></div>
-    <div id="nutriMeals" style="display:flex;flex-direction:column;gap:10px;margin-bottom:20px"></div>
-    <div style="text-align:center;padding-bottom:8px">
-      <button id="nutriRestoreBtn" class="btn-clr" style="font-size:11px;color:var(--faint);border-color:var(--border)" onclick="restoreNutritionBackup()">↩ Restore backup</button>
+    <div class="mcal-dow">
+      <span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span><span>S</span>
     </div>
+    <div class="mcal-grid" id="mcalGrid"></div>
+    <div class="mcal-stats" id="mcalStats"></div>
   </div>
+</div>
 
 <div class="toast" id="toast"></div>
 
@@ -1656,7 +1701,7 @@ function applyCloudUpdate(){
 
 /* ---- NUTRITION TAB ---- */
 const MEAL_PRESETS={"breakfasts":[{"name":"AH Chocolate Croissant","kcal":337,"protein":5.5,"carbs":35,"fat":19},{"name":"AH Chocolate Bread","kcal":521,"protein":10.5,"carbs":52,"fat":29},{"name":"HiPRO Skyr Vanilla","kcal":53,"protein":9.5,"carbs":3.5,"fat":0},{"name":"HiPRO Skyr Vanilla w/ Honey & Nuts","kcal":203,"protein":12.5,"carbs":22.5,"fat":8},{"name":"Almhof Yogurt","kcal":138,"protein":2.7,"carbs":13,"fat":8},{"name":"Banana","kcal":100,"protein":1,"carbs":27,"fat":0},{"name":"Fruit","kcal":80,"protein":1,"carbs":20,"fat":0},{"name":"Coffee w/ milk","kcal":60,"protein":3,"carbs":8,"fat":2}],"lunches":[{"name":"Nona Rossa - Coppa di Parma sandwich","kcal":850,"protein":38,"carbs":76,"fat":44},{"name":"AH kip bacon wrap","kcal":352,"protein":15,"carbs":25,"fat":21},{"name":"AH Broodje","kcal":356,"protein":15,"carbs":50,"fat":4},{"name":"Tosti kaas","kcal":320,"protein":16,"carbs":36,"fat":10},{"name":"Bolletjes (JQTRP)","kcal":450,"protein":19,"carbs":54,"fat":18},{"name":"Croissant Hamkaas (x2)","kcal":610,"protein":17,"carbs":58,"fat":34},{"name":"Nada / ayuno","kcal":0,"protein":0,"carbs":0,"fat":0},{"name":"AH Pasta filled w/ Sauce","kcal":420,"protein":17,"carbs":45,"fat":20}],"snacks":[{"name":"AH Choco Karamel Bar","kcal":170,"protein":15,"carbs":14,"fat":7.5},{"name":"Holie's Chocolate Bar","kcal":130,"protein":8,"carbs":15,"fat":5},{"name":"Fruta Random","kcal":80,"protein":1,"carbs":20,"fat":0},{"name":"AH Macadamia Mix","kcal":190,"protein":5.5,"carbs":5,"fat":16},{"name":"Coffee","kcal":5,"protein":0,"carbs":1,"fat":0},{"name":"Banana","kcal":100,"protein":1,"carbs":27,"fat":0},{"name":"AH Protein mousse","kcal":76,"protein":10,"carbs":5,"fat":1.6},{"name":"Ben & Jerry's","kcal":1232,"protein":20,"carbs":149,"fat":60},{"name":"Alfajor","kcal":250,"protein":4,"carbs":36,"fat":10}],"drinks":[{"name":"Beer 33cl","kcal":150,"protein":1,"carbs":13,"fat":0},{"name":"Beer 50cl","kcal":228,"protein":2,"carbs":20,"fat":0},{"name":"Wine — glass 15cl","kcal":122,"protein":0,"carbs":4,"fat":0},{"name":"Wine — 2 glasses","kcal":244,"protein":0,"carbs":8,"fat":0},{"name":"Cocktail","kcal":180,"protein":0,"carbs":18,"fat":0},{"name":"Shot 4cl","kcal":90,"protein":0,"carbs":0,"fat":0},{"name":"Soft drink 33cl","kcal":140,"protein":0,"carbs":35,"fat":0}]};
-const DAILY={kcal:2800,protein:140,carbs:300,fat:70};
+const DAILY={kcal:2600,protein:130,carbs:280,fat:65};
 const MEAL_SLOTS=[
   {key:'breakfast',icon:'☀️',label:'Breakfast'},
   {key:'lunch',    icon:'🥗',label:'Lunch'},
@@ -1666,14 +1711,12 @@ const MEAL_SLOTS=[
 
 let nutriDate=dk(new Date());
 let lunchMealPickerOpen=false;
-let editingPreset=null;
 
 function nutriNav(dir){
   const d=new Date(nutriDate+'T12:00:00');
   d.setDate(d.getDate()+dir);
   nutriDate=dk(d);
   lunchMealPickerOpen=false;
-  editingPreset=null;
   renderNutri();
 }
 
@@ -1721,18 +1764,18 @@ function calcDailyTotals(dayData, dinner){
 function calcDailyScore(totals){
   if(totals.kcal<200)return 0;
   let s=0;
-  // Calories: 25 pts — target 2600–3000
-  if(totals.kcal>=2600&&totals.kcal<=3000)s+=25;
-  else if(totals.kcal>=2200&&totals.kcal<=3400)s+=12;
-  // Protein: 35 pts — target 130–155g (priority)
-  if(totals.protein>=130&&totals.protein<=155)s+=35;
-  else if(totals.protein>=110&&totals.protein<=175)s+=17;
-  // Carbs: 20 pts — target 250–350g
-  if(totals.carbs>=250&&totals.carbs<=350)s+=20;
-  else if(totals.carbs>=200&&totals.carbs<=420)s+=10;
-  // Fat: 20 pts — target 60–82g
-  if(totals.fat>=60&&totals.fat<=82)s+=20;
-  else if(totals.fat>=45&&totals.fat<=105)s+=10;
+  // Calories: 25 pts — target 2400–2800
+  if(totals.kcal>=2400&&totals.kcal<=2800)s+=25;
+  else if(totals.kcal>=2100&&totals.kcal<=3100)s+=12;
+  // Protein: 35 pts — target 120–145g (priority)
+  if(totals.protein>=120&&totals.protein<=145)s+=35;
+  else if(totals.protein>=100&&totals.protein<=165)s+=17;
+  // Carbs: 20 pts — target 235–325g
+  if(totals.carbs>=235&&totals.carbs<=325)s+=20;
+  else if(totals.carbs>=190&&totals.carbs<=390)s+=10;
+  // Fat: 20 pts — target 55–75g
+  if(totals.fat>=55&&totals.fat<=75)s+=20;
+  else if(totals.fat>=42&&totals.fat<=98)s+=10;
   return s;
 }
 
@@ -1794,23 +1837,23 @@ function renderNutriProgress(totals){
   const{kcal,protein,carbs,fat}=totals;
   const score=calcDailyScore(totals);
   const grade=getDayGrade(score);
-  const kcalColor=kcal===0?'var(--faint)':getMacroColor(kcal,2600,3000);
+  const kcalColor=kcal===0?'var(--faint)':getMacroColor(kcal,2400,2800);
 
   // Main ring: r=50, size=120
-  const kcalRing=makeSVGRing(kcal,3200,kcalColor,50,9,120);
+  const kcalRing=makeSVGRing(kcal,3000,kcalColor,50,9,120);
 
   // Remaining label
   let remainHTML;
   if(kcal===0)remainHTML=`<span style="color:var(--faint)">— to go</span>`;
-  else if(kcal>3000)remainHTML=`<span style="color:var(--terra)">+${kcal-2800} over</span>`;
-  else if(kcal>=2600)remainHTML=`<span style="color:var(--sage)">On target ✓</span>`;
-  else remainHTML=`<span style="color:var(--gold)">${2800-kcal} to go</span>`;
+  else if(kcal>2800)remainHTML=`<span style="color:var(--terra)">+${kcal-2600} over</span>`;
+  else if(kcal>=2400)remainHTML=`<span style="color:var(--sage)">On target ✓</span>`;
+  else remainHTML=`<span style="color:var(--gold)">${2600-kcal} to go</span>`;
 
   // Macro rows
   const macros=[
-    {label:'Protein',val:protein,target:140,low:130,high:155,unit:'g'},
-    {label:'Carbs',  val:carbs,  target:300,low:250,high:350,unit:'g'},
-    {label:'Fat',    val:fat,    target:70, low:60, high:82, unit:'g'},
+    {label:'Protein',val:protein,target:130,low:120,high:145,unit:'g'},
+    {label:'Carbs',  val:carbs,  target:280,low:235,high:325,unit:'g'},
+    {label:'Fat',    val:fat,    target:65, low:55, high:75, unit:'g'},
   ];
   const macroRows=macros.map(m=>{
     const color=m.val===0?'var(--faint)':getMacroColor(m.val,m.low,m.high);
@@ -1833,7 +1876,7 @@ function renderNutriProgress(totals){
         ${kcalRing}
         <div class="ring-center">
           <div class="ring-main-val" style="color:${kcalColor}">${kcal}</div>
-          <div class="ring-main-lbl">/ 2800 kcal</div>
+          <div class="ring-main-lbl">/ 2600 kcal</div>
           <div class="ring-remaining">${remainHTML}</div>
         </div>
         <div class="daily-grade-badge ${grade.cls}">${grade.letter}</div>
@@ -1875,6 +1918,91 @@ function renderWeekStrip(){
 function nutriJump(key){
   nutriDate=key;
   renderNutri();
+}
+
+/* ---- MONTHLY VIEW ---- */
+let nutriMonthOffset=0;
+
+function openMcal(){
+  nutriMonthOffset=0;
+  document.getElementById('mcalModal').style.display='flex';
+  renderMcal();
+}
+function closeMcal(){document.getElementById('mcalModal').style.display='none';}
+function closeMcalBackdrop(e){if(e.target===document.getElementById('mcalModal'))closeMcal();}
+function chgMonth(dir){nutriMonthOffset+=dir;renderMcal();}
+
+function mcalRing(score,size=36){
+  const r=size/2-3.5;
+  const circ=(2*Math.PI*r).toFixed(2);
+  const pct=score/100;
+  const off=(circ*(1-pct)).toFixed(2);
+  const color=score>=75?'var(--sage)':score>=45?'var(--gold)':'var(--terra)';
+  return`<svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}" style="transform:rotate(-90deg);display:block">
+    <circle cx="${size/2}" cy="${size/2}" r="${r}" fill="none" stroke="var(--surface2)" stroke-width="3.5"/>
+    ${score>0?`<circle cx="${size/2}" cy="${size/2}" r="${r}" fill="none" stroke="${color}" stroke-width="3.5" stroke-linecap="round" stroke-dasharray="${circ}" stroke-dashoffset="${off}"/>`:''}
+  </svg>`;
+}
+
+function renderMcal(){
+  const now=new Date();
+  const y=now.getFullYear(), m=now.getMonth();
+  const tgtDate=new Date(y, m+nutriMonthOffset, 1);
+  const tgtY=tgtDate.getFullYear(), tgtM=tgtDate.getMonth();
+  const todayKey=dk(new Date());
+
+  document.getElementById('mcalLbl').textContent=
+    tgtDate.toLocaleDateString('en-GB',{month:'long',year:'numeric'});
+
+  // First weekday of month (0=Mon..6=Sun)
+  const firstDay=(new Date(tgtY,tgtM,1).getDay()+6)%7;
+  const daysInMonth=new Date(tgtY,tgtM+1,0).getDate();
+
+  let totalScored=0, sumScore=0, bestStreak=0, curStreak=0;
+  const cells=[];
+
+  // Empty cells before day 1
+  for(let i=0;i<firstDay;i++) cells.push(`<div class="mcal-day empty"></div>`);
+
+  for(let d=1;d<=daysInMonth;d++){
+    const dateStr=`${tgtY}-${String(tgtM+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+    const isToday=dateStr===todayKey;
+    const isFuture=dateStr>todayKey;
+    const dayData=S.nutrition?.[dateStr]||{};
+    const dinnerId=S.plan[dateStr];
+    const dinner=dinnerId?MEALS.find(m=>m.id===dinnerId):null;
+    const totals=calcDailyTotals(dayData,dinner);
+    const score=isFuture?0:calcDailyScore(totals);
+
+    if(!isFuture&&score>0){totalScored++;sumScore+=score;curStreak++;}
+    else if(!isFuture){curStreak=0;}
+    bestStreak=Math.max(bestStreak,curStreak);
+
+    const cls=['mcal-day',isToday?'today':'',isFuture?'future':''].filter(Boolean).join(' ');
+    cells.push(`<div class="${cls}" onclick="closeMcal();nutriDate='${dateStr}';renderNutri()">
+      ${isFuture?`<div style="width:36px;height:36px;border-radius:50%;background:var(--surface2);border:1.5px dashed var(--border)"></div>`
+               :mcalRing(score)}
+      <div class="mcal-num">${d}</div>
+    </div>`);
+  }
+
+  document.getElementById('mcalGrid').innerHTML=cells.join('');
+
+  const avgScore=totalScored>0?Math.round(sumScore/totalScored):0;
+  const grade=getDayGrade(avgScore);
+  document.getElementById('mcalStats').innerHTML=`
+    <div class="mcal-stat">
+      <div class="mcal-stat-val">${totalScored}</div>
+      <div class="mcal-stat-lbl">Days logged</div>
+    </div>
+    <div class="mcal-stat">
+      <div class="mcal-stat-val" style="color:${avgScore>=75?'var(--sage)':avgScore>=45?'var(--gold)':'var(--terra)'}">${avgScore>0?grade.letter:'—'}</div>
+      <div class="mcal-stat-lbl">Avg grade</div>
+    </div>
+    <div class="mcal-stat">
+      <div class="mcal-stat-val">${bestStreak}</div>
+      <div class="mcal-stat-lbl">Best streak</div>
+    </div>`;
 }
 
 /* ---- RENDER: ACHIEVEMENTS ---- */
@@ -1943,15 +2071,8 @@ function renderNutri(){
       const qtys=d._qtys||{};
       const sel=picks.includes(p.name);
       const qty=qtys[p.name]||1;
-      const editKey=`${nutriDate}|${key}|${p.name}`;
-      const isEditing=editingPreset===editKey;
       const pnJson=JSON.stringify(p.name).replace(/"/g,'&quot;');
-      let badge='';
-      if(sel){
-        badge=isEditing
-          ?`<span class="preset-stepper" onclick="event.stopPropagation()"><button onclick="incrPreset('${nutriDate}','${key}',${pnJson},-1);event.stopPropagation()">−</button><span>${qty}</span><button onclick="incrPreset('${nutriDate}','${key}',${pnJson},1);event.stopPropagation()">+</button></span>`
-          :`<span class="preset-qty-tap" onclick="toggleEditPreset('${nutriDate}','${key}',${pnJson});event.stopPropagation()">×${qty}</span>`;
-      }
+      const badge=sel?`<span class="preset-qty-tap" onclick="cyclePreset('${nutriDate}','${key}',${pnJson});event.stopPropagation()">×${qty}</span>`:'';
       return`<button class="preset-chip${sel?' on':''}" onclick="applyPreset('${nutriDate}','${key}',${JSON.stringify(p).replace(/"/g,'&quot;')})">${p.name}${badge}</button>`;
     }).join('');
 
@@ -2044,7 +2165,6 @@ function applyPreset(date,meal,preset){
   const idx=picks.indexOf(preset.name);
   if(idx>=0){picks.splice(idx,1);delete qtys[preset.name];}
   else{picks.push(preset.name);qtys[preset.name]=1;}
-  editingPreset=null;
   if(picks.length===0){delete S.nutrition[date][meal];}
   else{recomputeFromPicks(date,meal,picks,qtys);}
   saveNutriStore();renderNutri();
@@ -2061,24 +2181,18 @@ function recomputeFromPicks(date,meal,picks,qtys){
   S.nutrition[date][meal]={name,...sum,_picks:picks,_qtys:qtys};
 }
 
-function toggleEditPreset(date,meal,name){
-  const k=`${date}|${meal}|${name}`;
-  editingPreset=editingPreset===k?null:k;
-  renderNutri();
-}
-
-function incrPreset(date,meal,name,delta){
+function cyclePreset(date,meal,name){
   const cur=S.nutrition?.[date]?.[meal];
   if(!cur?._picks?.includes(name))return;
   if(!cur._qtys)cur._qtys={};
-  cur._qtys[name]=Math.max(1,(cur._qtys[name]||1)+delta);
+  const q=cur._qtys[name]||1;
+  cur._qtys[name]=q>=5?1:q+1;
   recomputeFromPicks(date,meal,cur._picks,cur._qtys);
   saveNutriStore();renderNutri();
 }
 
 function clearNutriMeal(date,meal){
   if(S.nutrition?.[date]?.[meal])delete S.nutrition[date][meal];
-  editingPreset=null;
   saveNutriStore();renderNutri();
 }
 function saveNutriField(meal,field,val){
