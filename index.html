@@ -878,7 +878,7 @@ function chgWeek(dir){S.wk+=dir;renderWeek()}
 let extrasOpen=false;
 let editingExtraName=null;
 
-function extrasKey(){return dk(wkDates(S.wk)[0]);}
+function extrasKey(off){return dk(wkDates(off!==undefined?off:S.wk)[6]);} // Sunday = last day of week
 function getExtras(){return S.wkExtras?.[extrasKey()]||[];}
 
 function addExtra(name,cat){
@@ -912,6 +912,16 @@ function toggleEditExtra(name){
   editingExtraName=editingExtraName===name?null:name;
   renderExtras();
 }
+function copyExtrasFromLastWeek(){
+  const prevKey=extrasKey(S.wk-1);
+  const prevExtras=S.wkExtras?.[prevKey]||[];
+  if(!prevExtras.length){showToast('No extras in previous week');return;}
+  if(!S.wkExtras)S.wkExtras={};
+  S.wkExtras[extrasKey()]=prevExtras.map(e=>({...e}));
+  save();renderExtras();
+  showToast('Copied from last week ✓');
+}
+
 function toggleExtras(){
   extrasOpen=!extrasOpen;
   renderExtras();
@@ -957,11 +967,19 @@ function renderExtras(){
     </div>`;
   }).join('');
 
+  const prevExtras=S.wkExtras?.[extrasKey(S.wk-1)]||[];
+  const copyBtn=!extras.length&&prevExtras.length
+    ?`<button class="btn-clr" style="font-size:11px;padding:4px 9px" onclick="copyExtrasFromLastWeek()">↩ Copy last week</button>`
+    :'';
+
   el.innerHTML=`<div class="extras-card">
     <div class="extras-header" onclick="toggleExtras()">
       <div class="extras-title">🛒 Weekly extras${extras.length?` <span class="extras-count">${extras.length} item${extras.length>1?'s':''}</span>`:''}
       </div>
-      <span class="extras-chevron">${extrasOpen?'▴':'▾'}</span>
+      <div style="display:flex;align-items:center;gap:8px" onclick="event.stopPropagation()">
+        ${copyBtn}
+        <span class="extras-chevron">${extrasOpen?'▴':'▾'}</span>
+      </div>
     </div>
     ${extrasOpen?`<div class="extras-body">${sections}</div>`:''}
     ${extras.length?`<div class="extras-pills">${pills}</div>`:''}
@@ -1234,17 +1252,18 @@ function renderList(){
 }
 
 function renderExtrasList(c, weekKey){
-  const extras=S.wkExtras?.[weekKey]||[];
+  const extKey=dk(wkDates(S.wk)[6]); // Sunday key for extras
+  const extras=S.wkExtras?.[extKey]||[];
   if(!extras.length)return;
   const extItems=extras.map(e=>{
-    const ck=S.ckd[`${weekKey}|extra|${e.name}`];
+    const ck=S.ckd[`${extKey}|extra|${e.name}`];
     const pd=manualPrices[e.name]||{price:DEFAULT_PRICES[e.name]??null,bonus:false};
     let pBadge='';
     if(pd.price!=null){
       const cls=pd.bonus?'price-bonus':'price-found';
       pBadge=`<span class="price-badge ${cls}">€${(pd.price*e.qty).toFixed(2)}${pd.bonus?' ★':''}${e.qty>1?` (×${e.qty})`:''}</span>`;
     }
-    const key=`${weekKey}|extra|${e.name}`;
+    const key=`${extKey}|extra|${e.name}`;
     return`<div class="iitem${ck?' ckd':''}" onclick="togCkd('${key}')">
       <input type="checkbox"${ck?' checked':''} onclick="togCkd('${key}',event)">
       <div class="ingr-info">
@@ -1764,18 +1783,18 @@ function calcDailyTotals(dayData, dinner){
 function calcDailyScore(totals){
   if(totals.kcal<200)return 0;
   let s=0;
-  // Calories: 25 pts — target 2400–2800
-  if(totals.kcal>=2400&&totals.kcal<=2800)s+=25;
-  else if(totals.kcal>=2100&&totals.kcal<=3100)s+=12;
-  // Protein: 35 pts — target 120–145g (priority)
-  if(totals.protein>=120&&totals.protein<=145)s+=35;
-  else if(totals.protein>=100&&totals.protein<=165)s+=17;
-  // Carbs: 20 pts — target 235–325g
-  if(totals.carbs>=235&&totals.carbs<=325)s+=20;
-  else if(totals.carbs>=190&&totals.carbs<=390)s+=10;
-  // Fat: 20 pts — target 55–75g
-  if(totals.fat>=55&&totals.fat<=75)s+=20;
-  else if(totals.fat>=42&&totals.fat<=98)s+=10;
+  // Calories: 30 pts — target 2400–2800
+  if(totals.kcal>=2400&&totals.kcal<=2800)s+=30;
+  else if(totals.kcal>=2100&&totals.kcal<=3100)s+=15;
+  // Protein: 40 pts — target 120–145g (priority)
+  if(totals.protein>=120&&totals.protein<=145)s+=40;
+  else if(totals.protein>=100&&totals.protein<=165)s+=20;
+  // Carbs: 15 pts — target 235–325g
+  if(totals.carbs>=235&&totals.carbs<=325)s+=15;
+  else if(totals.carbs>=190&&totals.carbs<=390)s+=7;
+  // Fat: 15 pts — target 55–75g
+  if(totals.fat>=55&&totals.fat<=75)s+=15;
+  else if(totals.fat>=42&&totals.fat<=98)s+=7;
   return s;
 }
 
@@ -1924,7 +1943,6 @@ function nutriJump(key){
 let nutriMonthOffset=0;
 
 function openMcal(){
-  nutriMonthOffset=0;
   document.getElementById('mcalModal').style.display='flex';
   renderMcal();
 }
@@ -2212,7 +2230,8 @@ function saveNutriField(meal,field,val){
 
 function saveNutriStore(){
   localStorage.setItem('cenas_nutrition',JSON.stringify(S.nutrition||{}));
-  maybeDailyBackup(); // once per day, silent
+  maybeDailyBackup();
+  if(document.getElementById('mcalModal')?.style.display!=='none') renderMcal();
 }
 
 function loadNutri(){
