@@ -451,6 +451,25 @@ html,body{min-height:100%;background:var(--bg);color:var(--text);font-family:'Ou
 .preset-stepper{display:inline-flex;align-items:center;gap:3px;margin-left:5px;vertical-align:middle}
 .preset-stepper button{background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);border-radius:50%;width:16px;height:16px;font-size:12px;line-height:1;cursor:pointer;color:inherit;padding:0;display:inline-flex;align-items:center;justify-content:center}
 .preset-stepper span{min-width:12px;text-align:center;font-weight:700;font-size:11px}
+
+/* Custom add panel */
+.custom-add-chip{background:none;border:1px dashed var(--border);border-radius:20px;padding:5px 10px;font-size:12px;cursor:pointer;color:var(--muted);transition:all .15s}
+.custom-add-chip.on,.custom-add-chip:active{border-color:var(--sage);color:var(--sage);background:rgba(58,140,54,.08)}
+.nmeal-customs{display:flex;flex-wrap:wrap;gap:6px;padding:6px 12px 0}
+.custom-pill{display:inline-flex;align-items:center;gap:5px;background:rgba(58,140,54,.08);border:1px solid rgba(58,140,54,.25);border-radius:20px;padding:4px 6px 4px 10px;font-size:12px;color:var(--text)}
+.custom-pill-rm{background:none;border:none;color:var(--muted);cursor:pointer;font-size:14px;padding:0 2px;line-height:1}
+.custom-pill-rm:hover{color:var(--terra)}
+.custom-panel{background:var(--surface2);border:1px solid var(--border);border-radius:var(--r);padding:12px;margin:8px 12px 0;display:flex;flex-direction:column;gap:8px}
+.custom-name-input{width:100%;border:1px solid var(--border);border-radius:var(--rs);padding:8px 10px;font-family:'Outfit',sans-serif;font-size:13px;background:var(--surface);color:var(--text);box-sizing:border-box}
+.custom-name-input:focus{outline:none;border-color:var(--sage)}
+.custom-macro-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--border);border:1px solid var(--border);border-radius:var(--rs);overflow:hidden}
+.custom-field{background:var(--surface);padding:7px 4px;display:flex;flex-direction:column;align-items:center;gap:2px}
+.custom-field label{font-size:9px;font-weight:600;text-transform:uppercase;letter-spacing:.4px;color:var(--muted)}
+.custom-field input{border:none;background:transparent;font-size:14px;font-weight:600;text-align:center;width:100%;color:var(--text);padding:0;font-family:'Outfit',sans-serif}
+.custom-field input:focus{outline:none}
+.custom-actions{display:flex;gap:8px}
+.custom-add-btn{flex:1;background:rgba(58,140,54,.1);border:1px solid var(--sage);color:var(--sage);border-radius:var(--rs);padding:9px;font-size:13px;font-weight:600;cursor:pointer;font-family:'Outfit',sans-serif}
+.custom-cancel-btn{background:var(--surface);border:1px solid var(--border);color:var(--muted);border-radius:var(--rs);padding:9px 14px;font-size:13px;cursor:pointer;font-family:'Outfit',sans-serif}
 </style>
 </head>
 <body>
@@ -1730,12 +1749,15 @@ const MEAL_SLOTS=[
 
 let nutriDate=dk(new Date());
 let lunchMealPickerOpen=false;
+let customPanelSlot=null;
+let customDraft={name:'',kcal:'',protein:'',carbs:'',fat:''};
 
 function nutriNav(dir){
   const d=new Date(nutriDate+'T12:00:00');
   d.setDate(d.getDate()+dir);
   nutriDate=dk(d);
   lunchMealPickerOpen=false;
+  customPanelSlot=null;
   renderNutri();
 }
 
@@ -1780,22 +1802,25 @@ function calcDailyTotals(dayData, dinner){
   return tot;
 }
 
+function scoreRange(val, minAcc, minTgt, maxTgt, maxAcc, pts){
+  if(val<minAcc||val>maxAcc)return 0;
+  if(val>=minTgt&&val<=maxTgt)return pts;
+  if(val<minTgt)return pts*(val-minAcc)/(minTgt-minAcc);
+  return pts*(maxAcc-val)/(maxAcc-maxTgt);
+}
+
 function calcDailyScore(totals){
   if(totals.kcal<200)return 0;
   let s=0;
-  // Calories: 30 pts — target 2400–2800
-  if(totals.kcal>=2400&&totals.kcal<=2800)s+=30;
-  else if(totals.kcal>=2100&&totals.kcal<=3100)s+=15;
-  // Protein: 40 pts — target 120–145g (priority)
-  if(totals.protein>=120&&totals.protein<=145)s+=40;
-  else if(totals.protein>=100&&totals.protein<=165)s+=20;
-  // Carbs: 15 pts — target 235–325g
-  if(totals.carbs>=235&&totals.carbs<=325)s+=15;
-  else if(totals.carbs>=190&&totals.carbs<=390)s+=7;
-  // Fat: 15 pts — target 55–75g
-  if(totals.fat>=55&&totals.fat<=75)s+=15;
-  else if(totals.fat>=42&&totals.fat<=98)s+=7;
-  return s;
+  // Calories: 30 pts — ramp 1600→2400, flat 2400→2800, ramp 2800→3200
+  s+=scoreRange(totals.kcal, 1600,2400,2800,3200, 30);
+  // Protein: 40 pts — ramp 60→120, flat 120→145, ramp 145→185
+  s+=scoreRange(totals.protein, 60,120,145,185, 40);
+  // Carbs: 15 pts — ramp 100→235, flat 235→325, ramp 325→430
+  s+=scoreRange(totals.carbs, 100,235,325,430, 15);
+  // Fat: 15 pts — ramp 20→55, flat 55→75, ramp 75→115
+  s+=scoreRange(totals.fat, 20,55,75,115, 15);
+  return Math.round(s);
 }
 
 function getDayGrade(score){
@@ -2110,6 +2135,27 @@ function renderNutri(){
         <div class="meal-picker-panel${panelOpen?'':' hidden'}">${mealChips}</div>`;
     }
 
+    // Custom items already added (pills)
+    const customPills=(d._customs||[]).map((c,i)=>
+      `<span class="custom-pill">${c.name||'Custom'} <span style="color:var(--faint);font-size:10px">${c.kcal}kcal</span> <button class="custom-pill-rm" onclick="removeCustomItem('${nutriDate}','${key}',${i});event.stopPropagation()">×</button></span>`
+    ).join('');
+
+    // Custom add panel
+    const panelOpen=customPanelSlot===key;
+    const customPanel=panelOpen?`<div class="custom-panel">
+      <input class="custom-name-input" placeholder="Name (optional)" value="${customDraft.name}" oninput="customDraft.name=this.value">
+      <div class="custom-macro-grid">
+        <div class="custom-field"><label>kcal</label><input type="number" min="0" placeholder="—" value="${customDraft.kcal}" oninput="customDraft.kcal=this.value"></div>
+        <div class="custom-field"><label>Prot</label><input type="number" min="0" placeholder="—" value="${customDraft.protein}" oninput="customDraft.protein=this.value"></div>
+        <div class="custom-field"><label>Carbs</label><input type="number" min="0" placeholder="—" value="${customDraft.carbs}" oninput="customDraft.carbs=this.value"></div>
+        <div class="custom-field"><label>Fat</label><input type="number" min="0" placeholder="—" value="${customDraft.fat}" oninput="customDraft.fat=this.value"></div>
+      </div>
+      <div class="custom-actions">
+        <button class="custom-add-btn" onclick="addCustomItem('${nutriDate}','${key}')">＋ Add</button>
+        <button class="custom-cancel-btn" onclick="openCustomPanel('${key}')">Cancel</button>
+      </div>
+    </div>`:'';
+
     return`<div class="nmeal-card">
       <div class="nmeal-hdr">
         <div class="nmeal-hdr-left">
@@ -2120,8 +2166,11 @@ function renderNutri(){
       </div>
       <div class="nmeal-presets">${presetChips}
         <button class="preset-chip${isCustomActive?' on':''}" onclick="clearNutriMeal('${nutriDate}','${key}')">Custom</button>
+        <button class="custom-add-chip${panelOpen?' on':''}" onclick="openCustomPanel('${key}')">＋ Add</button>
         ${mealPickerHTML}
       </div>
+      ${customPills?`<div class="nmeal-customs">${customPills}</div>`:''}
+      ${customPanel}
       <div class="nmeal-body">
         <div class="nmeal-name-row nfield-name">
           <label>What</label>
@@ -2183,20 +2232,56 @@ function applyPreset(date,meal,preset){
   const idx=picks.indexOf(preset.name);
   if(idx>=0){picks.splice(idx,1);delete qtys[preset.name];}
   else{picks.push(preset.name);qtys[preset.name]=1;}
-  if(picks.length===0){delete S.nutrition[date][meal];}
-  else{recomputeFromPicks(date,meal,picks,qtys);}
+  if(picks.length===0&&!(cur._customs||[]).length){delete S.nutrition[date][meal];}
+  else{recomputeFromPicks(date,meal,picks,qtys,cur._customs||[]);}
   saveNutriStore();renderNutri();
 }
 
-function recomputeFromPicks(date,meal,picks,qtys){
+function recomputeFromPicks(date,meal,picks,qtys,customs){
   const all=[...MEAL_PRESETS.breakfasts,...MEAL_PRESETS.lunches,...MEAL_PRESETS.snacks,...MEAL_PRESETS.drinks];
   const selected=picks.map(n=>all.find(p=>p.name===n)).filter(Boolean);
-  const sum=selected.reduce((a,p)=>{
+  let sum=selected.reduce((a,p)=>{
     const q=qtys[p.name]||1;
     return{kcal:a.kcal+(p.kcal||0)*q,protein:a.protein+(p.protein||0)*q,carbs:a.carbs+(p.carbs||0)*q,fat:a.fat+(p.fat||0)*q};
   },{kcal:0,protein:0,carbs:0,fat:0});
-  const name=selected.map(p=>(qtys[p.name]||1)>1?`${p.name} ×${qtys[p.name]}`:p.name).join(' + ');
-  S.nutrition[date][meal]={name,...sum,_picks:picks,_qtys:qtys};
+  (customs||[]).forEach(c=>{
+    sum.kcal+=(c.kcal||0);sum.protein+=(c.protein||0);sum.carbs+=(c.carbs||0);sum.fat+=(c.fat||0);
+  });
+  const nameParts=[
+    ...selected.map(p=>(qtys[p.name]||1)>1?`${p.name} ×${qtys[p.name]}`:p.name),
+    ...(customs||[]).map(c=>c.name||'Custom')
+  ];
+  S.nutrition[date][meal]={name:nameParts.join(' + '),...sum,_picks:picks,_qtys:qtys,_customs:customs||[]};
+}
+
+function openCustomPanel(meal){
+  customPanelSlot=customPanelSlot===meal?null:meal;
+  if(customPanelSlot)customDraft={name:'',kcal:'',protein:'',carbs:'',fat:''};
+  renderNutri();
+}
+
+function addCustomItem(date,meal){
+  const kcal=parseFloat(customDraft.kcal)||0;
+  const protein=parseFloat(customDraft.protein)||0;
+  const carbs=parseFloat(customDraft.carbs)||0;
+  const fat=parseFloat(customDraft.fat)||0;
+  if(!kcal&&!protein&&!carbs&&!fat)return;
+  if(!S.nutrition)S.nutrition={};
+  if(!S.nutrition[date])S.nutrition[date]={};
+  const cur=S.nutrition[date][meal]||{};
+  const customs=[...(cur._customs||[]),{name:customDraft.name||'Custom',kcal,protein,carbs,fat}];
+  recomputeFromPicks(date,meal,cur._picks||[],cur._qtys||{},customs);
+  customDraft={name:'',kcal:'',protein:'',carbs:'',fat:''};
+  customPanelSlot=null;
+  saveNutriStore();renderNutri();
+}
+
+function removeCustomItem(date,meal,idx){
+  const cur=S.nutrition?.[date]?.[meal];
+  if(!cur?._customs)return;
+  cur._customs.splice(idx,1);
+  recomputeFromPicks(date,meal,cur._picks||[],cur._qtys||{},cur._customs);
+  saveNutriStore();renderNutri();
 }
 
 function cyclePreset(date,meal,name){
@@ -2205,7 +2290,7 @@ function cyclePreset(date,meal,name){
   if(!cur._qtys)cur._qtys={};
   const q=cur._qtys[name]||1;
   cur._qtys[name]=q>=5?1:q+1;
-  recomputeFromPicks(date,meal,cur._picks,cur._qtys);
+  recomputeFromPicks(date,meal,cur._picks,cur._qtys,cur._customs||[]);
   saveNutriStore();renderNutri();
 }
 
