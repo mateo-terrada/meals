@@ -1903,7 +1903,8 @@ function renderNutriProgress(totals){
     const color=m.val===0?'var(--faint)':getMacroColor(m.val,m.low,m.high);
     const ring=makeSVGRing(m.val,m.target*1.2,color,17,4,44);
     const diff=m.target-m.val;
-    const sub=m.val===0?`${m.target}${m.unit} target`:diff>0?`${diff}${m.unit} to go`:`+${-diff}${m.unit} over`;
+    const diffRounded=Math.round(Math.abs(diff)*10)/10;
+    const sub=m.val===0?`${m.target}${m.unit} target`:diff>0?`${diffRounded}${m.unit} to go`:`+${diffRounded}${m.unit} over`;
     return`<div class="macro-ring-row">
       <div class="macro-mini-ring">${ring}<div class="macro-mini-center" style="color:${color}">${m.val}</div></div>
       <div class="macro-ring-info">
@@ -1939,8 +1940,9 @@ function renderWeekStrip(){
     const dayData=S.nutrition?.[key]||{};
     const dinnerId=S.plan[key];
     const dinner=dinnerId?MEALS.find(m=>m.id===dinnerId):null;
-    const totals=calcDailyTotals(dayData,dinner);
-    const score=calcDailyScore(totals);
+    const isFuture=key>todayKey;
+    const totals=isFuture?{kcal:0,protein:0,carbs:0,fat:0}:calcDailyTotals(dayData,dinner);
+    const score=isFuture?0:calcDailyScore(totals);
     const isToday=key===todayKey;
     const isNav=key===nutriDate&&key!==todayKey;
     let dotCls='s-none';
