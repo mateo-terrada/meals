@@ -402,6 +402,17 @@ html,body{min-height:100%;background:var(--bg);color:var(--text);font-family:'Ou
 .mcal-trigger{background:var(--surface2);border:1px solid var(--border);border-radius:50%;width:30px;height:30px;display:flex;align-items:center;justify-content:center;font-size:14px;cursor:pointer;flex-shrink:0;transition:all .15s}
 .mcal-trigger:active{background:var(--gold-dim);border-color:var(--gold)}
 
+/* ===== DASHBOARD ===== */
+.dash-range-row{display:flex;gap:6px;margin-bottom:20px}
+.dash-range-btn{flex:1;padding:8px 0;border:1px solid var(--border);border-radius:var(--rs);background:var(--surface2);font-size:13px;cursor:pointer;color:var(--muted);font-family:'Outfit',sans-serif;transition:all .15s}
+.dash-range-btn.on{background:var(--gold-dim);border-color:var(--gold);color:var(--gold);font-weight:600}
+.dash-section{margin-bottom:22px}
+.dash-section-hdr{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:10px;gap:8px}
+.dash-section-ttl{font-family:'Fraunces',serif;font-size:16px;font-weight:600;flex-shrink:0}
+.dash-section-meta{font-size:11px;color:var(--muted);text-align:right;line-height:1.4}
+.dash-section-meta strong{color:var(--text);font-weight:600}
+.dash-in-range{color:var(--sage);font-weight:600}
+
 /* Meal picker in lunch */
 .meal-picker-btn{border-color:var(--gold)!important;color:var(--gold)!important}
 .meal-picker-btn.on{background:var(--gold-dim)!important}
@@ -528,6 +539,7 @@ html,body{min-height:100%;background:var(--bg);color:var(--text);font-family:'Ou
     <div class="nutri-topbar">
       <h2 style="font-family:'Fraunces',serif;font-size:20px;font-weight:600;margin:0">Daily nutrition</h2>
       <div style="display:flex;align-items:center;gap:8px">
+        <button class="mcal-trigger" onclick="openDash()" title="Nutrition trends">📊</button>
         <button class="mcal-trigger" onclick="openMcal()" title="Monthly overview">◉</button>
         <span class="streak-badge zero" id="nutriStreak">—</span>
         <div class="wnav">
@@ -577,6 +589,18 @@ html,body{min-height:100%;background:var(--bg);color:var(--text);font-family:'Ou
     </div>
     <div class="mcal-grid" id="mcalGrid"></div>
     <div class="mcal-stats" id="mcalStats"></div>
+  </div>
+</div>
+
+<!-- Nutrition trends dashboard -->
+<div class="mcal-backdrop" id="dashModal" style="display:none" onclick="if(event.target===this)closeDash()">
+  <div class="mcal-sheet">
+    <div class="mcal-handle"></div>
+    <div class="mcal-hdr">
+      <span class="mcal-lbl">Nutrition trends</span>
+      <button class="mcal-close" onclick="closeDash()">×</button>
+    </div>
+    <div id="dashContent"></div>
   </div>
 </div>
 
@@ -1966,7 +1990,112 @@ function nutriJump(key){
   renderNutri();
 }
 
-/* ---- MONTHLY VIEW ---- */
+/* ---- DASHBOARD ---- */
+let dashRange=21;
+
+function openDash(){document.getElementById('dashModal').style.display='flex';renderDash();}
+function closeDash(){document.getElementById('dashModal').style.display='none';}
+function setDashRange(n){dashRange=n;renderDash();}
+
+function buildLineChart(dateKeys,values,yMin,yMax,tgtMin,tgtMax,lineColor,unit){
+  const W=320,H=120,lP=38,rP=6,tP=8,bP=20;
+  const cW=W-lP-rP,cH=H-tP-bP,n=dateKeys.length;
+  const xOf=i=>lP+(i/(n-1))*cW;
+  const yOf=v=>tP+cH*(1-(v-yMin)/(yMax-yMin));
+  const tY1=yOf(tgtMax),tY2=yOf(tgtMin);
+  const todayKey=dk(new Date());
+
+  // Line path with gap handling
+  let pathD='',inPath=false;
+  values.forEach((v,i)=>{
+    if(v===null){inPath=false;return;}
+    const x=xOf(i).toFixed(1),y=yOf(v).toFixed(1);
+    pathD+=inPath?` L${x},${y}`:`M${x},${y}`;
+    inPath=true;
+  });
+
+  // Dots
+  const dots=values.map((v,i)=>{
+    if(v===null)return'';
+    const inR=v>=tgtMin&&v<=tgtMax;
+    const close=v>=tgtMin*.82&&v<=tgtMax*1.18;
+    const c=inR?'var(--sage)':close?'var(--gold)':'var(--terra)';
+    const isToday=dateKeys[i]===todayKey;
+    return`<circle cx="${xOf(i).toFixed(1)}" cy="${yOf(v).toFixed(1)}" r="${isToday?4.5:3}" fill="${c}" stroke="var(--bg)" stroke-width="1.5"/>`;
+  }).join('');
+
+  // X labels — show every 3rd + today
+  const xLabels=dateKeys.map((k,i)=>{
+    const isToday=k===todayKey;
+    if(i%3!==0&&!isToday)return'';
+    const d=new Date(k+'T12:00:00');
+    const mon=d.toLocaleDateString('en-GB',{month:'short'});
+    const lbl=i===0||d.getDate()===1?`${d.getDate()} ${mon}`:`${d.getDate()}`;
+    return`<text x="${xOf(i).toFixed(1)}" y="${H-3}" font-size="8.5" text-anchor="middle" fill="${isToday?'var(--gold)':'var(--muted)'}" font-weight="${isToday?700:400}">${lbl}</text>`;
+  }).join('');
+
+  // Y labels at target boundaries
+  const unitLbl=unit==='kcal'?'kcal':unit;
+  const yLbls=`
+    <text x="${lP-4}" y="${tY1.toFixed(1)}" font-size="8.5" text-anchor="end" fill="rgba(58,140,54,.75)" dominant-baseline="middle">${tgtMax}${unitLbl}</text>
+    <text x="${lP-4}" y="${tY2.toFixed(1)}" font-size="8.5" text-anchor="end" fill="rgba(58,140,54,.75)" dominant-baseline="middle">${tgtMin}${unitLbl}</text>`;
+
+  return`<svg viewBox="0 0 ${W} ${H}" width="100%" style="overflow:visible;display:block">
+    <rect x="${lP}" y="${tY1.toFixed(1)}" width="${cW}" height="${(tY2-tY1).toFixed(1)}" fill="rgba(58,140,54,.09)" rx="2"/>
+    <line x1="${lP}" y1="${tY1.toFixed(1)}" x2="${W-rP}" y2="${tY1.toFixed(1)}" stroke="rgba(58,140,54,.35)" stroke-width="1" stroke-dasharray="4,3"/>
+    <line x1="${lP}" y1="${tY2.toFixed(1)}" x2="${W-rP}" y2="${tY2.toFixed(1)}" stroke="rgba(58,140,54,.35)" stroke-width="1" stroke-dasharray="4,3"/>
+    <path d="${pathD}" fill="none" stroke="${lineColor}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" opacity=".85"/>
+    ${dots}
+    ${yLbls}
+    ${xLabels}
+  </svg>`;
+}
+
+function renderDash(){
+  const n=dashRange;
+  const dateKeys=[];
+  for(let i=n-1;i>=0;i--){const d=new Date();d.setDate(d.getDate()-i);dateKeys.push(dk(d));}
+
+  const kcalArr=[],protArr=[];
+  dateKeys.forEach(k=>{
+    const dd=S.nutrition?.[k]||{};
+    const dinner=S.plan[k]?MEALS.find(m=>m.id===S.plan[k]):null;
+    const t=calcDailyTotals(dd,dinner);
+    kcalArr.push(t.kcal>0?Math.round(t.kcal):null);
+    protArr.push(t.kcal>0?Math.round(t.protein*10)/10:null);
+  });
+
+  const vKcal=kcalArr.filter(v=>v!==null);
+  const vProt=protArr.filter(v=>v!==null);
+  const logged=vKcal.length;
+  const avgKcal=logged?Math.round(vKcal.reduce((a,b)=>a+b,0)/logged):'—';
+  const avgProt=vProt.length?(vProt.reduce((a,b)=>a+b,0)/vProt.length).toFixed(1):'—';
+  const kcalInR=vKcal.filter(v=>v>=2400&&v<=2800).length;
+  const protInR=vProt.filter(v=>v>=120&&v<=145).length;
+
+  const kcalChart=buildLineChart(dateKeys,kcalArr,1400,3400,2400,2800,'var(--gold)','kcal');
+  const protChart=buildLineChart(dateKeys,protArr,55,195,120,145,'var(--sage)','g');
+
+  const rangeBtn=v=>`<button class="dash-range-btn${dashRange===v?' on':''}" onclick="setDashRange(${v})">${v}d</button>`;
+
+  document.getElementById('dashContent').innerHTML=`
+    <div class="dash-range-row">${[14,21,30].map(rangeBtn).join('')}</div>
+    <div class="dash-section">
+      <div class="dash-section-hdr">
+        <span class="dash-section-ttl">Calories</span>
+        <span class="dash-section-meta">Avg <strong>${avgKcal} kcal</strong><br><span class="dash-in-range">${kcalInR}</span>/${logged} days in range</span>
+      </div>
+      ${kcalChart}
+    </div>
+    <div class="dash-section">
+      <div class="dash-section-hdr">
+        <span class="dash-section-ttl">Protein</span>
+        <span class="dash-section-meta">Avg <strong>${avgProt}g</strong><br><span class="dash-in-range">${protInR}</span>/${logged} days in range</span>
+      </div>
+      ${protChart}
+    </div>
+  `;
+}
 let nutriMonthOffset=0;
 
 function openMcal(){
