@@ -680,6 +680,7 @@ const MEALS=[
   {id:21,name:"Pasta Bolognese",emoji:"🍝",ingr:["Pasta","Minced meat","Tomato sauce"],cx:3,t:30,cost:null,y:8,who:"Both",nutrition:{kcal:620,protein:34,carbs:70,fat:18}},
   {id:22,name:"Cheese toast",emoji:"🧀",ingr:["Cheese","Sandwich bread"],cx:1,t:10,cost:null,y:7,who:"Both",nutrition:{kcal:380,protein:18,carbs:36,fat:18}},
   {id:23,name:"Pasta Chicken Alfredo",emoji:"🍗",ingr:["Pasta","Heavy cream","Chicken breast (½ kg)","Parmesan"],cx:3,t:30,cost:null,y:8,who:"Both",nutrition:{kcal:900,protein:46,carbs:45,fat:60}},
+  {id:24,name:"Greek Wrap",emoji:"🥙",ingr:["Protein flat bread","Chicken breast","Greek yogurt high protein","Lemon","Cucumber","Cherry tomatoes"],cx:3,t:30,cost:null,y:7,who:"Both",nutrition:{kcal:871,protein:118,carbs:72,fat:11}},
 ];
 
 const DNAMES=['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
@@ -1204,11 +1205,11 @@ function closeMod(ev){
 /* ---- LISTA ---- */
 const CAT_ORDER=[
   {name:'🥩 Meat & fish',keys:['Steak','Chicken breast','Chicken breast (½ kg)','Chicken patties','Minced meat','AH marinated ribs','Fish fillet','Shrimps','AH frozen fish mix','Salami','Prosciutto','Chicken nuggets','Beef patties']},
-  {name:'🧀 Dairy & eggs',keys:['Eggs','Parmesan','Cheddar','Butter','Burrata','Cheese','Sour cream','Heavy cream']},
+  {name:'🧀 Dairy & eggs',keys:['Eggs','Parmesan','Cheddar','Butter','Burrata','Cheese','Sour cream','Heavy cream','Greek yogurt high protein']},
   {name:'🍝 Pasta, rice & grains',keys:['Pasta','Arborio rice','Rice','Flour','Breadcrumbs']},
-  {name:'🥦 Fresh produce',keys:['Vegetables','Onion','Garlic','Lemon','Tomato','Bell pepper','Red pepper','Lettuce','Rucola','Mushrooms','Parsley','Green beans','Crème fraîche']},
+  {name:'🥦 Fresh produce',keys:['Vegetables','Onion','Garlic','Lemon','Tomato','Bell pepper','Red pepper','Lettuce','Rucola','Mushrooms','Parsley','Green beans','Crème fraîche','Cucumber','Cherry tomatoes']},
   {name:'🧴 Pantry & sauces',keys:['Tomato sauce','Tomato purée','Tomato peeled','Chorizo','Guanciale','Broth','Oil','Knorr Seasoned Rice']},
-  {name:'🍞 Bread & wraps',keys:['Bread','Burger buns','Wraps','Sandwich bread','Box pizza']},
+  {name:'🍞 Bread & wraps',keys:['Bread','Burger buns','Wraps','Sandwich bread','Box pizza','Protein flat bread']},
   {name:'🧊 Frozen & ready',keys:['Mixed snacks','Fries','Sushi','Snacks']},
 ];
 
@@ -1346,7 +1347,7 @@ function renderAhTotal(){
 
 /* ---- PRECIOS MANUALES ---- */
 // Precios por defecto basados en AH (€)
-const DEFAULT_PRICES={"Bolletjes (JQTRP)":11.5,"AH Broodje":0,"AH Choco Karamel Bar":3.0,"AH Chocolate Bread":5.0,"AH Chocolate croissants":3.9,"AH Macadamia Mix":2.79,"AH Pasta filled w/ Sauce":0,"AH Protein mousse":1.5,"AH frozen fish mix":6.3,"AH kip bacon wrap":4.25,"AH marinated ribs":10.0,"Alfajor":0,"Almhof Roomyoghurt aardbei":2.59,"Arborio rice":2.1,"Banana":0.4,"Beef patties":5.0,"Bell pepper":1.3,"Ben & Jerry's":4.0,"Bolletjes (bag of 10)":2.0,"Box pizza":4.0,"Bread":2.0,"Breadcrumbs":0.8,"Broth":0.8,"Burger buns":1.6,"Burrata":2.1,"Cheddar":1.35,"Cheese":1.5,"Cherry tomatoes":1.1,"Chicken breast":10.0,"Chicken breast (½ kg)":5.0,"Chicken nuggets":5.0,"Chicken patties":6.0,"Chorizo":3.15,"Crème fraîche":1.4,"Eggs":2.0,"Fish fillet":12.0,"Flour":0.85,"Fries":1.5,"Garlic":0.8,"Green beans":2.4,"Guanciale":2.5,"Heavy cream":2.0,"HiPRO Skyr Vanilla":3.0,"Holie's Chocolate Bar":3.3,"Knorr Seasoned Rice":4.7,"Lemon":1.5,"Lettuce":1.3,"Minced meat":6.8,"Mixed snacks":3.45,"Mushrooms":1.8,"Nona Rossa Copa Di Parma sandwich":11.0,"Oil":0.72,"Onion":0.4,"Parmesan":3.7,"Parsley":1.3,"Pasta":2.8,"Pesto":1.8,"Prosciutto":4.0,"Red pepper":1.2,"Rucola":1.1,"Salami":4.0,"Sandwich bread":0.7,"Shrimps":10.8,"Steak":12.0,"Sushi":30.0,"Tomato":1.2,"Tomato peeled":0.75,"Tomato purée":0.6,"Tomato sauce":0.75,"Vegetables":2.5,"Wraps":1.0};
+const DEFAULT_PRICES={"AA Drink":1.0,"Bolletjes (JQTRP)":11.5,"AH Broodje":0,"AH Choco Karamel Bar":3.0,"AH Chocolate Bread":5.0,"AH Chocolate croissants":3.9,"AH Macadamia Mix":2.79,"AH Pasta filled w/ Sauce":0,"AH Protein mousse":1.5,"AH frozen fish mix":6.3,"AH kip bacon wrap":4.25,"AH marinated ribs":10.0,"Almhof Roomyoghurt aardbei":2.59,"Arborio rice":2.1,"Banana":0.4,"Beef patties":5.0,"Bell pepper":1.3,"Ben & Jerry's (1/2 pint)":8.0,"Bolletjes (bag of 10)":2.0,"Box pizza":4.0,"Bread":2.0,"Breadcrumbs":0.8,"Broth":0.8,"Burger buns":1.6,"Burrata":2.1,"Cheddar":1.35,"Cheese":1.5,"Cherry tomatoes":1.1,"Chicken breast":10.0,"Chicken breast (½ kg)":5.0,"Chicken nuggets":5.0,"Chicken patties":6.0,"Chorizo":3.15,"Crème fraîche":1.4,"Cucumber":0.9,"Eggs":2.0,"Fish fillet":12.0,"Flour":0.85,"Fries":1.5,"Garlic":0.8,"Greek yogurt high protein":2.1,"Green beans":2.4,"Guanciale":2.5,"Havanna Alfajor":30.0,"Heavy cream":2.0,"HiPRO Skyr Vanilla":3.0,"Holie's Chocolate Bar":3.3,"Knorr Seasoned Rice":4.7,"Lemon":1.5,"Lettuce":1.3,"Minced meat":6.8,"Mixed snacks":3.45,"Mushrooms":1.8,"Nona Rossa Copa Di Parma sandwich":11.0,"Oil":0.72,"Onion":0.4,"Parmesan":3.7,"Parsley":1.3,"Pasta":2.8,"Pesto":1.8,"Prosciutto":4.0,"Protein flat bread":2.5,"Red pepper":1.2,"Rucola":1.1,"Salami":4.0,"Sandwich bread":0.7,"Shrimps":10.8,"Steak":12.0,"Sushi":30.0,"Tomato":1.2,"Tomato peeled":0.75,"Tomato purée":0.6,"Tomato sauce":0.75,"Vegetables":2.5,"Wraps":1.0};
 
 // Estado de precios: { ingredient: { price: number, bonus: bool } }
 let manualPrices={};
@@ -1762,7 +1763,7 @@ function applyCloudUpdate(){
 }
 
 /* ---- NUTRITION TAB ---- */
-const MEAL_PRESETS={"breakfasts":[{"name":"AH Chocolate Croissant","kcal":337,"protein":5.5,"carbs":35,"fat":19},{"name":"AH Chocolate Bread","kcal":521,"protein":10.5,"carbs":52,"fat":29},{"name":"HiPRO Skyr Vanilla","kcal":53,"protein":9.5,"carbs":3.5,"fat":0},{"name":"HiPRO Skyr Vanilla w/ Honey & Nuts","kcal":203,"protein":12.5,"carbs":22.5,"fat":8},{"name":"Almhof Yogurt","kcal":138,"protein":2.7,"carbs":13,"fat":8},{"name":"Banana","kcal":100,"protein":1,"carbs":27,"fat":0},{"name":"Fruit","kcal":80,"protein":1,"carbs":20,"fat":0},{"name":"Coffee w/ milk","kcal":60,"protein":3,"carbs":8,"fat":2}],"lunches":[{"name":"Nona Rossa - Coppa di Parma sandwich","kcal":850,"protein":38,"carbs":76,"fat":44},{"name":"AH kip bacon wrap","kcal":352,"protein":15,"carbs":25,"fat":21},{"name":"AH Broodje","kcal":356,"protein":15,"carbs":50,"fat":4},{"name":"Tosti kaas","kcal":320,"protein":16,"carbs":36,"fat":10},{"name":"Bolletjes (JQTRP)","kcal":450,"protein":19,"carbs":54,"fat":18},{"name":"Croissant Hamkaas (x2)","kcal":610,"protein":17,"carbs":58,"fat":34},{"name":"Nada / ayuno","kcal":0,"protein":0,"carbs":0,"fat":0},{"name":"AH Pasta filled w/ Sauce","kcal":420,"protein":17,"carbs":45,"fat":20}],"snacks":[{"name":"AH Choco Karamel Bar","kcal":170,"protein":15,"carbs":14,"fat":7.5},{"name":"Holie's Chocolate Bar","kcal":130,"protein":8,"carbs":15,"fat":5},{"name":"Fruta Random","kcal":80,"protein":1,"carbs":20,"fat":0},{"name":"AH Macadamia Mix","kcal":190,"protein":5.5,"carbs":5,"fat":16},{"name":"Coffee","kcal":5,"protein":0,"carbs":1,"fat":0},{"name":"Banana","kcal":100,"protein":1,"carbs":27,"fat":0},{"name":"AH Protein mousse","kcal":76,"protein":10,"carbs":5,"fat":1.6},{"name":"Ben & Jerry's","kcal":1232,"protein":20,"carbs":149,"fat":60},{"name":"Alfajor","kcal":250,"protein":4,"carbs":36,"fat":10}],"drinks":[{"name":"Beer 33cl","kcal":150,"protein":1,"carbs":13,"fat":0},{"name":"Beer 50cl","kcal":228,"protein":2,"carbs":20,"fat":0},{"name":"Wine — glass 15cl","kcal":122,"protein":0,"carbs":4,"fat":0},{"name":"Wine — 2 glasses","kcal":244,"protein":0,"carbs":8,"fat":0},{"name":"Cocktail","kcal":180,"protein":0,"carbs":18,"fat":0},{"name":"Shot 4cl","kcal":90,"protein":0,"carbs":0,"fat":0},{"name":"Soft drink 33cl","kcal":140,"protein":0,"carbs":35,"fat":0}]};
+const MEAL_PRESETS={"breakfasts":[{"name":"AH Chocolate Croissant","kcal":337,"protein":5.5,"carbs":35,"fat":19},{"name":"AH Chocolate Bread","kcal":521,"protein":10.5,"carbs":52,"fat":29},{"name":"HiPRO Skyr Vanilla","kcal":53,"protein":9.5,"carbs":3.5,"fat":0},{"name":"HiPRO Skyr Vanilla w/ Honey & Nuts","kcal":203,"protein":12.5,"carbs":22.5,"fat":8},{"name":"Almhof Yogurt","kcal":138,"protein":2.7,"carbs":13,"fat":8},{"name":"Banana","kcal":100,"protein":1,"carbs":27,"fat":0},{"name":"Fruit","kcal":80,"protein":1,"carbs":20,"fat":0},{"name":"Coffee w/ milk","kcal":60,"protein":3,"carbs":8,"fat":2}],"lunches":[{"name":"Nona Rossa - Coppa di Parma sandwich","kcal":850,"protein":38,"carbs":76,"fat":44},{"name":"AH kip bacon wrap","kcal":352,"protein":15,"carbs":25,"fat":21},{"name":"AH Broodje","kcal":356,"protein":15,"carbs":50,"fat":4},{"name":"Tosti kaas","kcal":320,"protein":16,"carbs":36,"fat":10},{"name":"Bolletjes (JQTRP)","kcal":450,"protein":19,"carbs":54,"fat":18},{"name":"Croissant Hamkaas (x2)","kcal":610,"protein":17,"carbs":58,"fat":34},{"name":"Nada / ayuno","kcal":0,"protein":0,"carbs":0,"fat":0},{"name":"AH Pasta filled w/ Sauce","kcal":420,"protein":17,"carbs":45,"fat":20}],"snacks":[{"name":"AH Choco Karamel Bar","kcal":170,"protein":15,"carbs":14,"fat":7.5},{"name":"Holie's Chocolate Bar","kcal":130,"protein":8,"carbs":15,"fat":5},{"name":"Fruta Random","kcal":80,"protein":1,"carbs":20,"fat":0},{"name":"AH Macadamia Mix","kcal":190,"protein":5.5,"carbs":5,"fat":16},{"name":"Coffee","kcal":5,"protein":0,"carbs":1,"fat":0},{"name":"Banana","kcal":100,"protein":1,"carbs":27,"fat":0},{"name":"AH Protein mousse","kcal":76,"protein":10,"carbs":5,"fat":1.6},{"name":"Ben & Jerry's (1/2 pint)","kcal":616,"protein":10,"carbs":74.5,"fat":30},{"name":"Havanna Alfajor","kcal":248,"protein":3.8,"carbs":36,"fat":10}],"drinks":[{"name":"Beer 33cl","kcal":150,"protein":1,"carbs":13,"fat":0},{"name":"Beer 50cl","kcal":228,"protein":2,"carbs":20,"fat":0},{"name":"Wine — glass 15cl","kcal":122,"protein":0,"carbs":4,"fat":0},{"name":"Wine — 2 glasses","kcal":244,"protein":0,"carbs":8,"fat":0},{"name":"Cocktail","kcal":180,"protein":0,"carbs":18,"fat":0},{"name":"Shot 4cl","kcal":90,"protein":0,"carbs":0,"fat":0},{"name":"Soft drink 33cl","kcal":140,"protein":0,"carbs":35,"fat":0},{"name":"AA Drink","kcal":195,"protein":0,"carbs":49,"fat":0},{"name":"Frappuccino","kcal":120,"protein":5,"carbs":28,"fat":2}]};
 const DAILY={kcal:2600,protein:130,carbs:280,fat:65};
 const MEAL_SLOTS=[
   {key:'breakfast',icon:'☀️',label:'Breakfast'},
@@ -1836,8 +1837,8 @@ function scoreRange(val, minAcc, minTgt, maxTgt, maxAcc, pts){
 function calcDailyScore(totals){
   if(totals.kcal<200)return 0;
   let s=0;
-  // Calories: 30 pts — ramp 1600→2400, flat 2400→2800, ramp 2800→3200
-  s+=scoreRange(totals.kcal, 1600,2400,2800,3200, 30);
+  // Calories: 30 pts — ramp 1600→2400, flat 2400→3000, ramp 3000→3400
+  s+=scoreRange(totals.kcal, 1600,2400,3000,3400, 30);
   // Protein: 40 pts — ramp 60→120, flat 120→145, ramp 145→185
   s+=scoreRange(totals.protein, 60,120,145,185, 40);
   // Carbs: 15 pts — ramp 100→235, flat 235→325, ramp 325→430
@@ -1905,7 +1906,7 @@ function renderNutriProgress(totals){
   const{kcal,protein,carbs,fat}=totals;
   const score=calcDailyScore(totals);
   const grade=getDayGrade(score);
-  const kcalColor=kcal===0?'var(--faint)':getMacroColor(kcal,2400,2800);
+  const kcalColor=kcal===0?'var(--faint)':getMacroColor(kcal,2400,3000);
 
   // Main ring: r=50, size=120
   const kcalRing=makeSVGRing(kcal,3000,kcalColor,50,9,120);
@@ -1913,7 +1914,7 @@ function renderNutriProgress(totals){
   // Remaining label
   let remainHTML;
   if(kcal===0)remainHTML=`<span style="color:var(--faint)">— to go</span>`;
-  else if(kcal>2800)remainHTML=`<span style="color:var(--terra)">+${kcal-2600} over</span>`;
+  else if(kcal>3000)remainHTML=`<span style="color:var(--terra)">+${kcal-2600} over</span>`;
   else if(kcal>=2400)remainHTML=`<span style="color:var(--sage)">On target ✓</span>`;
   else remainHTML=`<span style="color:var(--gold)">${2600-kcal} to go</span>`;
 
@@ -2070,10 +2071,10 @@ function renderDash(){
   const logged=vKcal.length;
   const avgKcal=logged?Math.round(vKcal.reduce((a,b)=>a+b,0)/logged):'—';
   const avgProt=vProt.length?(vProt.reduce((a,b)=>a+b,0)/vProt.length).toFixed(1):'—';
-  const kcalInR=vKcal.filter(v=>v>=2400&&v<=2800).length;
+  const kcalInR=vKcal.filter(v=>v>=2400&&v<=3000).length;
   const protInR=vProt.filter(v=>v>=120&&v<=145).length;
 
-  const kcalChart=buildLineChart(dateKeys,kcalArr,1400,3400,2400,2800,'var(--gold)','kcal');
+  const kcalChart=buildLineChart(dateKeys,kcalArr,1400,3400,2400,3000,'var(--gold)','kcal');
   const protChart=buildLineChart(dateKeys,protArr,55,195,120,145,'var(--sage)','g');
 
   const rangeBtn=v=>`<button class="dash-range-btn${dashRange===v?' on':''}" onclick="setDashRange(${v})">${v}d</button>`;
